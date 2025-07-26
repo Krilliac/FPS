@@ -1,15 +1,15 @@
 #include "CubeObject.h"
-#include "Primitives.h"
 
 CubeObject::CubeObject(float size)
     : m_size(size)
 {
-    SetName("CubeObject_" + std::to_string(GetID()));
+    SetName("Cube_" + std::to_string(GetID()));
 }
 
-HRESULT CubeObject::Initialize(ID3D11Device* dev, ID3D11DeviceContext* ctx)
+HRESULT CubeObject::Initialize(ID3D11Device* device,
+    ID3D11DeviceContext* context)
 {
-    return GameObject::Initialize(dev, ctx);
+    return GameObject::Initialize(device, context);
 }
 
 void CubeObject::CreateMesh()

@@ -1,14 +1,7 @@
 #pragma once
-#include <vector>
+#include "..\Graphics\Mesh.h"  // Use MeshData from Mesh.h
 #include <DirectXMath.h>
 using DirectX::XMFLOAT3;
-
-struct MeshData
-{
-    std::vector<XMFLOAT3> positions;
-    std::vector<XMFLOAT3> normals;
-    std::vector<uint32_t> indices;
-};
 
 namespace Primitives
 {

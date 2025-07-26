@@ -1,17 +1,19 @@
 #include "SphereObject.h"
-#include "Primitives.h"
 
-SphereObject::SphereObject(float radius, int slices, int stacks)
+SphereObject::SphereObject(float radius,
+    int slices,
+    int stacks)
     : m_radius(radius)
     , m_slices(slices)
     , m_stacks(stacks)
 {
-    SetName("SphereObject_" + std::to_string(GetID()));
+    SetName("Sphere_" + std::to_string(GetID()));
 }
 
-HRESULT SphereObject::Initialize(ID3D11Device* dev, ID3D11DeviceContext* ctx)
+HRESULT SphereObject::Initialize(ID3D11Device* device,
+    ID3D11DeviceContext* context)
 {
-    return GameObject::Initialize(dev, ctx);
+    return GameObject::Initialize(device, context);
 }
 
 void SphereObject::CreateMesh()

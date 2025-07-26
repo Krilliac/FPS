@@ -1,16 +1,15 @@
 #include "PlaneObject.h"
-#include "Primitives.h"
 
 PlaneObject::PlaneObject(float width, float depth)
-    : m_width(width)
-    , m_depth(depth)
+    : m_width(width), m_depth(depth)
 {
-    SetName("PlaneObject_" + std::to_string(GetID()));
+    SetName("Plane_" + std::to_string(GetID()));
 }
 
-HRESULT PlaneObject::Initialize(ID3D11Device* dev, ID3D11DeviceContext* ctx)
+HRESULT PlaneObject::Initialize(ID3D11Device* device,
+    ID3D11DeviceContext* context)
 {
-    return GameObject::Initialize(dev, ctx);
+    return GameObject::Initialize(device, context);
 }
 
 void PlaneObject::CreateMesh()

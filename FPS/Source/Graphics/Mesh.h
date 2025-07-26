@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>
+#include <string>
 
 using DirectX::XMFLOAT2;
 using DirectX::XMFLOAT3;
@@ -14,24 +15,16 @@ struct Vertex
     XMFLOAT3 Normal;
     XMFLOAT2 TexCoord;
 
-    Vertex()
-        : Position(0, 0, 0)
-        , Normal(0, 1, 0)
-        , TexCoord(0, 0)
-    {
-    }
-    Vertex(const XMFLOAT3& pos, const XMFLOAT3& norm, const XMFLOAT2& tex)
-        : Position(pos)
-        , Normal(norm)
-        , TexCoord(tex)
-    {
+    Vertex() : Position{ 0,0,0 }, Normal{ 0,1,0 }, TexCoord{ 0,0 } {}
+    Vertex(const XMFLOAT3& p, const XMFLOAT3& n, const XMFLOAT2& t)
+        : Position(p), Normal(n), TexCoord(t) {
     }
 };
 
+// Unified mesh‐data type for both primitives and file loading
 struct MeshData
 {
-    std::vector<Vertex> positions;
-    std::vector<XMFLOAT3> normals;
+    std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 };
 
@@ -41,7 +34,7 @@ public:
     Mesh();
     ~Mesh();
 
-    // Initialize with device/context
+    // Setup
     HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
     void    Shutdown();
 
@@ -50,32 +43,32 @@ public:
     HRESULT CreatePlane(float width = 10.0f, float depth = 10.0f);
     HRESULT CreateSphere(float radius = 1.0f, int slices = 20, int stacks = 20);
 
-    // Custom mesh from CPU-side arrays
-    HRESULT CreateFromVertices(const std::vector<Vertex>& vertices,
-        const std::vector<unsigned int>& indices);
+    // From raw CPU arrays
+    HRESULT CreateFromVertices(const std::vector<Vertex>& verts,
+        const std::vector<unsigned int>& inds);
 
-    // Render call
+    // Attempt to load real asset
+    bool LoadFromFile(const std::wstring& path);
+
+    // Mark placeholder
+    void SetPlaceholder(bool p) { m_placeholder = p; }
+    bool IsPlaceholder() const { return m_placeholder; }
+
+    // Draw
     void Render();
 
-    // Accessors
-    unsigned int GetVertexCount() const { return m_vertexCount; }
-    unsigned int GetIndexCount()  const { return m_indexCount; }
-
 private:
-    // Buffer creation
     HRESULT CreateBuffers();
+    void    CalculateNormals();
 
-    // Compute per-face normals if needed
-    void CalculateNormals();
+    ID3D11Buffer* m_vb{ nullptr };
+    ID3D11Buffer* m_ib{ nullptr };
+    ID3D11Device* m_device{ nullptr };
+    ID3D11DeviceContext* m_context{ nullptr };
 
-    ID3D11Buffer* m_vertexBuffer;
-    ID3D11Buffer* m_indexBuffer;
-    ID3D11Device* m_device;
-    ID3D11DeviceContext* m_context;
-
-    std::vector<Vertex>        m_vertices;
-    std::vector<unsigned int>  m_indices;
-
-    unsigned int m_vertexCount;
-    unsigned int m_indexCount;
+    std::vector<Vertex>       m_vertices;
+    std::vector<unsigned int> m_indices;
+    unsigned int              m_vertexCount{ 0 };
+    unsigned int              m_indexCount{ 0 };
+    bool                      m_placeholder{ false };
 };

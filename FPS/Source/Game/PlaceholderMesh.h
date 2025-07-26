@@ -1,8 +1,13 @@
 ﻿#pragma once
-#include "Primitives.h"
-#include "..\Graphics\Mesh.h"
 
-// Attempts to load 'path'; if missing, builds the primitive fallback.
+#include "..\Graphics\Mesh.h"
+#include <DirectXMath.h>
+using DirectX::XMFLOAT2;
+
+// Forward declare MeshData since it's already in Mesh.h
+struct MeshData;
+
+// Attempts to LoadFromFile(path); if that fails, builds fallback primitive.
 inline void LoadOrPlaceholderMesh(Mesh& mesh,
     const std::wstring& path,
     const MeshData& fallback)
@@ -10,17 +15,7 @@ inline void LoadOrPlaceholderMesh(Mesh& mesh,
     if (!path.empty() && mesh.LoadFromFile(path))
         return;
 
-    // Build CPU‐side vertices from fallback.positions/normals
-    std::vector<Vertex> verts;
-    verts.reserve(fallback.positions.size());
-    for (size_t i = 0; i < fallback.positions.size(); ++i)
-    {
-        verts.emplace_back(
-            fallback.positions[i],
-            fallback.normals[i],
-            XMFLOAT2(0, 0) // no UVs needed for placeholder
-        );
-    }
-    mesh.CreateFromVertices(verts, fallback.indices);
+    // MeshData already contains proper Vertex objects
+    mesh.CreateFromVertices(fallback.vertices, fallback.indices);
     mesh.SetPlaceholder(true);
 }
