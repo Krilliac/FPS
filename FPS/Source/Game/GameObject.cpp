@@ -1,6 +1,11 @@
-﻿#include "GameObject.h"
-#include "..\Utils\MathUtils.h"
+﻿#include <Windows.h>
+#include <cstdint>
+#include <cstdarg>
+#include <cstdio>
 #include <DirectXMath.h>
+#include "GameObject.h"
+#include "..\Utils\MathUtils.h"
+
 using namespace DirectX;
 
 // Definition and initialization of the static member

@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "..\Physics\CollisionSystem.h"
 #include <DirectXMath.h>
+#include <memory>
 
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
@@ -32,13 +33,8 @@ struct WeaponStats
 
     WeaponStats() = default;
     WeaponStats(float dmg, float rate, int mag, float reload, float range, float acc, WeaponType t)
-        : Damage(dmg)
-        , FireRate(rate)
-        , MagazineSize(mag)
-        , ReloadTime(reload)
-        , Range(range)
-        , Accuracy(acc)
-        , Type(t)
+        : Damage(dmg), FireRate(rate), MagazineSize(mag),
+        ReloadTime(reload), Range(range), Accuracy(acc), Type(t)
     {
     }
 };
@@ -49,7 +45,7 @@ public:
     Player();
     ~Player() override = default;
 
-    // Not override: signature differs
+    // Note: signature differs, so not override
     HRESULT Initialize(ID3D11Device* device,
         ID3D11DeviceContext* context,
         FPSCamera* camera,
@@ -58,7 +54,7 @@ public:
     void Update(float deltaTime) override;
     void Render(const XMMATRIX& view, const XMMATRIX& proj) override;
 
-    // Implement callbacks so Player is no longer abstract
+    // Satisfy pure‐virtuals
     void OnHit(GameObject* target) override {}
     void OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal) override {}
 
@@ -85,14 +81,14 @@ public:
 
 private:
     // Stats
-    float m_health{ 100 }, m_maxHealth{ 100 };
-    float m_armor{ 0 }, m_maxArmor{ 100 };
-    float m_stamina{ 100 }, m_maxStamina{ 100 };
-    float m_speed{ 5 }, m_jumpHeight{ 3 };
+    float     m_health{ 100 }, m_maxHealth{ 100 };
+    float     m_armor{ 0 }, m_maxArmor{ 100 };
+    float     m_stamina{ 100 }, m_maxStamina{ 100 };
+    float     m_speed{ 5 }, m_jumpHeight{ 3 };
 
     // Movement
-    XMFLOAT3 m_velocity{};
-    bool     m_isGrounded{ true }, m_isRunning{ false },
+    XMFLOAT3  m_velocity{};
+    bool      m_isGrounded{ true }, m_isRunning{ false },
         m_isCrouching{ false }, m_isJumping{ false };
 
     // Combat

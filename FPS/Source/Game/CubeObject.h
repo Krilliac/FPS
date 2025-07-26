@@ -13,12 +13,10 @@ public:
     explicit CubeObject(float size = 1.0f);
     ~CubeObject() override = default;
 
-    HRESULT Initialize(ID3D11Device* device,
-        ID3D11DeviceContext* context) override;
-
+    HRESULT Initialize(ID3D11Device*, ID3D11DeviceContext*) override;
     void Update(float dt) override { GameObject::Update(dt); }
-    void Render(const XMMATRIX& v,
-        const XMMATRIX& p) override {
+    void Render(const XMMATRIX& v, const XMMATRIX& p) override
+    {
         GameObject::Render(v, p);
     }
 

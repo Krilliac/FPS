@@ -1,4 +1,9 @@
-﻿#include "Game.h"
+﻿#include <Windows.h>
+#include <cstdint>
+#include <cstdarg>
+#include <cstdio>
+#include <DirectXMath.h>
+#include "Game.h"
 
 #include "..\Graphics\GraphicsEngine.h"
 #include "..\Input\InputManager.h"
@@ -10,7 +15,12 @@
 #include "PlaneObject.h"
 #include "SphereObject.h"
 #include "Player.h"
+#include "..\Game\Console.h"
 #include "..\Projectiles\ProjectilePool.h"
+
+// Tell this file about the engine and console globals from FPS.cpp:
+extern std::unique_ptr<GraphicsEngine> g_graphics;
+extern Console                         g_console;
 
 Game::Game() = default;
 
@@ -80,42 +90,42 @@ void Game::Update(float deltaTime)
     UpdateCamera(deltaTime);
     UpdateGameObjects(deltaTime);
 
-    if (m_player)            m_player->Update(deltaTime);
-    if (m_projectilePool)    m_projectilePool->Update(deltaTime);
+    if (m_player)         m_player->Update(deltaTime);
+    if (m_projectilePool) m_projectilePool->Update(deltaTime);
 }
 
 void Game::Render()
 {
-    if (!m_graphics || !m_camera || !m_shader) return;
-
+    // Set shaders, constant buffers, etc.
     m_shader->SetShaders();
     XMMATRIX view = m_camera->GetViewMatrix();
-    XMMATRIX projection = m_camera->GetProjectionMatrix();
+    XMMATRIX proj = m_camera->GetProjectionMatrix();
 
-    // Render scene objects
+    // Draw every GameObject
     ConstantBuffer cb;
     for (auto& obj : m_gameObjects)
     {
-        if (obj && obj->IsActive() && obj->IsVisible())
-        {
-            cb.World = obj->GetWorldMatrix();
-            cb.View = view;
-            cb.Projection = projection;
-            m_shader->UpdateConstantBuffer(cb);
-            obj->Render(view, projection);
-        }
+        if (!obj->IsActive() || !obj->IsVisible()) continue;
+        cb.World = obj->GetWorldMatrix();
+        cb.View = view;
+        cb.Projection = proj;
+        m_shader->UpdateConstantBuffer(cb);
+        obj->Render(view, proj);
     }
 
-    // Render projectiles
-    if (m_projectilePool)
-    {
-        m_projectilePool->Render(view, projection);
-    }
+    // Draw player/projectiles if needed
+    m_player->Render(view, proj);
+    m_projectilePool->Render(view, proj);
+
+    // Finally draw UI/console on top
+    if (g_console.IsVisible())
+        g_console.Render(g_graphics->GetContext());
 }
 
 void Game::UpdateCamera(float deltaTime)
 {
-    if (m_camera) m_camera->Update(deltaTime);
+    if (m_camera)
+        m_camera->Update(deltaTime);
 }
 
 void Game::UpdateGameObjects(float deltaTime)
@@ -132,11 +142,11 @@ void Game::HandleInput(float deltaTime)
     if (!m_input || !m_camera) return;
 
     float moveSpeed = 10.0f * deltaTime;
-    if (m_input->IsKeyDown('W')) m_camera->MoveForward(moveSpeed);
-    if (m_input->IsKeyDown('S')) m_camera->MoveForward(-moveSpeed);
-    if (m_input->IsKeyDown('A')) m_camera->MoveRight(-moveSpeed);
-    if (m_input->IsKeyDown('D')) m_camera->MoveRight(moveSpeed);
-    if (m_input->IsKeyDown(VK_SPACE))    m_camera->MoveUp(moveSpeed);
+    if (m_input->IsKeyDown('W'))       m_camera->MoveForward(moveSpeed);
+    if (m_input->IsKeyDown('S'))       m_camera->MoveForward(-moveSpeed);
+    if (m_input->IsKeyDown('A'))       m_camera->MoveRight(-moveSpeed);
+    if (m_input->IsKeyDown('D'))       m_camera->MoveRight(moveSpeed);
+    if (m_input->IsKeyDown(VK_SPACE))  m_camera->MoveUp(moveSpeed);
     if (m_input->IsKeyDown(VK_LCONTROL)) m_camera->MoveUp(-moveSpeed);
 
     int dx, dy;
@@ -161,10 +171,10 @@ void Game::HandleInput(float deltaTime)
 
 void Game::CreateTestObjects()
 {
-    // Ground plane placeholder or asset
+    // Ground plane (placeholder or asset)
     auto ground = std::make_unique<PlaneObject>(20.0f, 20.0f);
     ground->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
-    ground->SetPosition({ 0, -1, 0 });
+    ground->SetPosition({ 0.0f, -1.0f, 0.0f });
     m_gameObjects.push_back(std::move(ground));
 
     // Array of cubes

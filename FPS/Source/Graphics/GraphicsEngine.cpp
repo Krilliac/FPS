@@ -1,12 +1,10 @@
 ﻿#include "GraphicsEngine.h"
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 GraphicsEngine::GraphicsEngine()
-    : m_device(nullptr)
-    , m_context(nullptr)
-    , m_swapChain(nullptr)
-    , m_renderTargetView(nullptr)
-    , m_depthStencilView(nullptr)
-    , m_windowWidth(1280)
+    : m_windowWidth(1280)
     , m_windowHeight(720)
 {
 }
@@ -16,151 +14,208 @@ GraphicsEngine::~GraphicsEngine()
     Shutdown();
 }
 
-HRESULT GraphicsEngine::Initialize(HWND hwnd)
+HRESULT GraphicsEngine::Initialize(HWND hWnd)
 {
-    HRESULT hr = S_OK;
+    // Get initial client size
+    RECT rc;
+    GetClientRect(hWnd, &rc);
+    m_windowWidth = rc.right - rc.left;
+    m_windowHeight = rc.bottom - rc.top;
 
-    hr = CreateDevice(hwnd);
+    // Create device, context, and swap chain
+    HRESULT hr = CreateDeviceAndSwapChain(hWnd);
     if (FAILED(hr)) return hr;
 
+    // Create render target and depth-stencil views
     hr = CreateRenderTargetView();
     if (FAILED(hr)) return hr;
-
     hr = CreateDepthStencilView();
     if (FAILED(hr)) return hr;
 
+    // Setup viewport
     SetViewport();
-
     return S_OK;
 }
 
 void GraphicsEngine::Shutdown()
 {
-    if (m_depthStencilView) { m_depthStencilView->Release(); m_depthStencilView = nullptr; }
-    if (m_renderTargetView) { m_renderTargetView->Release(); m_renderTargetView = nullptr; }
-    if (m_swapChain) { m_swapChain->Release(); m_swapChain = nullptr; }
-    if (m_context) { m_context->Release(); m_context = nullptr; }
-    if (m_device) { m_device->Release(); m_device = nullptr; }
+    m_depthStencilView.Reset();
+    m_renderTargetView.Reset();
+    m_swapChain.Reset();
+    m_context.Reset();
+    m_device.Reset();
 }
 
 void GraphicsEngine::Render()
 {
-    // Clear render target
-    float clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
-    m_context->ClearRenderTargetView(m_renderTargetView, clearColor);
-    m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    // Clear RTV and DSV
+    const float clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    m_context->ClearRenderTargetView(m_renderTargetView.Get(), clearColor);
+    m_context->ClearDepthStencilView(m_depthStencilView.Get(),
+        D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-    // Set render targets
-    m_context->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+    // Bind RTV/DSV
+    m_context->OMSetRenderTargets(1,
+        m_renderTargetView.GetAddressOf(),
+        m_depthStencilView.Get());
 
-    // TODO: Render game objects here
+    // Scene drawing happens in Game::Render()
 
-    // Present the frame
+    // Present using flip-model
     m_swapChain->Present(1, 0);
 }
 
 void GraphicsEngine::OnResize(UINT width, UINT height)
 {
     if (width == 0 || height == 0) return;
-
     m_windowWidth = width;
     m_windowHeight = height;
 
-    // Release render target views
-    if (m_renderTargetView) { m_renderTargetView->Release(); m_renderTargetView = nullptr; }
-    if (m_depthStencilView) { m_depthStencilView->Release(); m_depthStencilView = nullptr; }
+    // Release views
+    m_renderTargetView.Reset();
+    m_depthStencilView.Reset();
 
-    // Resize swap chain
-    m_swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+    // Resize swap chain buffers
+    m_swapChain->ResizeBuffers(
+        0, width, height, DXGI_FORMAT_UNKNOWN, 0);
 
-    // Recreate render target views
+    // Recreate views and viewport
     CreateRenderTargetView();
     CreateDepthStencilView();
     SetViewport();
 }
 
-HRESULT GraphicsEngine::CreateDevice(HWND hwnd)
+HRESULT GraphicsEngine::CreateDeviceAndSwapChain(HWND hWnd)
 {
-    RECT rc;
-    GetClientRect(hwnd, &rc);
-    m_windowWidth = rc.right - rc.left;
-    m_windowHeight = rc.bottom - rc.top;
-
-    UINT createDeviceFlags = 0;
+    UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
-    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+    flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-    D3D_DRIVER_TYPE driverTypes[] = {
-        D3D_DRIVER_TYPE_HARDWARE,
-        D3D_DRIVER_TYPE_WARP,
-        D3D_DRIVER_TYPE_REFERENCE,
-    };
-
+    // Supported feature levels
     D3D_FEATURE_LEVEL featureLevels[] = {
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
     };
 
-    DXGI_SWAP_CHAIN_DESC sd = {};
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = m_windowWidth;
-    sd.BufferDesc.Height = m_windowHeight;
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = hwnd;
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
+    // Describe flip-model swap chain
+    DXGI_SWAP_CHAIN_DESC1 scd = {};
+    scd.Width = m_windowWidth;
+    scd.Height = m_windowHeight;
+    scd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scd.SampleDesc.Count = 1;
+    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    scd.BufferCount = 2;
+    scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+    scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    return D3D11CreateDeviceAndSwapChain(
-        nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags,
-        featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION,
-        &sd, &m_swapChain, &m_device, nullptr, &m_context);
+    // Create DXGI factory
+    ComPtr<IDXGIFactory2> factory;
+#if defined(_DEBUG)
+    UINT factoryFlags = DXGI_CREATE_FACTORY_DEBUG;
+#else
+    UINT factoryFlags = 0;
+#endif
+    HRESULT hr = CreateDXGIFactory2(factoryFlags, IID_PPV_ARGS(&factory));
+    if (FAILED(hr)) return hr;
+
+    // Create D3D11 device and context
+    ComPtr<ID3D11Device> dev;
+    ComPtr<ID3D11DeviceContext> ctx;
+    hr = D3D11CreateDevice(
+        nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags,
+        featureLevels, _countof(featureLevels),
+        D3D11_SDK_VERSION,
+        &dev, nullptr, &ctx);
+    if (FAILED(hr)) return hr;
+
+    // Query 11.1 interfaces
+    hr = dev.As(&m_device);
+    if (FAILED(hr)) return hr;
+    hr = ctx.As(&m_context);
+    if (FAILED(hr)) return hr;
+
+#ifdef _DEBUG
+    // Suppress INFO-level D3D11 messages
+    {
+        ComPtr<ID3D11InfoQueue> infoQueue;
+        if (SUCCEEDED(m_device.As(&infoQueue)))
+        {
+            D3D11_MESSAGE_SEVERITY sevs[] = { D3D11_MESSAGE_SEVERITY_INFO };
+            D3D11_INFO_QUEUE_FILTER filt = {};
+            filt.DenyList.NumSeverities = _countof(sevs);
+            filt.DenyList.pSeverityList = sevs;
+            infoQueue->AddStorageFilterEntries(&filt);
+            infoQueue->AddRetrievalFilterEntries(&filt);
+        }
+    }
+    // Suppress DXGI warning #294 (legacy swap)
+    {
+        ComPtr<IDXGIDebug1> dxgiDebug;
+        if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug))))
+        {
+            ComPtr<IDXGIInfoQueue> dxgiInfo;
+            if (SUCCEEDED(dxgiDebug.As(&dxgiInfo)))
+            {
+                DXGI_INFO_QUEUE_MESSAGE_ID denyIds[] = { 294 };
+                DXGI_INFO_QUEUE_FILTER dxgiFilt = {};
+                dxgiFilt.DenyList.NumIDs = _countof(denyIds);
+                dxgiFilt.DenyList.pIDList = denyIds;
+                dxgiInfo->AddStorageFilterEntries(DXGI_DEBUG_ALL, &dxgiFilt);
+                dxgiInfo->AddRetrievalFilterEntries(DXGI_DEBUG_ALL, &dxgiFilt);
+            }
+        }
+    }
+#endif
+
+    // Create the swap chain for this window
+    return factory->CreateSwapChainForHwnd(
+        m_device.Get(),
+        hWnd,
+        &scd,
+        nullptr,
+        nullptr,
+        &m_swapChain);
 }
 
 HRESULT GraphicsEngine::CreateRenderTargetView()
 {
-    ID3D11Texture2D* pBackBuffer = nullptr;
-    HRESULT hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    ComPtr<ID3D11Texture2D> back;
+    HRESULT hr = m_swapChain->GetBuffer(
+        0, IID_PPV_ARGS(&back));
     if (FAILED(hr)) return hr;
-
-    hr = m_device->CreateRenderTargetView(pBackBuffer, nullptr, &m_renderTargetView);
-    pBackBuffer->Release();
-    return hr;
+    return m_device->CreateRenderTargetView(
+        back.Get(), nullptr, &m_renderTargetView);
 }
 
 HRESULT GraphicsEngine::CreateDepthStencilView()
 {
-    D3D11_TEXTURE2D_DESC depthDesc = {};
-    depthDesc.Width = m_windowWidth;
-    depthDesc.Height = m_windowHeight;
-    depthDesc.MipLevels = 1;
-    depthDesc.ArraySize = 1;
-    depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthDesc.SampleDesc.Count = 1;
-    depthDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    D3D11_TEXTURE2D_DESC desc = {};
+    desc.Width = m_windowWidth;
+    desc.Height = m_windowHeight;
+    desc.MipLevels = 1;
+    desc.ArraySize = 1;
+    desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    desc.SampleDesc.Count = 1;
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-    ID3D11Texture2D* pDepthStencil = nullptr;
-    HRESULT hr = m_device->CreateTexture2D(&depthDesc, nullptr, &pDepthStencil);
+    ComPtr<ID3D11Texture2D> tex;
+    HRESULT hr = m_device->CreateTexture2D(
+        &desc, nullptr, &tex);
     if (FAILED(hr)) return hr;
-
-    hr = m_device->CreateDepthStencilView(pDepthStencil, nullptr, &m_depthStencilView);
-    pDepthStencil->Release();
-    return hr;
+    return m_device->CreateDepthStencilView(
+        tex.Get(), nullptr, &m_depthStencilView);
 }
 
 void GraphicsEngine::SetViewport()
 {
     D3D11_VIEWPORT vp = {};
-    vp.Width = (FLOAT)m_windowWidth;
-    vp.Height = (FLOAT)m_windowHeight;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
     vp.TopLeftX = 0;
     vp.TopLeftY = 0;
+    vp.Width = static_cast<float>(m_windowWidth);
+    vp.Height = static_cast<float>(m_windowHeight);
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
     m_context->RSSetViewports(1, &vp);
 }

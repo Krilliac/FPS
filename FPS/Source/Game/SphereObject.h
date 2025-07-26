@@ -1,9 +1,11 @@
 #pragma once
-
+#include <Windows.h>
+#include <cstdint>
+#include <DirectXMath.h>
+#include "SphereObject.h"
 #include "GameObject.h"
 #include "PlaceholderMesh.h"
 #include "Primitives.h"
-#include <DirectXMath.h>
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
 

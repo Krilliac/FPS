@@ -1,9 +1,12 @@
 #pragma once
-
+#include <Windows.h>
+#include <cstdint>
+#include <DirectXMath.h>
+#include "PlaneObject.h"
 #include "GameObject.h"
 #include "PlaceholderMesh.h"
 #include "Primitives.h"
-#include <DirectXMath.h>
+
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
 
@@ -13,12 +16,10 @@ public:
     PlaneObject(float width = 10.0f, float depth = 10.0f);
     ~PlaneObject() override = default;
 
-    HRESULT Initialize(ID3D11Device* device,
-        ID3D11DeviceContext* context) override;
-
+    HRESULT Initialize(ID3D11Device*, ID3D11DeviceContext*) override;
     void Update(float dt) override { GameObject::Update(dt); }
-    void Render(const XMMATRIX& v,
-        const XMMATRIX& p) override {
+    void Render(const XMMATRIX& v, const XMMATRIX& p) override
+    {
         GameObject::Render(v, p);
     }
 

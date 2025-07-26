@@ -6,10 +6,9 @@ PlaneObject::PlaneObject(float width, float depth)
     SetName("Plane_" + std::to_string(GetID()));
 }
 
-HRESULT PlaneObject::Initialize(ID3D11Device* device,
-    ID3D11DeviceContext* context)
+HRESULT PlaneObject::Initialize(ID3D11Device* d, ID3D11DeviceContext* c)
 {
-    return GameObject::Initialize(device, context);
+    return GameObject::Initialize(d, c);
 }
 
 void PlaneObject::CreateMesh()
