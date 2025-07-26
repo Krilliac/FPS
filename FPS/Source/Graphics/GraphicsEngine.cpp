@@ -16,23 +16,16 @@ GraphicsEngine::~GraphicsEngine()
 
 HRESULT GraphicsEngine::Initialize(HWND hWnd)
 {
-    // Get initial client size
-    RECT rc;
-    GetClientRect(hWnd, &rc);
+    RECT rc; GetClientRect(hWnd, &rc);
     m_windowWidth = rc.right - rc.left;
     m_windowHeight = rc.bottom - rc.top;
 
-    // Create device, context, and swap chain
     HRESULT hr = CreateDeviceAndSwapChain(hWnd);
     if (FAILED(hr)) return hr;
 
-    // Create render target and depth-stencil views
-    hr = CreateRenderTargetView();
-    if (FAILED(hr)) return hr;
-    hr = CreateDepthStencilView();
-    if (FAILED(hr)) return hr;
+    hr = CreateRenderTargetView(); if (FAILED(hr)) return hr;
+    hr = CreateDepthStencilView(); if (FAILED(hr)) return hr;
 
-    // Setup viewport
     SetViewport();
     return S_OK;
 }
@@ -46,22 +39,19 @@ void GraphicsEngine::Shutdown()
     m_device.Reset();
 }
 
-void GraphicsEngine::Render()
+void GraphicsEngine::BeginFrame()
 {
-    // Clear RTV and DSV
     const float clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
     m_context->ClearRenderTargetView(m_renderTargetView.Get(), clearColor);
     m_context->ClearDepthStencilView(m_depthStencilView.Get(),
         D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-    // Bind RTV/DSV
-    m_context->OMSetRenderTargets(1,
-        m_renderTargetView.GetAddressOf(),
+    m_context->OMSetRenderTargets(
+        1, m_renderTargetView.GetAddressOf(),
         m_depthStencilView.Get());
+}
 
-    // Scene drawing happens in Game::Render()
-
-    // Present using flip-model
+void GraphicsEngine::EndFrame()
+{
     m_swapChain->Present(1, 0);
 }
 
@@ -71,15 +61,10 @@ void GraphicsEngine::OnResize(UINT width, UINT height)
     m_windowWidth = width;
     m_windowHeight = height;
 
-    // Release views
     m_renderTargetView.Reset();
     m_depthStencilView.Reset();
+    m_swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
 
-    // Resize swap chain buffers
-    m_swapChain->ResizeBuffers(
-        0, width, height, DXGI_FORMAT_UNKNOWN, 0);
-
-    // Recreate views and viewport
     CreateRenderTargetView();
     CreateDepthStencilView();
     SetViewport();
@@ -92,13 +77,11 @@ HRESULT GraphicsEngine::CreateDeviceAndSwapChain(HWND hWnd)
     flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-    // Supported feature levels
-    D3D_FEATURE_LEVEL featureLevels[] = {
+    D3D_FEATURE_LEVEL levels[] = {
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
     };
 
-    // Describe flip-model swap chain
     DXGI_SWAP_CHAIN_DESC1 scd = {};
     scd.Width = m_windowWidth;
     scd.Height = m_windowHeight;
@@ -109,7 +92,6 @@ HRESULT GraphicsEngine::CreateDeviceAndSwapChain(HWND hWnd)
     scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    // Create DXGI factory
     ComPtr<IDXGIFactory2> factory;
 #if defined(_DEBUG)
     UINT factoryFlags = DXGI_CREATE_FACTORY_DEBUG;
@@ -119,63 +101,56 @@ HRESULT GraphicsEngine::CreateDeviceAndSwapChain(HWND hWnd)
     HRESULT hr = CreateDXGIFactory2(factoryFlags, IID_PPV_ARGS(&factory));
     if (FAILED(hr)) return hr;
 
-    // Create D3D11 device and context
     ComPtr<ID3D11Device> dev;
     ComPtr<ID3D11DeviceContext> ctx;
     hr = D3D11CreateDevice(
-        nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags,
-        featureLevels, _countof(featureLevels),
-        D3D11_SDK_VERSION,
-        &dev, nullptr, &ctx);
+        nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr,
+        flags, levels, _countof(levels),
+        D3D11_SDK_VERSION, &dev, nullptr, &ctx);
     if (FAILED(hr)) return hr;
 
-    // Query 11.1 interfaces
-    hr = dev.As(&m_device);
-    if (FAILED(hr)) return hr;
-    hr = ctx.As(&m_context);
-    if (FAILED(hr)) return hr;
+    dev.As(&m_device);
+    ctx.As(&m_context);
 
 #ifdef _DEBUG
-    // Suppress INFO-level D3D11 messages
+    // Filter INFO-level D3D11 messages
     {
         ComPtr<ID3D11InfoQueue> infoQueue;
         if (SUCCEEDED(m_device.As(&infoQueue)))
         {
-            D3D11_MESSAGE_SEVERITY sevs[] = { D3D11_MESSAGE_SEVERITY_INFO };
+            D3D11_MESSAGE_SEVERITY sev[] = { D3D11_MESSAGE_SEVERITY_INFO };
             D3D11_INFO_QUEUE_FILTER filt = {};
-            filt.DenyList.NumSeverities = _countof(sevs);
-            filt.DenyList.pSeverityList = sevs;
+            filt.DenyList.NumSeverities = _countof(sev);
+            filt.DenyList.pSeverityList = sev;
             infoQueue->AddStorageFilterEntries(&filt);
             infoQueue->AddRetrievalFilterEntries(&filt);
         }
     }
-    // Suppress DXGI warning #294 (legacy swap)
+    // Filter DXGI warning #294
     {
         ComPtr<IDXGIDebug1> dxgiDebug;
-        if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug))))
+        if (SUCCEEDED(DXGIGetDebugInterface1(
+            0, IID_PPV_ARGS(&dxgiDebug))))
         {
             ComPtr<IDXGIInfoQueue> dxgiInfo;
             if (SUCCEEDED(dxgiDebug.As(&dxgiInfo)))
             {
-                DXGI_INFO_QUEUE_MESSAGE_ID denyIds[] = { 294 };
+                DXGI_INFO_QUEUE_MESSAGE_ID ids[] = { 294 };
                 DXGI_INFO_QUEUE_FILTER dxgiFilt = {};
-                dxgiFilt.DenyList.NumIDs = _countof(denyIds);
-                dxgiFilt.DenyList.pIDList = denyIds;
-                dxgiInfo->AddStorageFilterEntries(DXGI_DEBUG_ALL, &dxgiFilt);
-                dxgiInfo->AddRetrievalFilterEntries(DXGI_DEBUG_ALL, &dxgiFilt);
+                dxgiFilt.DenyList.NumIDs = _countof(ids);
+                dxgiFilt.DenyList.pIDList = ids;
+                dxgiInfo->AddStorageFilterEntries(
+                    DXGI_DEBUG_ALL, &dxgiFilt);
+                dxgiInfo->AddRetrievalFilterEntries(
+                    DXGI_DEBUG_ALL, &dxgiFilt);
             }
         }
     }
 #endif
 
-    // Create the swap chain for this window
     return factory->CreateSwapChainForHwnd(
-        m_device.Get(),
-        hWnd,
-        &scd,
-        nullptr,
-        nullptr,
-        &m_swapChain);
+        m_device.Get(), hWnd, &scd,
+        nullptr, nullptr, &m_swapChain);
 }
 
 HRESULT GraphicsEngine::CreateRenderTargetView()
@@ -211,11 +186,9 @@ HRESULT GraphicsEngine::CreateDepthStencilView()
 void GraphicsEngine::SetViewport()
 {
     D3D11_VIEWPORT vp = {};
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
+    vp.TopLeftX = 0; vp.TopLeftY = 0;
     vp.Width = static_cast<float>(m_windowWidth);
     vp.Height = static_cast<float>(m_windowHeight);
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
+    vp.MinDepth = 0.0f; vp.MaxDepth = 1.0f;
     m_context->RSSetViewports(1, &vp);
 }

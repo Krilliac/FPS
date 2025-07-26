@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-// Target Windows 10 for DXGI 1.3+ and debug interfaces
+// Target Windows 10 SDK for DXGI1.3+ and debug interfaces
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0A00
+#define _WIN32NT 0x0A00
 #endif
 
 #include <windows.h>
@@ -24,11 +24,12 @@ public:
     // Initialize device, flip-model swap chain, RTV/DSV, debug filters
     HRESULT Initialize(HWND hWnd);
 
-    // Cleanup resources
+    // Cleanup
     void Shutdown();
 
-    // Render frame (does not draw scene objects)
-    void Render();
+    // Begin/End frame (clear + bind / present)
+    void BeginFrame();
+    void EndFrame();
 
     // Handle window resize
     void OnResize(UINT width, UINT height);
