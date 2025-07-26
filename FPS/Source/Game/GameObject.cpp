@@ -1,10 +1,10 @@
-﻿// File: FPS/Source/Game/GameObject.cpp
-#include "GameObject.h"
+﻿#include "GameObject.h"
 #include "..\Utils\MathUtils.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 
-UINT GameObject::s_nextID = 1;  // definition + initialization
+// Definition and initialization of the static member
+UINT GameObject::s_nextID = 1;
 
 GameObject::GameObject()
     : m_position{ 0,0,0 }
@@ -12,8 +12,6 @@ GameObject::GameObject()
     , m_scale{ 1,1,1 }
     , m_worldMatrix(XMMatrixIdentity())
     , m_worldMatrixDirty(true)
-    , m_device(nullptr)
-    , m_context(nullptr)
     , m_active(true)
     , m_visible(true)
     , m_id(s_nextID++)
@@ -42,6 +40,8 @@ HRESULT GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex
 
 void GameObject::Shutdown()
 {
+    if (m_mesh)
+        m_mesh->Shutdown();
     m_mesh.reset();
     m_device = nullptr;
     m_context = nullptr;
@@ -153,7 +153,7 @@ float GameObject::GetDistanceFrom(const XMFLOAT3& pos) const
 void GameObject::CreateMesh()
 {
     if (m_mesh)
-        m_mesh->CreateCube(1.0f);
+        m_mesh->CreateCube(1.0f);  // placeholder default
 }
 
 void GameObject::UpdateWorldMatrix()

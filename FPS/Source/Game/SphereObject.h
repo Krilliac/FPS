@@ -1,44 +1,32 @@
 #pragma once
-
 #include "GameObject.h"
+#include "PlaceholderMesh.h"
 #include <DirectXMath.h>
-
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
 
 class SphereObject : public GameObject
 {
 public:
-    // Constructor: radius, slices, stacks
     SphereObject(float radius = 1.0f, int slices = 20, int stacks = 20);
     ~SphereObject() override = default;
 
-    // Initialize base GameObject (mesh, transforms)
-    HRESULT Initialize(ID3D11Device* device,
-                       ID3D11DeviceContext* context) override;
+    HRESULT Initialize(ID3D11Device*, ID3D11DeviceContext*) override;
 
-    // Use base Update/Render
-    void Update(float deltaTime) override   { GameObject::Update(deltaTime); }
-    void Render(const XMMATRIX& view,
-                const XMMATRIX& projection) override
+    void Update(float dt) override { GameObject::Update(dt); }
+    void Render(const XMMATRIX& v, const XMMATRIX& p) override
     {
-        GameObject::Render(view, projection);
+        GameObject::Render(v, p);
     }
 
-    // Implement pure-virtual callbacks so SphereObject is concrete
-    void OnHit(GameObject* target) override       { /* no-op */ }
-    void OnHitWorld(const XMFLOAT3& hitPoint,
-                    const XMFLOAT3& normal) override
-    {
-        /* no-op */
-    }
+    void OnHit(GameObject*) override {}
+    void OnHitWorld(const XMFLOAT3&, const XMFLOAT3&) override {}
 
 protected:
-    // Called by Initialize to build the mesh
     void CreateMesh() override;
 
 private:
     float m_radius;
-    int   m_slices;
-    int   m_stacks;
+    int   m_slices, m_stacks;
+    std::wstring m_modelPath = L"Assets/Models/Sphere.fbx";
 };

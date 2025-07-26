@@ -1,12 +1,11 @@
-﻿// File: FPS/Source/Game/GameObject.h
-#pragma once
+﻿#pragma once
 
 #include "..\Core\framework.h"    // XMFLOAT3, XMMATRIX, HRESULT
 #include "..\Graphics\Mesh.h"
 #include <memory>
 #include <string>
 
-// Forward-declare Projectile to avoid include cycles
+// Forward‐declare Projectile to avoid include cycles
 namespace Projectiles { class Projectile; }
 using Projectiles::Projectile;
 
@@ -22,7 +21,7 @@ public:
     virtual void    Render(const XMMATRIX& view, const XMMATRIX& projection);
     virtual void    Shutdown();
 
-    // Hit callbacks (must be overridden)
+    // Hit callbacks (must be overridden by subclasses)
     virtual void OnHit(GameObject* target) = 0;
     virtual void OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal) = 0;
 
@@ -59,7 +58,7 @@ public:
     float GetDistanceFrom(const XMFLOAT3& p) const;
 
 protected:
-    // Internals
+    // Internal helpers
     virtual void CreateMesh();
     void        UpdateWorldMatrix();
 

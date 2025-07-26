@@ -1,4 +1,7 @@
 ﻿#include "Mesh.h"
+#include <cmath>
+#include <DirectXMath.h>
+using namespace DirectX;
 
 Mesh::Mesh()
     : m_vertexBuffer(nullptr)
@@ -24,197 +27,137 @@ HRESULT Mesh::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 
 void Mesh::Shutdown()
 {
-    if (m_indexBuffer) { m_indexBuffer->Release(); m_indexBuffer = nullptr; }
+    if (m_indexBuffer) { m_indexBuffer->Release();  m_indexBuffer = nullptr; }
     if (m_vertexBuffer) { m_vertexBuffer->Release(); m_vertexBuffer = nullptr; }
+    m_vertices.clear();
+    m_indices.clear();
+}
+
+HRESULT Mesh::CreateFromVertices(const std::vector<Vertex>& vertices,
+    const std::vector<unsigned int>& indices)
+{
+    m_vertices = vertices;
+    m_indices = indices;
+    m_vertexCount = static_cast<unsigned int>(m_vertices.size());
+    m_indexCount = static_cast<unsigned int>(m_indices.size());
+    CalculateNormals();
+    return CreateBuffers();
 }
 
 HRESULT Mesh::CreateCube(float size)
 {
-    float halfSize = size * 0.5f;
-    
+    float h = size * 0.5f;
     m_vertices.clear();
     m_indices.clear();
-    
-    // Define cube vertices
-    m_vertices = {
-        // Front face
-        Vertex(XMFLOAT3(-halfSize, -halfSize, -halfSize), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 1.0f)),
-        Vertex(XMFLOAT3(-halfSize,  halfSize, -halfSize), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize,  halfSize, -halfSize), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize, -halfSize, -halfSize), XMFLOAT3(0.0f, 0.0f, -1.0f), XMFLOAT2(1.0f, 1.0f)),
-        
-        // Back face
-        Vertex(XMFLOAT3( halfSize, -halfSize,  halfSize), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f)),
-        Vertex(XMFLOAT3( halfSize,  halfSize,  halfSize), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f)),
-        Vertex(XMFLOAT3(-halfSize,  halfSize,  halfSize), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)),
-        Vertex(XMFLOAT3(-halfSize, -halfSize,  halfSize), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f)),
-        
-        // Left face
-        Vertex(XMFLOAT3(-halfSize, -halfSize,  halfSize), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
-        Vertex(XMFLOAT3(-halfSize,  halfSize,  halfSize), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
-        Vertex(XMFLOAT3(-halfSize,  halfSize, -halfSize), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
-        Vertex(XMFLOAT3(-halfSize, -halfSize, -halfSize), XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)),
-        
-        // Right face
-        Vertex(XMFLOAT3( halfSize, -halfSize, -halfSize), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
-        Vertex(XMFLOAT3( halfSize,  halfSize, -halfSize), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize,  halfSize,  halfSize), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize, -halfSize,  halfSize), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)),
-        
-        // Top face
-        Vertex(XMFLOAT3(-halfSize,  halfSize, -halfSize), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
-        Vertex(XMFLOAT3(-halfSize,  halfSize,  halfSize), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize,  halfSize,  halfSize), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize,  halfSize, -halfSize), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)),
-        
-        // Bottom face
-        Vertex(XMFLOAT3(-halfSize, -halfSize,  halfSize), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
-        Vertex(XMFLOAT3(-halfSize, -halfSize, -halfSize), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize, -halfSize, -halfSize), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfSize, -halfSize,  halfSize), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f))
+
+    // 8 corners
+    XMFLOAT3 pts[8] = {
+        {-h,-h,-h},{+h,-h,-h},{+h,+h,-h},{-h,+h,-h},
+        {-h,-h,+h},{+h,-h,+h},{+h,+h,+h},{-h,+h,+h}
     };
-    
-    // Define cube indices
-    m_indices = {
-        0,1,2,    0,2,3,    // Front face
-        4,5,6,    4,6,7,    // Back face
-        8,9,10,   8,10,11,  // Left face
-        12,13,14, 12,14,15, // Right face
-        16,17,18, 16,18,19, // Top face
-        20,21,22, 20,22,23  // Bottom face
+
+    // Face normals
+    XMFLOAT3 norms[6] = {
+        {0,0,-1},{0,0,1},{-1,0,0},
+        {1,0,0},{0,-1,0},{0,1,0}
     };
-    
-    m_vertexCount = static_cast<UINT>(m_vertices.size());
-    m_indexCount = static_cast<UINT>(m_indices.size());
-    
+
+    unsigned int faceIdxs[36] = {
+        0,1,2, 0,2,3,  // back
+        4,6,5, 4,7,6,  // front
+        4,5,1, 4,1,0,  // bottom
+        3,2,6, 3,6,7,  // top
+        4,0,3, 4,3,7,  // left
+        1,5,6, 1,6,2   // right
+    };
+
+    for (int f = 0; f < 6; ++f)
+    {
+        XMFLOAT3 n = norms[f];
+        for (int v = 0; v < 6; ++v)
+        {
+            unsigned int idx = faceIdxs[f * 6 + v];
+            XMFLOAT2 uv = { (v % 3 == 1) ? 1.0f : 0.0f, (v / 3 == 0) ? 1.0f : 0.0f };
+            m_vertices.emplace_back(pts[idx], n, uv);
+            m_indices.push_back(static_cast<unsigned int>(m_indices.size()));
+        }
+    }
+
+    m_vertexCount = static_cast<unsigned int>(m_vertices.size());
+    m_indexCount = static_cast<unsigned int>(m_indices.size());
     return CreateBuffers();
 }
 
 HRESULT Mesh::CreatePlane(float width, float depth)
 {
-    float halfWidth = width * 0.5f;
-    float halfDepth = depth * 0.5f;
-    
+    float hw = width * 0.5f;
+    float hd = depth * 0.5f;
     m_vertices.clear();
     m_indices.clear();
-    
-    // Create plane vertices
-    m_vertices = {
-        Vertex(XMFLOAT3(-halfWidth, 0.0f, -halfDepth), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
-        Vertex(XMFLOAT3(-halfWidth, 0.0f,  halfDepth), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfWidth, 0.0f,  halfDepth), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
-        Vertex(XMFLOAT3( halfWidth, 0.0f, -halfDepth), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f))
+
+    // 4 corners
+    XMFLOAT3 p[4] = {
+        {-hw,0,-hd},{+hw,0,-hd},{+hw,0,+hd},{-hw,0,+hd}
     };
-    
-    m_indices = { 0, 1, 2, 0, 2, 3 };
-    
-    m_vertexCount = static_cast<UINT>(m_vertices.size());
-    m_indexCount = static_cast<UINT>(m_indices.size());
-    
+    XMFLOAT3 n{ 0,1,0 };
+
+    m_vertices.emplace_back(p[0], n, XMFLOAT2(0, 1));
+    m_vertices.emplace_back(p[1], n, XMFLOAT2(1, 1));
+    m_vertices.emplace_back(p[2], n, XMFLOAT2(1, 0));
+    m_vertices.emplace_back(p[3], n, XMFLOAT2(0, 0));
+
+    unsigned int idxs[6] = { 0,1,2,0,2,3 };
+    for (unsigned int i : idxs)
+        m_indices.push_back(i);
+
+    m_vertexCount = static_cast<unsigned int>(m_vertices.size());
+    m_indexCount = static_cast<unsigned int>(m_indices.size());
     return CreateBuffers();
-}
-
-HRESULT Mesh::CreateFromVertices(const std::vector<Vertex>& vertices, const std::vector<UINT>& indices)
-{
-    m_vertices = vertices;
-    m_indices = indices;
-    
-    m_vertexCount = static_cast<UINT>(m_vertices.size());
-    m_indexCount = static_cast<UINT>(m_indices.size());
-    
-    return CreateBuffers();
-}
-
-void Mesh::Render()
-{
-    if (!m_vertexBuffer || !m_indexBuffer) return;
-    
-    UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-    
-    m_context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-    m_context->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    m_context->DrawIndexed(m_indexCount, 0, 0);
-}
-
-HRESULT Mesh::CreateBuffers()
-{
-    if (!m_device) return E_FAIL;
-    
-    // Create vertex buffer
-    D3D11_BUFFER_DESC vbd = {};
-    vbd.Usage = D3D11_USAGE_DEFAULT;
-    vbd.ByteWidth = sizeof(Vertex) * m_vertexCount;
-    vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    
-    D3D11_SUBRESOURCE_DATA vInitData = {};
-    vInitData.pSysMem = m_vertices.data();
-    
-    HRESULT hr = m_device->CreateBuffer(&vbd, &vInitData, &m_vertexBuffer);
-    if (FAILED(hr)) return hr;
-    
-    // Create index buffer
-    D3D11_BUFFER_DESC ibd = {};
-    ibd.Usage = D3D11_USAGE_DEFAULT;
-    ibd.ByteWidth = sizeof(UINT) * m_indexCount;
-    ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    
-    D3D11_SUBRESOURCE_DATA iInitData = {};
-    iInitData.pSysMem = m_indices.data();
-    
-    return m_device->CreateBuffer(&ibd, &iInitData, &m_indexBuffer);
 }
 
 HRESULT Mesh::CreateSphere(float radius, int slices, int stacks)
 {
     m_vertices.clear();
     m_indices.clear();
-    
-    // Generate sphere vertices
+
     for (int i = 0; i <= stacks; ++i)
     {
-        float V = i / (float)stacks;
-        float phi = V * DirectX::XM_PI;
-        
+        float v = i / (float)stacks;
+        float phi = v * XM_PI;
         for (int j = 0; j <= slices; ++j)
         {
-            float U = j / (float)slices;
-            float theta = U * (DirectX::XM_PI * 2);
-            
-            float x = cosf(theta) * sinf(phi);
-            float y = cosf(phi);
-            float z = sinf(theta) * sinf(phi);
-            
-            m_vertices.push_back(Vertex(
-                XMFLOAT3(x * radius, y * radius, z * radius),
-                XMFLOAT3(x, y, z),
-                XMFLOAT2(U, V)
-            ));
+            float u = j / (float)slices;
+            float theta = u * XM_2PI;
+            XMFLOAT3 pos{
+                radius * sinf(phi) * cosf(theta),
+                radius * cosf(phi),
+                radius * sinf(phi) * sinf(theta)
+            };
+            XMVECTOR n = XMVector3Normalize(XMLoadFloat3(&pos));
+            XMFLOAT3 norm; XMStoreFloat3(&norm, n);
+            m_vertices.emplace_back(pos, norm, XMFLOAT2(u, v));
         }
     }
-    
-    // Generate sphere indices
+
     for (int i = 0; i < stacks; ++i)
     {
         for (int j = 0; j < slices; ++j)
         {
             int a = i * (slices + 1) + j;
             int b = a + slices + 1;
-            
+
             m_indices.push_back(a);
             m_indices.push_back(b);
             m_indices.push_back(a + 1);
-            
+
             m_indices.push_back(b);
             m_indices.push_back(b + 1);
             m_indices.push_back(a + 1);
         }
     }
-    
-    m_vertexCount = static_cast<UINT>(m_vertices.size());
-    m_indexCount = static_cast<UINT>(m_indices.size());
-    
+
+    m_vertexCount = static_cast<unsigned int>(m_vertices.size());
+    m_indexCount = static_cast<unsigned int>(m_indices.size());
     return CreateBuffers();
 }
 
@@ -222,21 +165,59 @@ void Mesh::CalculateNormals()
 {
     for (size_t i = 0; i < m_indices.size(); i += 3)
     {
-        UINT i0 = m_indices[i];
-        UINT i1 = m_indices[i + 1];
-        UINT i2 = m_indices[i + 2];
-        
+        unsigned int i0 = m_indices[i];
+        unsigned int i1 = m_indices[i + 1];
+        unsigned int i2 = m_indices[i + 2];
+
         XMVECTOR v0 = XMLoadFloat3(&m_vertices[i0].Position);
         XMVECTOR v1 = XMLoadFloat3(&m_vertices[i1].Position);
         XMVECTOR v2 = XMLoadFloat3(&m_vertices[i2].Position);
-        
-        XMVECTOR e1 = v1 - v0;
-        XMVECTOR e2 = v2 - v0;
-        XMVECTOR normal = XMVector3Cross(e1, e2);
-        normal = XMVector3Normalize(normal);
-        
-        XMStoreFloat3(&m_vertices[i0].Normal, normal);
-        XMStoreFloat3(&m_vertices[i1].Normal, normal);
-        XMStoreFloat3(&m_vertices[i2].Normal, normal);
+
+        XMVECTOR edge1 = v1 - v0;
+        XMVECTOR edge2 = v2 - v0;
+        XMVECTOR n = XMVector3Normalize(XMVector3Cross(edge1, edge2));
+
+        XMFLOAT3 norm;
+        XMStoreFloat3(&norm, n);
+        m_vertices[i0].Normal = norm;
+        m_vertices[i1].Normal = norm;
+        m_vertices[i2].Normal = norm;
     }
+}
+
+HRESULT Mesh::CreateBuffers()
+{
+    if (!m_device || m_vertices.empty() || m_indices.empty())
+        return E_FAIL;
+
+    D3D11_BUFFER_DESC vbd = {};
+    vbd.Usage = D3D11_USAGE_DEFAULT;
+    vbd.ByteWidth = sizeof(Vertex) * m_vertexCount;
+    vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA vinit = {};
+    vinit.pSysMem = m_vertices.data();
+    HRESULT hr = m_device->CreateBuffer(&vbd, &vinit, &m_vertexBuffer);
+    if (FAILED(hr)) return hr;
+
+    D3D11_BUFFER_DESC ibd = {};
+    ibd.Usage = D3D11_USAGE_DEFAULT;
+    ibd.ByteWidth = sizeof(unsigned int) * m_indexCount;
+    ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA iinit = {};
+    iinit.pSysMem = m_indices.data();
+    hr = m_device->CreateBuffer(&ibd, &iinit, &m_indexBuffer);
+    return hr;
+}
+
+void Mesh::Render()
+{
+    if (!m_context || !m_vertexBuffer || !m_indexBuffer) return;
+
+    UINT stride = sizeof(Vertex), offset = 0;
+    m_context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+    m_context->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_context->DrawIndexed(m_indexCount, 0, 0);
 }

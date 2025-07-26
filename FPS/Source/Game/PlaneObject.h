@@ -1,43 +1,31 @@
 #pragma once
-
 #include "GameObject.h"
+#include "PlaceholderMesh.h"
 #include <DirectXMath.h>
-
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
 
 class PlaneObject : public GameObject
 {
 public:
-    // Constructor: specify plane width and depth
     PlaneObject(float width = 10.0f, float depth = 10.0f);
     ~PlaneObject() override = default;
 
-    // Initialize base GameObject (mesh, etc.)
-    HRESULT Initialize(ID3D11Device* device,
-                       ID3D11DeviceContext* context) override;
+    HRESULT Initialize(ID3D11Device*, ID3D11DeviceContext*) override;
 
-    // Update and render reuse base implementations
-    void Update(float deltaTime) override     { GameObject::Update(deltaTime); }
-    void Render(const XMMATRIX& view,
-                const XMMATRIX& projection) override
+    void Update(float dt) override { GameObject::Update(dt); }
+    void Render(const XMMATRIX& v, const XMMATRIX& p) override
     {
-        GameObject::Render(view, projection);
+        GameObject::Render(v, p);
     }
 
-    // Satisfy the pure-virtual interface so PlaneObject is concrete
-    void OnHit(GameObject* target) override       { /* no-op */ }
-    void OnHitWorld(const XMFLOAT3& hitPoint,
-                    const XMFLOAT3& normal) override
-    {
-        /* no-op */
-    }
+    void OnHit(GameObject*) override {}
+    void OnHitWorld(const XMFLOAT3&, const XMFLOAT3&) override {}
 
 protected:
-    // Create the plane mesh
     void CreateMesh() override;
 
 private:
-    float m_width;
-    float m_depth;
+    float m_width, m_depth;
+    std::wstring m_modelPath = L"Assets/Models/Plane.fbx";
 };

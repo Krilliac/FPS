@@ -1,24 +1,21 @@
 #include "SphereObject.h"
+#include "Primitives.h"
 
 SphereObject::SphereObject(float radius, int slices, int stacks)
     : m_radius(radius)
     , m_slices(slices)
     , m_stacks(stacks)
 {
-    // Give each instance a unique name for debugging
     SetName("SphereObject_" + std::to_string(GetID()));
 }
 
-HRESULT SphereObject::Initialize(ID3D11Device* device,
-                                 ID3D11DeviceContext* context)
+HRESULT SphereObject::Initialize(ID3D11Device* dev, ID3D11DeviceContext* ctx)
 {
-    // Base sets up mesh, world matrix, etc.
-    return GameObject::Initialize(device, context);
+    return GameObject::Initialize(dev, ctx);
 }
 
 void SphereObject::CreateMesh()
 {
-    // Build a UV sphere with given parameters
-    if (m_mesh)
-        m_mesh->CreateSphere(m_radius, m_slices, m_stacks);
+    auto md = Primitives::CreateSphere(m_radius, m_slices, m_stacks);
+    LoadOrPlaceholderMesh(*m_mesh, m_modelPath, md);
 }

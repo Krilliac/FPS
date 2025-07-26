@@ -160,7 +160,9 @@
     <ClInclude Include="Source\Core\resource.h" />
     <ClInclude Include="Source\Core\targetver.h" />
     <ClInclude Include="Source\Game\CubeObject.h" />
+    <ClInclude Include="Source\Game\PlaceholderMesh.h" />
     <ClInclude Include="Source\Game\PlaneObject.h" />
+    <ClInclude Include="Source\Game\Primitives.h" />
     <ClInclude Include="Source\Game\SphereObject.h" />
     <ClInclude Include="Source\Graphics\GraphicsEngine.h" />
     <ClInclude Include="Source\Graphics\Mesh.h" />
@@ -184,6 +186,7 @@
     <ClCompile Include="Source\Core\FPS.cpp" />
     <ClCompile Include="Source\Game\CubeObject.cpp" />
     <ClCompile Include="Source\Game\PlaneObject.cpp" />
+    <ClCompile Include="Source\Game\Primitives.cpp" />
     <ClCompile Include="Source\Game\SphereObject.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Graphics\Mesh.cpp" />
