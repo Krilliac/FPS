@@ -3,6 +3,7 @@
 #include "..\Input\InputManager.h"
 #include "..\Projectiles\ProjectilePool.h"
 #include "..\Utils\MathUtils.h"
+#include <algorithm>
 
 Player::Player()
     : GameObject()
@@ -74,27 +75,27 @@ void Player::Render(const XMMATRIX& view, const XMMATRIX& projection)
 void Player::TakeDamage(float damage)
 {
     if (!IsAlive()) return;
-    
+
     // Apply armor absorption
-    float damageToArmor = std::min(damage * 0.5f, m_armor);
+    float damageToArmor = (std::min)(damage * 0.5f, m_armor); // Ensure std::min is used correctly
     m_armor -= damageToArmor;
     damage -= damageToArmor;
-    
+
     // Apply remaining damage to health
     m_health -= damage;
-    m_health = std::max(0.0f, m_health);
-    
+    m_health = (std::max)(0.0f, m_health); // Ensure std::max is used correctly
+
     // TODO: Play damage sound/effect
 }
 
 void Player::Heal(float amount)
 {
-    m_health = std::min(m_maxHealth, m_health + amount);
+    m_health = (std::min)(m_maxHealth, m_health + amount);
 }
 
 void Player::AddArmor(float amount)
 {
-    m_armor = std::min(m_maxArmor, m_armor + amount);
+    m_armor = (std::min)(m_maxArmor, m_armor + amount);
 }
 
 void Player::Jump()
@@ -251,7 +252,7 @@ void Player::UpdateMovement(float deltaTime)
     // Regenerate stamina when not running
     if (!m_isRunning)
     {
-        m_stamina = std::min(m_maxStamina, m_stamina + 50.0f * deltaTime);
+        m_stamina = (std::min)(m_maxStamina, m_stamina + 50.0f * deltaTime);
     }
 }
 

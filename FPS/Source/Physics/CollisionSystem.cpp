@@ -41,15 +41,13 @@ void BoundingBox::Transform(const XMMATRIX& transform)
         XMVECTOR corner = XMLoadFloat3(&corners[i]);
         corner = XMVector3Transform(corner, transform);
         XMFLOAT3 transformedCorner;
-        XMStoreFloat3(&transformedCorner, corner);
-        
-        Min.x = std::min(Min.x, transformedCorner.x);
-        Min.y = std::min(Min.y, transformedCorner.y);
-        Min.z = std::min(Min.z, transformedCorner.z);
-        
-        Max.x = std::max(Max.x, transformedCorner.x);
-        Max.y = std::max(Max.y, transformedCorner.y);
-        Max.z = std::max(Max.z, transformedCorner.z);
+        XMStoreFloat3(&transformedCorner, corner);        
+        Min.x = (std::min)(Min.x, transformedCorner.x);
+        Min.y = (std::min)(Min.y, transformedCorner.y);
+        Min.z = (std::min)(Min.z, transformedCorner.z);        
+        Max.x = (std::max)(Max.x, transformedCorner.x);
+        Max.y = (std::max)(Max.y, transformedCorner.y);
+        Max.z = (std::max)(Max.z, transformedCorner.z);
     }
 }
 
@@ -151,46 +149,64 @@ bool CollisionSystem::BoxVsBox(const BoundingBox& box1, const BoundingBox& box2)
 CollisionResult CollisionSystem::RayVsSphere(const Ray& ray, const BoundingSphere& sphere)
 {
     CollisionResult result;
-    
+
+    // Load ray origin and direction
     XMVECTOR rayOrigin = XMLoadFloat3(&ray.Origin);
     XMVECTOR rayDirection = XMVector3Normalize(XMLoadFloat3(&ray.Direction));
     XMVECTOR sphereCenter = XMLoadFloat3(&sphere.Center);
-    
-    XMVECTOR oc = rayOrigin - sphereCenter;
-    
-    float a, b, c;
+
+    // Compute vector from sphere center to ray origin
+    XMVECTOR ocVec = rayOrigin - sphereCenter;
+
+    // Quadratic coefficients
+    float a = 0.0f;
+    float b = 0.0f;
+    float c = 0.0f;
+
+    // a = dot(D, D)
     XMStoreFloat(&a, XMVector3Dot(rayDirection, rayDirection));
-    XMStoreFloat(&b, 2.0f * XMVector3Dot(oc, rayDirection));
-    XMStoreFloat(&c, XMVector3Dot(oc, oc) - sphere.Radius * sphere.Radius);
-    
-    float discriminant = b * b - 4 * a * c;
-    
-    if (discriminant < 0)
+
+    // b = 2 * dot(oc, D)
+    float ocDotDir = 0.0f;
+    XMStoreFloat(&ocDotDir, XMVector3Dot(ocVec, rayDirection));
+    b = 2.0f * ocDotDir;
+
+    // c = dot(oc, oc) - radius^2
+    float ocDotOc = 0.0f;
+    XMStoreFloat(&ocDotOc, XMVector3Dot(ocVec, ocVec));
+    c = ocDotOc - (sphere.Radius * sphere.Radius);
+
+    // Compute discriminant
+    float discriminant = b * b - 4.0f * a * c;
+    if (discriminant < 0.0f)
     {
         result.Hit = false;
         return result;
     }
-    
-    float t = (-b - sqrtf(discriminant)) / (2.0f * a);
-    if (t < 0)
+
+    // Compute nearest intersection t
+    float sqrtDisc = sqrtf(discriminant);
+    float t0 = (-b - sqrtDisc) / (2.0f * a);
+    float t1 = (-b + sqrtDisc) / (2.0f * a);
+    float t = t0 > 0.0f ? t0 : t1;
+    if (t < 0.0f)
     {
-        t = (-b + sqrtf(discriminant)) / (2.0f * a);
-        if (t < 0)
-        {
-            result.Hit = false;
-            return result;
-        }
+        result.Hit = false;
+        return result;
     }
-    
+
+    // Fill result
     result.Hit = true;
     result.Distance = t;
-    
-    XMVECTOR hitPoint = rayOrigin + rayDirection * t;
-    XMStoreFloat3(&result.Point, hitPoint);
-    
-    XMVECTOR normal = XMVector3Normalize(hitPoint - sphereCenter);
-    XMStoreFloat3(&result.Normal, normal);
-    
+
+    // Compute hit point
+    XMVECTOR hitPointVec = rayOrigin + rayDirection * t;
+    XMStoreFloat3(&result.Point, hitPointVec);
+
+    // Compute normal at hit point
+    XMVECTOR normalVec = XMVector3Normalize(hitPointVec - sphereCenter);
+    XMStoreFloat3(&result.Normal, normalVec);
+
     return result;
 }
 
@@ -275,13 +291,80 @@ CollisionResult CollisionSystem::RayVsPlane(const Ray& ray, const XMFLOAT3& plan
     return result;
 }
 
+CollisionResult CollisionSystem::RayVsTriangle(const Ray& ray, const XMFLOAT3& v0, const XMFLOAT3& v1, const XMFLOAT3& v2)  
+{  
+    CollisionResult result;
+
+    // Load triangle vertices into XMVECTOR  
+    XMVECTOR p0 = XMLoadFloat3(&v0);  
+    XMVECTOR p1 = XMLoadFloat3(&v1);  
+    XMVECTOR p2 = XMLoadFloat3(&v2);  
+
+    // Compute triangle edges  
+    XMVECTOR edge1 = XMVectorSubtract(p1, p0);  
+    XMVECTOR edge2 = XMVectorSubtract(p2, p0);  
+
+    // Compute the determinant  
+    XMVECTOR h = XMVector3Cross(XMLoadFloat3(&ray.Direction), edge2);  
+    float a = XMVectorGetX(XMVector3Dot(edge1, h));  
+
+    // If the determinant is near zero, the ray lies in the plane of the triangle  
+    if (fabs(a) < 1e-6f)  
+    {  
+        result.Hit = false;  
+        return result;  
+    }  
+
+    float f = 1.0f / a;  
+    XMVECTOR s = XMVectorSubtract(XMLoadFloat3(&ray.Origin), p0);  
+    float u = f * XMVectorGetX(XMVector3Dot(s, h));  
+
+    // Check if the intersection lies outside the triangle  
+    if (u < 0.0f || u > 1.0f)  
+    {  
+        result.Hit = false;  
+        return result;  
+    }  
+
+    XMVECTOR q = XMVector3Cross(s, edge1);  
+    float v = f * XMVectorGetX(XMVector3Dot(XMLoadFloat3(&ray.Direction), q));  
+
+    // Check if the intersection lies outside the triangle  
+    if (v < 0.0f || u + v > 1.0f)  
+    {  
+        result.Hit = false;  
+        return result;  
+    }  
+
+    // Compute the distance along the ray to the intersection  
+    float t = f * XMVectorGetX(XMVector3Dot(edge2, q));  
+
+    if (t > 1e-6f) // Ray intersection  
+    {  
+        result.Hit = true;  
+        result.Distance = t;  
+        XMVECTOR intersectionPoint = XMVectorAdd(XMLoadFloat3(&ray.Origin), XMVectorScale(XMLoadFloat3(&ray.Direction), t));  
+        XMStoreFloat3(&result.Point, intersectionPoint);  
+
+        // Compute the normal of the triangle  
+        XMVECTOR normal = XMVector3Normalize(XMVector3Cross(edge1, edge2));  
+        XMStoreFloat3(&result.Normal, normal);  
+    }  
+    else // This means that there is a line intersection but not a ray intersection  
+    {  
+        result.Hit = false;  
+    }  
+
+    return result;  
+}
+
 XMFLOAT3 CollisionSystem::ClosestPointOnBox(const XMFLOAT3& point, const BoundingBox& box)
 {
-    XMFLOAT3 result;
+    XMFLOAT3 result{};
     
-    result.x = std::max(box.Min.x, std::min(point.x, box.Max.x));
-    result.y = std::max(box.Min.y, std::min(point.y, box.Max.y));
-    result.z = std::max(box.Min.z, std::min(point.z, box.Max.z));
+    result.x = (std::max)(box.Min.x, (std::min)(point.x, box.Max.x));
+    result.y = (std::max)(box.Min.y, (std::min)(point.y, box.Max.y));
+    result.z = (std::max)(box.Min.z, (std::min)(point.z, box.Max.z));
     
     return result;
 }

@@ -55,8 +55,14 @@ struct ContactManifold
     XMFLOAT3 Normal;
     float PenetrationDepth;
     int ContactCount;
-    
-    ContactManifold() : Normal(0.0f, 1.0f, 0.0f), PenetrationDepth(0.0f), ContactCount(0) {}
+
+    ContactManifold() : Normal(0.0f, 1.0f, 0.0f), PenetrationDepth(0.0f), ContactCount(0)  
+    {  
+        for (int i = 0; i < 4; ++i)  
+        {  
+            ContactPoints[i] = XMFLOAT3(0.0f, 0.0f, 0.0f);  
+        }  
+    }
 };
 
 class CollisionSystem
@@ -66,11 +72,9 @@ public:
     static bool SphereVsSphere(const BoundingSphere& sphere1, const BoundingSphere& sphere2);
     static bool SphereVsSphere(const BoundingSphere& sphere1, const BoundingSphere& sphere2, ContactManifold& manifold);
     static bool SphereVsBox(const BoundingSphere& sphere, const BoundingBox& box);
-    static bool SphereVsBox(const BoundingSphere& sphere, const BoundingBox& box, ContactManifold& manifold);
     
     // Box collision tests
     static bool BoxVsBox(const BoundingBox& box1, const BoundingBox& box2);
-    static bool BoxVsBox(const BoundingBox& box1, const BoundingBox& box2, ContactManifold& manifold);
     
     // Ray collision tests
     static CollisionResult RayVsSphere(const Ray& ray, const BoundingSphere& sphere);

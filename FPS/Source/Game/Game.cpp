@@ -90,38 +90,38 @@ void Game::Update(float deltaTime)
     }
 }
 
-void Game::Render()
-{
-    if (!m_graphics || !m_camera || !m_shader) return;
+void Game::Render()  
+{  
+    if (!m_graphics || !m_camera || !m_shader) return;  
 
-    // Set up rendering pipeline
-    m_shader->SetShaders();
+    // Set up rendering pipeline  
+    m_shader->SetShaders();  
 
-    // Get matrices
-    XMMATRIX view = m_camera->GetViewMatrix();
-    XMMATRIX projection = m_camera->GetProjectionMatrix();
+    // Get matrices  
+    XMMATRIX view = m_camera->GetViewMatrix();  
+    XMMATRIX projection = m_camera->GetProjectionMatrix();  
 
-    // Render game objects
-    for (auto& gameObject : m_gameObjects)
-    {
-        if (gameObject && gameObject->IsActive() && gameObject->IsVisible())
-        {
-            // Update constant buffer
-            ConstantBuffer cb;
-            cb.World = gameObject->GetWorldMatrix();
-            cb.View = view;
-            cb.Projection = projection;
-            m_shader->UpdateConstantBuffer(cb);
+    // Render game objects  
+    for (auto& gameObject : m_gameObjects)  
+    {  
+        if (gameObject && gameObject->IsActive() && gameObject->IsVisible())  
+        {  
+            // Update constant buffer  
+            ConstantBuffer cb;  
+            cb.World = gameObject->GetWorldMatrix();  
+            cb.View = view;  
+            cb.Projection = projection;  
+            m_shader->UpdateConstantBuffer(cb);  
 
-            gameObject->Render(view, projection);
-        }
-    }
+            gameObject->Render(view, projection);  
+        }  
+    }  
 
-    // Render projectiles
-    if (m_projectilePool)
-    {
-        m_projectilePool->Render(view, projection);
-    }
+    // Render projectiles  
+    if (m_projectilePool)  
+    {  
+        m_projectilePool->Render(view, projection);  
+    }  
 }
 
 void Game::UpdateCamera(float deltaTime)
@@ -175,9 +175,9 @@ void Game::HandleInput(float deltaTime)
     // Shooting
     if (m_input->WasMouseButtonPressed(0) && m_projectilePool)
     {
-        XMFLOAT3 position = m_camera->GetPosition();
-        XMFLOAT3 direction = m_camera->GetForward();
-        m_projectilePool->FireProjectile(position, direction, 50.0f);
+        XMFLOAT3 position = m_camera->GetPosition(); // Assuming GetPosition() returns XMFLOAT3.
+        XMFLOAT3 direction = m_camera->GetForward(); // Assuming GetForward() returns XMFLOAT3.
+        m_projectilePool->FireProjectile(ProjectileType::BULLET, position, direction, 50.0f);
     }
 }
 
