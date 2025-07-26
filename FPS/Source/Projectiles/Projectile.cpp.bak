@@ -1,6 +1,5 @@
 ﻿#include "Projectile.h"
 #include "..\Utils\MathUtils.h"
-#include "..\Utils\MathUtils.h"
 #include "..\Utils\MathUtils.h"  // for any math utilities
 
 Projectile::Projectile()

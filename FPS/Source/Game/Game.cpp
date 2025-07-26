@@ -5,6 +5,9 @@
 #include "..\Graphics\Mesh.h"
 #include "..\Graphics\Shader.h"
 #include "GameObject.h"
+#include "CubeObject.h"
+#include "PlaneObject.h"
+#include "SphereObject.h"
 #include "Player.h"
 #include "..\Projectiles\ProjectilePool.h"
 

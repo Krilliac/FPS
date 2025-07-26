@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "..\Core\framework.h"
-#include "..\Core\framework.h"
 
 #include "..\Core\framework.h"            // XMFLOAT3, XMMATRIX
 #include "..\Physics\CollisionSystem.h"  // BoundingSphere

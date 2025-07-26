@@ -3,10 +3,6 @@
 #include "..\Projectiles\Rocket.h"
 #include "..\Projectiles\Grenade.h"
 using namespace std;
-#include "..\Projectiles\Bullet.h"
-#include "..\Projectiles\Rocket.h"
-#include "..\Projectiles\Grenade.h"
-using namespace std;
 
 ProjectilePool::ProjectilePool(size_t poolSize)
     : m_poolSize(poolSize)

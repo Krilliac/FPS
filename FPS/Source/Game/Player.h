@@ -2,6 +2,10 @@
 
 #include "GameObject.h"
 #include "..\Physics\CollisionSystem.h"
+#include <DirectXMath.h>
+
+using DirectX::XMFLOAT3;
+using DirectX::XMMATRIX;
 
 class FPSCamera;
 class InputManager;
@@ -18,22 +22,23 @@ enum class WeaponType
 
 struct WeaponStats
 {
-    float Damage;
-    float FireRate;          // Rounds per second
-    int   MagazineSize;
-    float ReloadTime;
-    float Range;
-    float Accuracy;
+    float      Damage;
+    float      FireRate;      // rounds/sec
+    int        MagazineSize;
+    float      ReloadTime;
+    float      Range;
+    float      Accuracy;      // 0–1
     WeaponType Type;
 
-    WeaponStats()
-        : Damage(25.0f)
-        , FireRate(5.0f)
-        , MagazineSize(30)
-        , ReloadTime(2.0f)
-        , Range(100.0f)
-        , Accuracy(0.95f)
-        , Type(WeaponType::PISTOL)
+    WeaponStats() = default;
+    WeaponStats(float dmg, float rate, int mag, float reload, float range, float acc, WeaponType t)
+        : Damage(dmg)
+        , FireRate(rate)
+        , MagazineSize(mag)
+        , ReloadTime(reload)
+        , Range(range)
+        , Accuracy(acc)
+        , Type(t)
     {
     }
 };
@@ -42,106 +47,79 @@ class Player : public GameObject
 {
 public:
     Player();
-    virtual ~Player();
+    ~Player() override = default;
 
-    // Removed override on Initialize since signature differs
+    // Not override: signature differs
     HRESULT Initialize(ID3D11Device* device,
         ID3D11DeviceContext* context,
         FPSCamera* camera,
         InputManager* input);
 
     void Update(float deltaTime) override;
-    void Render(const XMMATRIX& view,
-        const XMMATRIX& projection) override;
+    void Render(const XMMATRIX& view, const XMMATRIX& proj) override;
 
-    // Player actions
-    void TakeDamage(float damage);
-    void Heal(float amount);
-    void AddArmor(float amount);
+    // Implement callbacks so Player is no longer abstract
+    void OnHit(GameObject* target) override {}
+    void OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal) override {}
+
+    // Actions
+    void TakeDamage(float dmg);
+    void Heal(float amt);
+    void AddArmor(float amt);
     void Jump();
     void StartReload();
     void Fire();
 
     // Movement state
-    void SetRunning(bool running) { m_isRunning = running; }
-    void SetCrouching(bool crouch) { m_isCrouching = crouch; }
+    void SetRunning(bool v) { m_isRunning = v; }
+    void SetCrouching(bool v) { m_isCrouching = v; }
 
-    // Weapon/Ammo
+    // Weapons
     void ChangeWeapon(WeaponType type);
-    void SetProjectilePool(ProjectilePool* pool)
-    {
-        m_projectilePool = pool;
-    }
+    void SetProjectilePool(ProjectilePool* pool) { m_projectilePool = pool; }
 
     // Accessors
-    float GetHealth() const { return m_health; }
+    float GetHealth()    const { return m_health; }
     float GetMaxHealth() const { return m_maxHealth; }
-    float GetHealthPercentage() const { return m_health / m_maxHealth; }
-
-    float GetArmor() const { return m_armor; }
-    float GetMaxArmor() const { return m_maxArmor; }
-    float GetArmorPercentage() const { return m_armor / m_maxArmor; }
-
-    float GetStamina() const { return m_stamina; }
-    float GetMaxStamina() const { return m_maxStamina; }
-    float GetStaminaPercentage() const { return m_stamina / m_maxStamina; }
-
-    int   GetCurrentAmmo() const { return m_currentAmmo; }
-    int   GetMagazineSize() const { return m_currentWeapon.MagazineSize; }
-    bool  IsReloading() const { return m_isReloading; }
-
-    bool  IsAlive() const { return m_health > 0.0f; }
-    bool  IsGrounded() const { return m_isGrounded; }
+    bool  IsAlive()      const { return m_health > 0.0f; }
 
 private:
     // Stats
-    float       m_health;
-    float       m_maxHealth;
-    float       m_armor;
-    float       m_maxArmor;
-    float       m_stamina;
-    float       m_maxStamina;
-    float       m_speed;
-    float       m_jumpHeight;
+    float m_health{ 100 }, m_maxHealth{ 100 };
+    float m_armor{ 0 }, m_maxArmor{ 100 };
+    float m_stamina{ 100 }, m_maxStamina{ 100 };
+    float m_speed{ 5 }, m_jumpHeight{ 3 };
 
     // Movement
-    XMFLOAT3    m_velocity;
-    bool        m_isGrounded;
-    bool        m_isRunning;
-    bool        m_isCrouching;
-    bool        m_isJumping;
+    XMFLOAT3 m_velocity{};
+    bool     m_isGrounded{ true }, m_isRunning{ false },
+        m_isCrouching{ false }, m_isJumping{ false };
 
     // Combat
-    WeaponStats      m_currentWeapon;
-    int              m_currentAmmo;
-    float            m_fireTimer;
-    float            m_reloadTimer;
-    bool             m_isReloading;
-    bool             m_isFiring;
+    WeaponStats     m_currentWeapon;
+    int             m_currentAmmo{ 30 };
+    float           m_fireTimer{ 0 }, m_reloadTimer{ 0 };
+    bool            m_isReloading{ false }, m_isFiring{ false };
 
     // External
-    FPSCamera* m_camera;
-    InputManager* m_input;
-    ProjectilePool* m_projectilePool;
+    FPSCamera* m_camera{ nullptr };
+    InputManager* m_input{ nullptr };
+    ProjectilePool* m_projectilePool{ nullptr };
 
-    // Collision
-    BoundingSphere   m_collisionSphere;
+    // Collision & animation
+    BoundingSphere  m_collisionSphere;
+    float           m_bobTimer{ 0 }, m_footstepTimer{ 0 };
 
-    // Animation
-    float            m_bobTimer;
-    float            m_footstepTimer;
-
-    // Internal updates
-    void HandleInput(float deltaTime);
-    void UpdateMovement(float deltaTime);
-    void UpdateCombat(float deltaTime);
-    void UpdatePhysics(float deltaTime);
-    void UpdateAnimation(float deltaTime);
+    // Helpers
+    void HandleInput(float dt);
+    void UpdateMovement(float dt);
+    void UpdateCombat(float dt);
+    void UpdatePhysics(float dt);
+    void UpdateAnimation(float dt);
     void UpdateCollision();
-
-    void ApplyGravity(float deltaTime);
+    void ApplyGravity(float dt);
     void CheckGroundCollision();
-    void HandleFootsteps(float deltaTime);
+    void HandleFootsteps(float dt);
 
     WeaponStats GetWeaponStats(WeaponType type);
     XMFLOAT3    CalculateFireDirection();
