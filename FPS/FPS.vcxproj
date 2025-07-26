@@ -168,8 +168,11 @@
     <ClInclude Include="Source\Camera\FPSCamera.h" />
     <ClInclude Include="Source\Input\InputManager.h" />
     <ClInclude Include="Source\Physics\CollisionSystem.h" />
+    <ClInclude Include="Source\Projectiles\Bullet.h" />
+    <ClInclude Include="Source\Projectiles\Grenade.h" />
     <ClInclude Include="Source\Projectiles\Projectile.h" />
     <ClInclude Include="Source\Projectiles\ProjectilePool.h" />
+    <ClInclude Include="Source\Projectiles\Rocket.h" />
     <ClInclude Include="Source\Utils\Timer.h" />
     <ClInclude Include="Source\Utils\MathUtils.h" />
     <ClInclude Include="Source\Utils\ObjectPool.h" />
@@ -185,8 +188,11 @@
     <ClCompile Include="Source\Camera\FPSCamera.cpp" />
     <ClCompile Include="Source\Input\InputManager.cpp" />
     <ClCompile Include="Source\Physics\CollisionSystem.cpp" />
+    <ClCompile Include="Source\Projectiles\Bullet.cpp" />
+    <ClCompile Include="Source\Projectiles\Grenade.cpp" />
     <ClCompile Include="Source\Projectiles\Projectile.cpp" />
     <ClCompile Include="Source\Projectiles\ProjectilePool.cpp" />
+    <ClCompile Include="Source\Projectiles\Rocket.cpp" />
     <ClCompile Include="Source\Utils\Timer.cpp" />
     <ClCompile Include="Source\Utils\MathUtils.cpp" />
   </ItemGroup>

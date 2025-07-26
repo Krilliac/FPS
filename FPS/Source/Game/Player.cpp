@@ -32,7 +32,7 @@ Player::Player()
 {
     SetName("Player");
     m_currentWeapon = GetWeaponStats(WeaponType::PISTOL);
-    m_collisionSphere = BoundingSphere(m_position, 0.5f);
+    m_collisionSphere = BoundingSphere(GetPosition(), 0.5f);
 }
 
 Player::~Player() = default;
@@ -44,9 +44,8 @@ HRESULT Player::Initialize(ID3D11Device* device,
 {
     m_camera = camera;
     m_input = input;
+    SetVisible(false);  // first-person hide
 
-    // First-person: hide mesh
-    SetVisible(false);
     return GameObject::Initialize(device, context);
 }
 
@@ -67,16 +66,15 @@ void Player::Update(float deltaTime)
 void Player::Render(const XMMATRIX& view,
     const XMMATRIX& projection)
 {
-    // No first-person mesh to render
+    // No first-person mesh
 }
 
 void Player::TakeDamage(float damage)
 {
     if (!IsAlive()) return;
-    float dmgToArmor = (std::min)(damage * 0.5f, m_armor);
-    m_armor -= dmgToArmor;
-    m_health = (std::max)(0.0f,
-        m_health - (damage - dmgToArmor));
+    float armorHit = (std::min)(damage * 0.5f, m_armor);
+    m_armor -= armorHit;
+    m_health = (std::max)(0.0f, m_health - (damage - armorHit));
 }
 
 void Player::Heal(float amount)
@@ -102,8 +100,7 @@ void Player::Jump()
 
 void Player::StartReload()
 {
-    if (!m_isReloading &&
-        m_currentAmmo < m_currentWeapon.MagazineSize)
+    if (!m_isReloading && m_currentAmmo < m_currentWeapon.MagazineSize)
     {
         m_isReloading = true;
         m_reloadTimer = m_currentWeapon.ReloadTime;
@@ -112,13 +109,13 @@ void Player::StartReload()
 
 void Player::Fire()
 {
-    if (m_isReloading || m_currentAmmo <= 0 ||
-        m_fireTimer > 0.0f) return;
+    if (m_isReloading || m_currentAmmo <= 0 || m_fireTimer > 0.0f)
+        return;
 
     if (m_projectilePool && m_camera)
     {
-        XMFLOAT3 pos = m_camera->GetPosition();
-        XMFLOAT3 dir = CalculateFireDirection();
+        auto pos = m_camera->GetPosition();
+        auto dir = CalculateFireDirection();
 
         switch (m_currentWeapon.Type)
         {
@@ -152,14 +149,9 @@ void Player::HandleInput(float deltaTime)
 {
     if (!m_input) return;
 
-    if (m_input->WasKeyPressed('R'))
-        StartReload();
-
-    if (m_input->IsMouseButtonDown(0))
-        Fire();
-
-    if (m_input->WasKeyPressed(VK_SPACE))
-        Jump();
+    if (m_input->WasKeyPressed('R')) StartReload();
+    if (m_input->IsMouseButtonDown(0)) Fire();
+    if (m_input->WasKeyPressed(VK_SPACE)) Jump();
 
     m_isRunning = m_input->IsKeyDown(VK_LSHIFT);
     m_isCrouching = m_input->IsKeyDown(VK_LCONTROL);
@@ -177,11 +169,13 @@ void Player::UpdateMovement(float deltaTime)
 
     XMFLOAT3 move{ 0,0,0 };
     float speed = m_speed;
-    if (m_isRunning && m_stamina > 0.0f) {
+    if (m_isRunning && m_stamina > 0)
+    {
         speed *= 2.0f;
         m_stamina -= 30.0f * deltaTime;
     }
-    else if (m_isCrouching) {
+    else if (m_isCrouching)
+    {
         speed *= 0.5f;
     }
 
@@ -190,15 +184,14 @@ void Player::UpdateMovement(float deltaTime)
     if (m_input->IsKeyDown('A')) move.x -= 1;
     if (m_input->IsKeyDown('D')) move.x += 1;
 
-    XMVECTOR mv = XMLoadFloat3(&move);
-    if (XMVectorGetX(XMVector3Length(mv)) > 0)
+    XMVECTOR v = XMLoadFloat3(&move);
+    if (XMVectorGetX(XMVector3Length(v)) > 0)
     {
-        mv = XMVector3Normalize(mv);
-        XMStoreFloat3(&move, mv);
+        v = XMVector3Normalize(v);
+        XMStoreFloat3(&move, v);
 
-        XMFLOAT3 fw = m_camera->GetForward();
+        auto fw = m_camera->GetForward();
         XMFLOAT3 rt{ 1,0,0 };
-
         XMFLOAT3 delta{
             (rt.x * move.x + fw.x * move.z) * speed * deltaTime,
             0,
@@ -214,13 +207,16 @@ void Player::UpdateMovement(float deltaTime)
 
 void Player::UpdateCombat(float deltaTime)
 {
-    if (m_fireTimer > 0.0f) {
+    if (m_fireTimer > 0)
+    {
         m_fireTimer -= deltaTime;
         if (m_fireTimer <= 0) m_isFiring = false;
     }
-    if (m_isReloading) {
+    if (m_isReloading)
+    {
         m_reloadTimer -= deltaTime;
-        if (m_reloadTimer <= 0) {
+        if (m_reloadTimer <= 0)
+        {
             m_currentAmmo = m_currentWeapon.MagazineSize;
             m_isReloading = false;
         }
@@ -232,20 +228,21 @@ void Player::UpdatePhysics(float deltaTime)
     ApplyGravity(deltaTime);
     CheckGroundCollision();
 
-    XMFLOAT3 velMove{
+    XMFLOAT3 dm{
         m_velocity.x * deltaTime,
         m_velocity.y * deltaTime,
         m_velocity.z * deltaTime
     };
-    Translate(velMove);
+    Translate(dm);
 
-    if (m_camera) {
-        XMFLOAT3 eyeOff{ 0,1.7f,0 };
-        if (m_isCrouching) eyeOff.y *= 0.6f;
+    if (m_camera)
+    {
+        XMFLOAT3 eye{ 0,1.7f,0 };
+        if (m_isCrouching) eye.y *= 0.6f;
         XMFLOAT3 camPos{
-            m_position.x + eyeOff.x,
-            m_position.y + eyeOff.y,
-            m_position.z + eyeOff.z
+            m_position.x + eye.x,
+            m_position.y + eye.y,
+            m_position.z + eye.z
         };
         m_camera->SetPosition(camPos);
     }
@@ -254,17 +251,10 @@ void Player::UpdatePhysics(float deltaTime)
 void Player::UpdateAnimation(float deltaTime)
 {
     bool moving = m_input &&
-        (m_input->IsKeyDown('W') ||
-            m_input->IsKeyDown('A') ||
-            m_input->IsKeyDown('S') ||
-            m_input->IsKeyDown('D'));
-    if (moving) {
-        m_bobTimer += deltaTime * 8.0f;
-        // apply to camera if desired...
-    }
-    else {
-        m_bobTimer = 0.0f;
-    }
+        (m_input->IsKeyDown('W') || m_input->IsKeyDown('A') ||
+            m_input->IsKeyDown('S') || m_input->IsKeyDown('D'));
+    if (moving) m_bobTimer += deltaTime * 8.0f;
+    else        m_bobTimer = 0.0f;
 }
 
 void Player::UpdateCollision()
@@ -280,23 +270,23 @@ void Player::ApplyGravity(float deltaTime)
 
 void Player::CheckGroundCollision()
 {
-    if (m_position.y <= 0.0f) {
+    if (m_position.y <= 0)
+    {
         m_position.y = 0;
         m_velocity.y = 0;
         m_isGrounded = true;
         m_isJumping = false;
         SetPosition(m_position);
     }
-    else {
-        m_isGrounded = false;
-    }
+    else m_isGrounded = false;
 }
 
 void Player::HandleFootsteps(float deltaTime)
 {
     m_footstepTimer -= deltaTime;
-    if (m_footstepTimer <= 0) {
-        // play step sound...
+    if (m_footstepTimer <= 0)
+    {
+        // play step
         m_footstepTimer = m_isRunning ? 0.3f : 0.6f;
     }
 }
@@ -304,12 +294,13 @@ void Player::HandleFootsteps(float deltaTime)
 WeaponStats Player::GetWeaponStats(WeaponType type)
 {
     WeaponStats s; s.Type = type;
-    switch (type) {
-    case WeaponType::PISTOL:         s.Damage = 20; s.FireRate = 3;  s.MagazineSize = 12; s.ReloadTime = 1.5f; s.Range = 50;  s.Accuracy = 0.9f;  break;
-    case WeaponType::RIFLE:          s.Damage = 35; s.FireRate = 8;  s.MagazineSize = 30; s.ReloadTime = 2.0f; s.Range = 100; s.Accuracy = 0.95f; break;
-    case WeaponType::SHOTGUN:        s.Damage = 60; s.FireRate = 1.5f; s.MagazineSize = 8;  s.ReloadTime = 3.0f; s.Range = 25;  s.Accuracy = 0.7f;  break;
-    case WeaponType::ROCKET_LAUNCHER:s.Damage = 150; s.FireRate = 0.5f; s.MagazineSize = 1;  s.ReloadTime = 4.0f; s.Range = 200; s.Accuracy = 0.95f; break;
-    case WeaponType::GRENADE_LAUNCHER:s.Damage = 100; s.FireRate = 1.0f; s.MagazineSize = 6;  s.ReloadTime = 3.5f; s.Range = 80;  s.Accuracy = 0.8f;  break;
+    switch (type)
+    {
+    case WeaponType::PISTOL:          s.Damage = 20; s.FireRate = 3; s.MagazineSize = 12; s.ReloadTime = 1.5f; s.Range = 50;  s.Accuracy = 0.9f;  break;
+    case WeaponType::RIFLE:           s.Damage = 35; s.FireRate = 8; s.MagazineSize = 30; s.ReloadTime = 2.0f; s.Range = 100; s.Accuracy = 0.95f; break;
+    case WeaponType::SHOTGUN:         s.Damage = 60; s.FireRate = 1.5f; s.MagazineSize = 8; s.ReloadTime = 3.0f; s.Range = 25;  s.Accuracy = 0.7f;  break;
+    case WeaponType::ROCKET_LAUNCHER: s.Damage = 150; s.FireRate = 0.5f; s.MagazineSize = 1; s.ReloadTime = 4.0f; s.Range = 200; s.Accuracy = 0.95f; break;
+    case WeaponType::GRENADE_LAUNCHER: s.Damage = 100; s.FireRate = 1.0f; s.MagazineSize = 6; s.ReloadTime = 3.5f; s.Range = 80;  s.Accuracy = 0.8f;  break;
     }
     return s;
 }
@@ -318,7 +309,8 @@ XMFLOAT3 Player::CalculateFireDirection()
 {
     XMFLOAT3 dir = m_camera ? m_camera->GetForward() : XMFLOAT3{ 0,0,1 };
     float spread = 1.0f - m_currentWeapon.Accuracy;
-    if (spread > 0.0f) {
+    if (spread > 0)
+    {
         float angle = spread * 0.1f;
         float rx = MathUtils::RandomFloat(-angle, angle);
         float ry = MathUtils::RandomFloat(-angle, angle);

@@ -44,10 +44,11 @@ public:
     Player();
     virtual ~Player();
 
+    // Removed override on Initialize since signature differs
     HRESULT Initialize(ID3D11Device* device,
         ID3D11DeviceContext* context,
         FPSCamera* camera,
-        InputManager* input) override;
+        InputManager* input);
 
     void Update(float deltaTime) override;
     void Render(const XMMATRIX& view,
@@ -93,22 +94,22 @@ public:
     bool  IsGrounded() const { return m_isGrounded; }
 
 private:
-    // State
-    float m_health;
-    float m_maxHealth;
-    float m_armor;
-    float m_maxArmor;
-    float m_stamina;
-    float m_maxStamina;
-    float m_speed;
-    float m_jumpHeight;
+    // Stats
+    float       m_health;
+    float       m_maxHealth;
+    float       m_armor;
+    float       m_maxArmor;
+    float       m_stamina;
+    float       m_maxStamina;
+    float       m_speed;
+    float       m_jumpHeight;
 
     // Movement
-    XMFLOAT3 m_velocity;
-    bool     m_isGrounded;
-    bool     m_isRunning;
-    bool     m_isCrouching;
-    bool     m_isJumping;
+    XMFLOAT3    m_velocity;
+    bool        m_isGrounded;
+    bool        m_isRunning;
+    bool        m_isCrouching;
+    bool        m_isJumping;
 
     // Combat
     WeaponStats      m_currentWeapon;
@@ -118,7 +119,7 @@ private:
     bool             m_isReloading;
     bool             m_isFiring;
 
-    // Interactions
+    // External
     FPSCamera* m_camera;
     InputManager* m_input;
     ProjectilePool* m_projectilePool;

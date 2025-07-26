@@ -16,38 +16,71 @@ HRESULT ProjectilePool::Initialize(ID3D11Device* device, ID3D11DeviceContext* co
 {
     m_device = device;
     m_context = context;
-    
     CreateProjectiles();
-    
     return S_OK;
+}
+
+void ProjectilePool::CreateProjectiles()
+{
+    m_projectiles.reserve(m_poolSize);
+
+    size_t bulletsCount = static_cast<size_t>(m_poolSize * 0.6f);
+    size_t rocketsCount = static_cast<size_t>(m_poolSize * 0.3f);
+    size_t grenadesCount = m_poolSize - bulletsCount - rocketsCount;
+
+    // Bullets
+    for (size_t i = 0; i < bulletsCount; ++i)
+    {
+        auto p = std::make_unique<Bullet>();
+        if (SUCCEEDED(p->Initialize(m_device, m_context)))
+        {
+            m_availableProjectiles.push(p.get());
+            m_projectiles.push_back(std::move(p));
+        }
+    }
+
+    // Rockets
+    for (size_t i = 0; i < rocketsCount; ++i)
+    {
+        auto p = std::make_unique<Rocket>();
+        if (SUCCEEDED(p->Initialize(m_device, m_context)))
+        {
+            m_availableProjectiles.push(p.get());
+            m_projectiles.push_back(std::move(p));
+        }
+    }
+
+    // Grenades
+    for (size_t i = 0; i < grenadesCount; ++i)
+    {
+        auto p = std::make_unique<Grenade>();
+        if (SUCCEEDED(p->Initialize(m_device, m_context)))
+        {
+            m_availableProjectiles.push(p.get());
+            m_projectiles.push_back(std::move(p));
+        }
+    }
 }
 
 void ProjectilePool::Update(float deltaTime)
 {
-    // Update all projectiles and return inactive ones to pool
-    for (auto& projectile : m_projectiles)
+    for (auto& up : m_projectiles)
     {
-        if (projectile->IsActive())
+        if (up->IsActive())
         {
-            projectile->Update(deltaTime);
-            
-            // Check if projectile became inactive and return to pool
-            if (!projectile->IsActive())
-            {
-                ReturnProjectile(projectile.get());
-            }
+            up->Update(deltaTime);
+            if (!up->IsActive())
+                ReturnProjectile(up.get());
         }
     }
 }
 
 void ProjectilePool::Render(const XMMATRIX& view, const XMMATRIX& projection)
 {
-    for (auto& projectile : m_projectiles)
+    for (auto& up : m_projectiles)
     {
-        if (projectile->IsActive())
-        {
-            projectile->Render(view, projection);
-        }
+        if (up->IsActive())
+            up->Render(view, projection);
     }
 }
 
@@ -55,156 +88,65 @@ void ProjectilePool::Shutdown()
 {
     m_projectiles.clear();
     while (!m_availableProjectiles.empty())
-    {
         m_availableProjectiles.pop();
-    }
 }
 
 Projectile* ProjectilePool::GetProjectile()
 {
     if (m_availableProjectiles.empty())
-    {
-        return nullptr; // Pool exhausted
-    }
-    
-    Projectile* projectile = m_availableProjectiles.front();
+        return nullptr;
+    Projectile* p = m_availableProjectiles.front();
     m_availableProjectiles.pop();
-    return projectile;
+    return p;
 }
 
-void ProjectilePool::ReturnProjectile(Projectile* projectile)
+void ProjectilePool::ReturnProjectile(Projectile* p)
 {
-    if (projectile)
+    p->Reset();
+    m_availableProjectiles.push(p);
+}
+
+void ProjectilePool::FireBullet(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
+{
+    Projectile* p = GetProjectile();
+    if (p) p->Fire(pos, dir, speed);
+}
+
+void ProjectilePool::FireRocket(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
+{
+    Projectile* p = GetProjectile();
+    if (p) p->Fire(pos, dir, speed);
+}
+
+void ProjectilePool::FireGrenade(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
+{
+    Projectile* p = GetProjectile();
+    if (p)
     {
-        projectile->Reset();
-        m_availableProjectiles.push(projectile);
+        p->SetGravity(true, 1.0f);
+        p->Fire(pos, dir, speed);
     }
 }
 
-void ProjectilePool::FireProjectile(ProjectileType type, const XMFLOAT3& startPosition, 
-                                  const XMFLOAT3& direction, float speed)
+void ProjectilePool::FireProjectile(ProjectileType type, const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
     switch (type)
     {
-    case ProjectileType::BULLET:
-        FireBullet(startPosition, direction, speed);
-        break;
-    case ProjectileType::ROCKET:
-        FireRocket(startPosition, direction, speed);
-        break;
-    case ProjectileType::GRENADE:
-        FireGrenade(startPosition, direction, speed);
-        break;
-    }
-}
-
-void ProjectilePool::FireBullet(const XMFLOAT3& startPosition, const XMFLOAT3& direction, float speed)
-{
-    Projectile* projectile = GetProjectile();
-    if (projectile)
-    {
-        projectile->Fire(startPosition, direction, speed);
-    }
-}
-
-void ProjectilePool::FireRocket(const XMFLOAT3& startPosition, const XMFLOAT3& direction, float speed)
-{
-    Projectile* projectile = GetProjectile();
-    if (projectile)
-    {
-        projectile->Fire(startPosition, direction, speed);
-    }
-}
-
-void ProjectilePool::FireGrenade(const XMFLOAT3& startPosition, const XMFLOAT3& direction, float speed)
-{
-    Projectile* projectile = GetProjectile();
-    if (projectile)
-    {
-        projectile->SetGravity(true, 1.0f);
-        projectile->Fire(startPosition, direction, speed);
+    case ProjectileType::BULLET:  FireBullet(pos, dir, speed); break;
+    case ProjectileType::ROCKET:  FireRocket(pos, dir, speed); break;
+    case ProjectileType::GRENADE: FireGrenade(pos, dir, speed); break;
     }
 }
 
 size_t ProjectilePool::GetActiveCount() const
 {
-    size_t activeCount = 0;
-    for (const auto& projectile : m_projectiles)
-    {
-        if (projectile->IsActive())
-        {
-            activeCount++;
-        }
-    }
-    return activeCount;
+    size_t count = 0;
+    for (const auto& up : m_projectiles)
+        if (up->IsActive()) ++count;
+    return count;
 }
 
-void ProjectilePool::ClearAll()
+size_t ProjectilePool::GetAvailableCount() const
 {
-    for (auto& projectile : m_projectiles)
-    {
-        if (projectile->IsActive())
-        {
-            projectile->Deactivate();
-            ReturnProjectile(projectile.get());
-        }
-    }
-}
-
-void ProjectilePool::CreateProjectiles()
-{
-    m_projectiles.reserve(m_poolSize);
-    
-    // Create a mix of different projectile types
-    size_t bulletsCount = static_cast<size_t>(m_poolSize * 0.6f);  // 60% bullets
-    size_t rocketsCount = static_cast<size_t>(m_poolSize * 0.3f);  // 30% rockets
-    size_t grenadesCount = static_cast<size_t>(m_poolSize * 0.1f); // 10% grenades
-    
-    // Create bullets
-    for (size_t i = 0; i < bulletsCount; ++i)
-    {
-        auto projectile = std::make_unique<Bullet>();
-        if (SUCCEEDED(projectile->Initialize(m_device, m_context)))
-        {
-            m_availableProjectiles.push(projectile.get());
-            m_projectiles.push_back(std::move(projectile));
-        }
-    }
-    
-    // Create rockets
-    for (size_t i = 0; i < rocketsCount; ++i)
-    {
-        auto projectile = std::make_unique<Rocket>();
-        if (SUCCEEDED(projectile->Initialize(m_device, m_context)))
-        {
-            m_availableProjectiles.push(projectile.get());
-            m_projectiles.push_back(std::move(projectile));
-        }
-    }
-    
-    // Create grenades
-    for (size_t i = 0; i < grenadesCount; ++i)
-    {
-        auto projectile = std::make_unique<Grenade>();
-        if (SUCCEEDED(projectile->Initialize(m_device, m_context)))
-        {
-            m_availableProjectiles.push(projectile.get());
-            m_projectiles.push_back(std::move(projectile));
-        }
-    }
-}
-
-Projectile* ProjectilePool::CreateProjectileOfType(ProjectileType type)
-{
-    switch (type)
-    {
-    case ProjectileType::BULLET:
-        return new Bullet();
-    case ProjectileType::ROCKET:
-        return new Rocket();
-    case ProjectileType::GRENADE:
-        return new Grenade();
-    default:
-        return new Bullet();
-    }
+    return m_availableProjectiles.size();
 }
