@@ -1,95 +1,60 @@
-﻿#pragma once  
-#include "..\Game\GameObject.h"  
-#include "..\Physics\CollisionSystem.h"  
+﻿#pragma once
 
-class Projectile : public GameObject  
-{  
-private:  
-    XMFLOAT3 m_velocity;  
-    float m_speed;  
-    float m_lifeTime;  
-    float m_maxLifeTime;  
-    float m_damage;  
-    bool m_active;  
+#include "..\Core\framework.h"            // XMFLOAT3, XMMATRIX
+#include "..\Physics\CollisionSystem.h"  // BoundingSphere
+#include "..\Game\GameObject.h"
 
-    // Physics properties  
-    BoundingSphere m_boundingSphere;  
-    bool m_hasGravity;  
-    float m_gravityScale;  
+class Projectile : public GameObject
+{
+protected:  // allow derived classes to access these
+    // Motion
+    XMFLOAT3 m_velocity;
+    float    m_speed;
+    float    m_lifeTime;
+    float    m_maxLifeTime;
+    float    m_damage;
+    bool     m_active;
 
-public:  
-    Projectile();  
-    ~Projectile();  
+    // Physics
+    BoundingSphere m_boundingSphere;
+    bool           m_hasGravity;
+    float          m_gravityScale;
 
-    HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context) override;  
-    virtual void Update(float deltaTime) = 0;  
-    void Render(const XMMATRIX& view, const XMMATRIX& projection) override;  
+public:
+    Projectile();
+    virtual ~Projectile();
 
-    // Projectile specific methods  
-    void Fire(const XMFLOAT3& startPosition, const XMFLOAT3& direction, float speed);  
-    void Deactivate();  
-    void Reset();  
+    // GameObject overrides
+    HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context) override;
+    void    Update(float deltaTime) override;
+    void    Render(const XMMATRIX& view, const XMMATRIX& projection) override;
 
-    // Collision  
-    void OnHit(GameObject* target) override; // Ensure this matches the pure virtual function in GameObject  
-    void OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal) override;  
+    // Projectile actions
+    void Fire(const XMFLOAT3& startPosition, const XMFLOAT3& direction, float speed);
+    void Deactivate();
+    void Reset();
 
-    // Physics  
-    void SetGravity(bool enabled, float scale = 1.0f);  
-    void ApplyForce(const XMFLOAT3& force);  
+    // Collision callbacks
+    void OnHit(GameObject* target) override;
+    void OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal) override;
 
-    // Accessors  
-    bool IsActive() const { return m_active; }  
-    float GetDamage() const { return m_damage; }  
-    const XMFLOAT3& GetVelocity() const { return m_velocity; }  
-    const BoundingSphere& GetBoundingSphere() const { return m_boundingSphere; }  
+    // Physics controls
+    void SetGravity(bool enabled, float scale = 1.0f);
+    void ApplyForce(const XMFLOAT3& force);
 
-    void SetDamage(float damage) { m_damage = damage; }  
-    void SetLifeTime(float lifeTime) { m_maxLifeTime = lifeTime; }  
+    // Accessors
+    bool                IsActive() const { return m_active; }
+    float               GetDamage() const { return m_damage; }
+    const XMFLOAT3& GetVelocity() const { return m_velocity; }
+    const BoundingSphere& GetBoundingSphere() const { return m_boundingSphere; }
 
-protected:  
-    void CreateMesh() override;  
-    void CheckCollisions();  
-    void UpdatePhysics(float deltaTime);  
-    void UpdateBoundingSphere();  
-};
+    void SetDamage(float damage) { m_damage = damage; }
+    void SetLifeTime(float lifeTime) { m_maxLifeTime = lifeTime; }
 
-// Specialized projectile types  
-class Bullet : public Projectile  
-{  
-public:  
-    Bullet();  
-    HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context) override;  
-};  
-
-class Rocket : public Projectile  
-{  
-private:  
-    float m_explosionRadius;  
-    bool m_hasExploded;  
-
-public:  
-    Rocket();  
-    HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context) override;  
-    void OnHit(GameObject* target) override;  
-    void OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal) override;  
-
-private:  
-    void Explode(const XMFLOAT3& position);  
-};  
-
-class Grenade : public Projectile  
-{  
-private:  
-    float m_fuseTime;  
-    float m_explosionRadius;  
-    bool m_hasExploded;  
-
-public:  
-    Grenade();  
-    void Update(float deltaTime) override;  
-    HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context) override;  
-
-private:  
-    void Explode();  
+protected:
+    // Internal updates
+    void CreateMesh() override;
+    void CheckCollisions();
+    void UpdatePhysics(float deltaTime);
+    void UpdateBoundingSphere();
 };
