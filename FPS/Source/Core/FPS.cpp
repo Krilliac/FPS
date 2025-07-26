@@ -28,8 +28,8 @@ std::unique_ptr<InputManager>         g_input;
 std::unique_ptr<Timer>                g_timer;
 Console                                g_console;
 
-// Forward decls
-ATOM                MyRegisterClass(HINSTANCE);
+// Forward declarations
+ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
@@ -41,25 +41,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_FPS, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
-    if (!InitInstance(hInstance, nCmdShow)) return FALSE;
+
+    if (!InitInstance(hInstance, nCmdShow))
+        return FALSE;
 
     HACCEL hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_FPS));
     MSG    msg = {};
     g_timer = std::make_unique<Timer>();
 
-    // Main loop
     while (msg.message != WM_QUIT)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            // Console input
+            // Console input handling
             if (msg.message == WM_CHAR)
             {
-                if (g_console.HandleChar((wchar_t)msg.wParam)) continue;
+                if (g_console.HandleChar((wchar_t)msg.wParam))
+                    continue;
             }
             else if (msg.message == WM_KEYDOWN)
             {
-                if (g_console.HandleKeyDown(msg.wParam)) continue;
+                if (g_console.HandleKeyDown(msg.wParam))
+                    continue;
             }
 
             if (!TranslateAccelerator(msg.hwnd, hAccel, &msg))
@@ -70,58 +73,75 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
+            // Update
             float dt = g_timer->GetDeltaTime();
             if (g_input) g_input->Update();
             if (g_game && !g_console.IsVisible())
                 g_game->Update(dt);
 
-            // Render
-            g_graphics->BeginFrame();
-            if (g_game) g_game->Render();
+            // Render sequence
+            g_graphics->BeginFrame();         // clear & bind
+
+            if (g_game)
+                g_game->Render();            // draw terrain, objects, projectiles
+
             if (g_console.IsVisible())
-                g_console.Render(g_graphics->GetContext());
-            g_graphics->EndFrame();
+                g_console.Render(g_graphics->GetContext());  // overlay
+
+            g_graphics->EndFrame();           // present
         }
     }
+
     return (int)msg.wParam;
 }
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex = { sizeof(wcex),
-        CS_HREDRAW | CS_VREDRAW,
-        WndProc,0,0,
-        hInstance,
-        LoadIcon(hInstance,MAKEINTRESOURCE(IDI_FPS)),
-        LoadCursor(nullptr,IDC_ARROW),
-        (HBRUSH)(COLOR_WINDOW + 1),
-        MAKEINTRESOURCEW(IDC_FPS),
-        szWindowClass,
-        LoadIcon(hInstance,MAKEINTRESOURCE(IDI_SMALL)) };
+    WNDCLASSEXW wcex = {};
+    wcex.cbSize = sizeof(WNDCLASSEX);
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInstance;
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_FPS));
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_FPS);
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+
     return RegisterClassExW(&wcex);
 }
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance;
-    HWND hWnd = CreateWindowW(szWindowClass, szTitle,
+    HWND hWnd = CreateWindowW(
+        szWindowClass, szTitle,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, 1280, 720,
-        nullptr, nullptr, hInstance, nullptr);
-    if (!hWnd) return FALSE;
+        nullptr, nullptr, hInstance, nullptr
+    );
+    if (!hWnd)
+        return FALSE;
 
+    // Initialize console overlay
     g_console.Initialize(1280, 720);
 
+    // Initialize graphics engine
     g_graphics = std::make_unique<GraphicsEngine>();
     if (FAILED(g_graphics->Initialize(hWnd)))
     {
-        MessageBox(hWnd, L"Graphics init failed", L"Error", MB_OK);
+        MessageBox(hWnd, L"Failed to initialize graphics engine", L"Error", MB_OK);
         return FALSE;
     }
 
+    // Initialize input manager
     g_input = std::make_unique<InputManager>();
     g_input->Initialize(hWnd);
 
+    // Initialize game logic
     g_game = std::make_unique<Game>();
     g_game->Initialize(g_graphics.get(), g_input.get());
 
@@ -138,10 +158,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
         BOOL active = (LOWORD(wParam) != WA_INACTIVE);
         RECT rc; GetClientRect(hWnd, &rc);
-        MapWindowPoints(hWnd, nullptr, (POINT*)&rc, 2);
+        MapWindowPoints(hWnd, nullptr, reinterpret_cast<POINT*>(&rc), 2);
         ClipCursor(active ? &rc : nullptr);
         return 0;
     }
+
     case WM_KEYDOWN:
         if (wParam == VK_ESCAPE)
         {
@@ -149,31 +170,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             ShowCursor(TRUE);
             return 0;
         }
-        if (wParam == VK_OEM_3) // ` key
+        if (wParam == VK_OEM_3)  // back-tick `
         {
             g_console.Toggle();
             return 0;
         }
-        // fallthrough
+        // fallthrough to input manager
     case WM_KEYUP:
     case WM_MOUSEMOVE:
     case WM_LBUTTONDOWN:
     case WM_LBUTTONUP:
     case WM_RBUTTONDOWN:
     case WM_RBUTTONUP:
-        if (g_input) g_input->HandleMessage(msg, wParam, lParam);
+        if (g_input)
+            g_input->HandleMessage(msg, wParam, lParam);
         break;
+
     case WM_SIZE:
-        if (g_graphics) g_graphics->OnResize(LOWORD(lParam), HIWORD(lParam));
+        if (g_graphics)
+            g_graphics->OnResize(LOWORD(lParam), HIWORD(lParam));
         break;
+
     case WM_DESTROY:
         ClipCursor(nullptr);
         PostQuitMessage(0);
         return 0;
-    default:
-        return DefWindowProc(hWnd, msg, wParam, lParam);
     }
-    return 0;
+
+    return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 INT_PTR CALLBACK About(HWND hDlg, UINT msg, WPARAM wParam, LPARAM)

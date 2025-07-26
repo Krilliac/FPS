@@ -165,6 +165,7 @@
     <ClInclude Include="Source\Game\PlaneObject.h" />
     <ClInclude Include="Source\Game\Primitives.h" />
     <ClInclude Include="Source\Game\SphereObject.h" />
+    <ClInclude Include="Source\Game\Terrain.h" />
     <ClInclude Include="Source\Graphics\GraphicsEngine.h" />
     <ClInclude Include="Source\Graphics\Mesh.h" />
     <ClInclude Include="Source\Graphics\Shader.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Source\Projectiles\Projectile.h" />
     <ClInclude Include="Source\Projectiles\ProjectilePool.h" />
     <ClInclude Include="Source\Projectiles\Rocket.h" />
+    <ClInclude Include="Source\ThirdParty\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="Source\Utils\Timer.h" />
     <ClInclude Include="Source\Utils\MathUtils.h" />
     <ClInclude Include="Source\Utils\ObjectPool.h" />
@@ -190,6 +192,7 @@
     <ClCompile Include="Source\Game\PlaneObject.cpp" />
     <ClCompile Include="Source\Game\Primitives.cpp" />
     <ClCompile Include="Source\Game\SphereObject.cpp" />
+    <ClCompile Include="Source\Game\Terrain.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Graphics\Mesh.cpp" />
     <ClCompile Include="Source\Graphics\Shader.cpp" />
@@ -204,6 +207,7 @@
     <ClCompile Include="Source\Projectiles\Projectile.cpp" />
     <ClCompile Include="Source\Projectiles\ProjectilePool.cpp" />
     <ClCompile Include="Source\Projectiles\Rocket.cpp" />
+    <ClCompile Include="Source\ThirdParty\tinyobjloader\tiny_obj_loader.cc" />
     <ClCompile Include="Source\Utils\Timer.cpp" />
     <ClCompile Include="Source\Utils\MathUtils.cpp" />
   </ItemGroup>

@@ -3,6 +3,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <DirectXMath.h>
+
 #include "Game.h"
 
 #include "..\Graphics\GraphicsEngine.h"
@@ -18,61 +19,69 @@
 #include "..\Game\Console.h"
 #include "..\Projectiles\ProjectilePool.h"
 
-// Tell this file about the engine and console globals from FPS.cpp:
+// Pull in globals defined in FPS.cpp
 extern std::unique_ptr<GraphicsEngine> g_graphics;
 extern Console                         g_console;
 
+/*-------------------------------------------------------------
+  Ctor / Dtor
+--------------------------------------------------------------*/
 Game::Game() = default;
+Game::~Game() { Shutdown(); }
 
-Game::~Game()
-{
-    Shutdown();
-}
-
-HRESULT Game::Initialize(GraphicsEngine* graphics, InputManager* input)
+/*-------------------------------------------------------------
+  Initialise all game-side systems
+--------------------------------------------------------------*/
+HRESULT Game::Initialize(GraphicsEngine* graphics,
+    InputManager* input)
 {
     m_graphics = graphics;
     m_input = input;
 
-    // Initialize camera
+    /* Camera ------------------------------------------------*/
     m_camera = std::make_unique<FPSCamera>();
-    float aspect = float(m_graphics->GetWindowWidth()) / m_graphics->GetWindowHeight();
+    float aspect =
+        float(m_graphics->GetWindowWidth()) /
+        float(m_graphics->GetWindowHeight());
     m_camera->Initialize(aspect);
     m_camera->SetPosition({ 0.0f, 2.0f, -5.0f });
 
-    // Initialize shader system
+    /* Shaders ----------------------------------------------*/
     m_shader = std::make_unique<Shader>();
-    HRESULT hr = m_shader->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+    HRESULT hr = m_shader->Initialize(
+        m_graphics->GetDevice(),
+        m_graphics->GetContext());
     if (FAILED(hr)) return hr;
+    if (FAILED(m_shader->LoadVertexShader(L"Shaders\\HLSL\\BasicVS.hlsl")))
+        return hr;
+    if (FAILED(m_shader->LoadPixelShader(L"Shaders\\HLSL\\BasicPS.hlsl")))
+        return hr;
 
-    hr = m_shader->LoadVertexShader(L"Shaders\\HLSL\\BasicVS.hlsl");
-    if (FAILED(hr)) return hr;
-    hr = m_shader->LoadPixelShader(L"Shaders\\HLSL\\BasicPS.hlsl");
-    if (FAILED(hr)) return hr;
-
-    // Initialize player
+    /* Player -----------------------------------------------*/
     m_player = std::make_unique<Player>();
     hr = m_player->Initialize(
         m_graphics->GetDevice(),
         m_graphics->GetContext(),
         m_camera.get(),
-        m_input
-    );
+        m_input);
     if (FAILED(hr)) return hr;
 
-    // Initialize projectile pool
-    m_projectilePool = std::make_unique<ProjectilePool>(100);
+    /* Projectile pool --------------------------------------*/
+    m_projectilePool =
+        std::make_unique<ProjectilePool>(100 /*max*/);
     hr = m_projectilePool->Initialize(
         m_graphics->GetDevice(),
-        m_graphics->GetContext()
-    );
+        m_graphics->GetContext());
     if (FAILED(hr)) return hr;
 
-    // Populate world
+    /* Scene objects ----------------------------------------*/
     CreateTestObjects();
     return S_OK;
 }
 
+/*-------------------------------------------------------------
+  Tear-down
+--------------------------------------------------------------*/
 void Game::Shutdown()
 {
     m_gameObjects.clear();
@@ -82,30 +91,40 @@ void Game::Shutdown()
     m_camera.reset();
 }
 
-void Game::Update(float deltaTime)
+/*-------------------------------------------------------------
+  Per-frame update
+--------------------------------------------------------------*/
+void Game::Update(float dt)
 {
     if (m_isPaused) return;
 
-    HandleInput(deltaTime);
-    UpdateCamera(deltaTime);
-    UpdateGameObjects(deltaTime);
+    HandleInput(dt);
+    UpdateCamera(dt);
+    UpdateGameObjects(dt);
 
-    if (m_player)         m_player->Update(deltaTime);
-    if (m_projectilePool) m_projectilePool->Update(deltaTime);
+    if (m_player)         m_player->Update(dt);
+    if (m_projectilePool) m_projectilePool->Update(dt);
 }
 
+/*-------------------------------------------------------------
+  Per-frame render – called between BeginFrame / EndFrame
+--------------------------------------------------------------*/
 void Game::Render()
 {
-    // Set shaders, constant buffers, etc.
+    // Set shader pair
     m_shader->SetShaders();
-    XMMATRIX view = m_camera->GetViewMatrix();
-    XMMATRIX proj = m_camera->GetProjectionMatrix();
 
-    // Draw every GameObject
+    // Build view/projection
+    DirectX::XMMATRIX view = m_camera->GetViewMatrix();
+    DirectX::XMMATRIX proj = m_camera->GetProjectionMatrix();
+
+    // Draw all scene objects
     ConstantBuffer cb;
     for (auto& obj : m_gameObjects)
     {
-        if (!obj->IsActive() || !obj->IsVisible()) continue;
+        if (!obj->IsActive() || !obj->IsVisible())
+            continue;
+
         cb.World = obj->GetWorldMatrix();
         cb.View = view;
         cb.Projection = proj;
@@ -113,82 +132,94 @@ void Game::Render()
         obj->Render(view, proj);
     }
 
-    // Draw player/projectiles if needed
+    // Draw player-related elements
     m_player->Render(view, proj);
     m_projectilePool->Render(view, proj);
 
-    // Finally draw UI/console on top
+    // Overlay console
     if (g_console.IsVisible())
-        g_console.Render(g_graphics->GetContext());
+        g_console.Render(m_graphics->GetContext());
 }
 
-void Game::UpdateCamera(float deltaTime)
+/*-------------------------------------------------------------*/
+void Game::UpdateCamera(float dt)
 {
-    if (m_camera)
-        m_camera->Update(deltaTime);
+    if (m_camera) m_camera->Update(dt);
 }
 
-void Game::UpdateGameObjects(float deltaTime)
+/*-------------------------------------------------------------*/
+void Game::UpdateGameObjects(float dt)
 {
     for (auto& obj : m_gameObjects)
-    {
         if (obj && obj->IsActive())
-            obj->Update(deltaTime);
-    }
+            obj->Update(dt);
 }
 
-void Game::HandleInput(float deltaTime)
+/*-------------------------------------------------------------
+  WASD + mouse look input handling
+--------------------------------------------------------------*/
+void Game::HandleInput(float dt)
 {
     if (!m_input || !m_camera) return;
 
-    float moveSpeed = 10.0f * deltaTime;
-    if (m_input->IsKeyDown('W'))       m_camera->MoveForward(moveSpeed);
-    if (m_input->IsKeyDown('S'))       m_camera->MoveForward(-moveSpeed);
-    if (m_input->IsKeyDown('A'))       m_camera->MoveRight(-moveSpeed);
-    if (m_input->IsKeyDown('D'))       m_camera->MoveRight(moveSpeed);
-    if (m_input->IsKeyDown(VK_SPACE))  m_camera->MoveUp(moveSpeed);
-    if (m_input->IsKeyDown(VK_LCONTROL)) m_camera->MoveUp(-moveSpeed);
+    // Movement
+    float speed = 10.0f * dt;
+    if (m_input->IsKeyDown('W'))        m_camera->MoveForward(speed);
+    if (m_input->IsKeyDown('S'))        m_camera->MoveForward(-speed);
+    if (m_input->IsKeyDown('A'))        m_camera->MoveRight(-speed);
+    if (m_input->IsKeyDown('D'))        m_camera->MoveRight(speed);
+    if (m_input->IsKeyDown(VK_SPACE))   m_camera->MoveUp(speed);
+    if (m_input->IsKeyDown(VK_LCONTROL))m_camera->MoveUp(-speed);
 
+    // Mouse look
     int dx, dy;
     if (m_input->GetMouseDelta(dx, dy))
     {
-        float sens = 0.005f;
+        constexpr float sens = 0.005f;
         m_camera->Yaw(dx * sens);
         m_camera->Pitch(-dy * sens);
     }
 
+    // Fire projectile
     if (m_input->WasMouseButtonPressed(0) && m_projectilePool)
     {
-        XMFLOAT3 pos = m_camera->GetPosition();
-        XMFLOAT3 dir = m_camera->GetForward();
+        auto pos = m_camera->GetPosition();
+        auto dir = m_camera->GetForward();
         m_projectilePool->FireProjectile(
-            ProjectileType::BULLET,
-            pos, dir,
-            50.0f
-        );
+            ProjectileType::BULLET, pos, dir, 50.0f);
     }
 }
 
+/*-------------------------------------------------------------
+  Spawn placeholder objects – replace with real assets later
+--------------------------------------------------------------*/
 void Game::CreateTestObjects()
 {
-    // Ground plane (placeholder or asset)
-    auto ground = std::make_unique<PlaneObject>(20.0f, 20.0f);
-    ground->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
-    ground->SetPosition({ 0.0f, -1.0f, 0.0f });
-    m_gameObjects.push_back(std::move(ground));
+    // Ground plane
+    {
+        auto ground = std::make_unique<PlaneObject>(20.0f, 20.0f);
+        ground->Initialize(m_graphics->GetDevice(),
+            m_graphics->GetContext());
+        ground->SetPosition({ 0.0f, -1.0f, 0.0f });
+        m_gameObjects.push_back(std::move(ground));
+    }
 
-    // Array of cubes
+    // Row of cubes
     for (int i = 0; i < 5; ++i)
     {
         auto cube = std::make_unique<CubeObject>(1.0f);
-        cube->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        cube->Initialize(m_graphics->GetDevice(),
+            m_graphics->GetContext());
         cube->SetPosition({ i * 3.0f - 6.0f, 1.0f, 10.0f });
         m_gameObjects.push_back(std::move(cube));
     }
 
     // Single sphere
-    auto sphere = std::make_unique<SphereObject>(1.0f, 16, 16);
-    sphere->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
-    sphere->SetPosition({ 5.0f, 0.0f, 0.0f });
-    m_gameObjects.push_back(std::move(sphere));
+    {
+        auto sphere = std::make_unique<SphereObject>(1.0f, 16, 16);
+        sphere->Initialize(m_graphics->GetDevice(),
+            m_graphics->GetContext());
+        sphere->SetPosition({ 5.0f, 0.0f, 0.0f });
+        m_gameObjects.push_back(std::move(sphere));
+    }
 }
