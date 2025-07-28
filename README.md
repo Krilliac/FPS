@@ -1,104 +1,66 @@
-﻿Below is the updated `README.md` with enhanced build/setup instructions, including batch‐file argument details for specifying Visual Studio generators and other options.
+﻿# Spark Engine
 
-```markdown
-# Spark Engine
+A modular, high-performance C++ game engine for 3D FPS titles and beyond, featuring DirectX 11 rendering, AngelScript scripting, and an integrated editor.
 
-A modular, high-performance game engine built in modern C++ with DirectX 11, AngelScript scripting, and an integrated in-engine editor.
+This Engine is still VERY young, fresh and all the issues are being worked out while slowly providing a fully featured game project/engine. Things may break or not compile/work at all.
 
-## Introduction
+## 🌟 Key Features
 
-Spark Engine empowers developers to rapidly prototype and ship 3D first-person shooter games and beyond. It features a clean Entity-Component-System architecture, hot-reload scripting with AngelScript, a real-time visual editor, production-grade crash handling, and high-performance DirectX 11 rendering.
+### 🎨 Rendering & Camera
+- **DirectX 11 Pipeline**: Dynamic lighting, shadows, post-processing, particle effects  
+- **First-Person Camera**: Smooth mouselook, WASD movement, jump, crouch, zoom  
 
-## Features
+### 🎮 Gameplay & Input
+- **ECS Architecture**: Clean separation of rendering, physics, audio, scripting, gameplay  
+- **Input Manager**: Keyboard/mouse capture, customizable bindings, console overlay  
 
-- **3D Graphics Rendering**  
-  Real-time DirectX 11 pipeline with dynamic lighting, shadows, particle effects.
-- **First-Person Camera**  
-  Smooth mouse-look and WASD movement with jump, crouch, and zoom.
-- **Input Handling**  
-  Keyboard/mouse capture with external debug console overlay.
-- **Modular Architecture**  
-  ECS-driven design separating rendering, physics, audio, scripting, and gameplay.
-- **Visual Editor** (optional)  
-  ImGui-powered editor: scene hierarchy, inspector, asset browser, gizmos.
-- **AngelScript Integration**  
-  Unity-style hot-reload scripting, full debugging, C++ API exposure.
-- **Crash Handling**  
-  Minidumps, symbolized stack traces, screenshot capture, ZIP packaging, HTTP upload.
-- **Shader System**  
-  HLSL support with auto-recompilation and constant-buffer binding fixes.
-- **Mesh Generation**  
-  Built-in cube, plane, and sphere procedural meshes.
-- **Cross-Platform Build**  
-  CMake scripts for Windows, Linux, macOS; auto-discovers source files.
+### 🛠 Editor & Scripting
+- **Visual Editor** *(optional)*: ImGui-powered scene hierarchy, inspector, asset browser, gizmos  
+- **AngelScript Integration**: Unity-style hot-reload, full debugging, exposed C++ API  
 
-## Requirements
+### 🩹 Stability & Debug
+- **Crash Handler**: Auto minidumps, symbolized stack traces, screenshot capture, ZIP upload  
+- **Console Overlay**: Real-time command input, logging, test crash trigger  
 
-- **Windows**: Windows 10+, DirectX 11 GPU, Visual Studio 2019 or later  
-- **Linux/macOS**: GCC/Clang, X11 (Linux) or Cocoa (macOS)
+### ⚙️ Utilities
+- **Shader System**: HLSL support with auto-recompilation and constant-buffer fixes  
+- **Mesh Generation**: Procedural cube, plane, and sphere primitives  
+- **Cross-Platform Build**: CMake for Windows, Linux, macOS; auto-discovers sources  
 
-## Quick Start
+## 📋 Table of Contents
 
-### Windows (PowerShell)
+- [Introduction](#spark-engine)  
+- [Quick Start](#quick-start)  
+- [Build & Setup](#build--setup)  
+- [Controls](#controls)  
+- [Architecture Overview](#architecture-overview)  
+- [Directory Layout](#directory-layout)  
+- [Configuration Options](#configuration-options)  
+- [License](#license)  
 
-1. Open PowerShell in the repo root.
-2. Run `generate.bat` to configure CMake (no build):
+## 🔥 Quick Start
 
-   ```
-   # Default: Debug + VS2022
-   .\generate.bat
+```bash
+# Clone repo with submodules
+git clone --recurse-submodules https://github.com/YourOrg/SparkEngine.git
+cd SparkEngine
 
-   # Specify configuration and generator:
-   .\generate.bat release                 # Release + VS2022
-   .\generate.bat debug                    # Debug + VS2022
-   .\generate.bat -g "Visual Studio 16 2019" debug
-   .\generate.bat -g "Ninja" release       # Generate Ninja files
-   ```
+# Generate build files
+# Windows (PowerShell)
+.\generate.bat -g "Visual Studio 17 2022" release
 
-3. Build with `build.ps1` (calls CMake build):
+# Linux/macOS
+chmod +x generate.sh
+./generate.sh release -g Ninja
 
-   ```
-   .\build.ps1 -config Release -editor -angelscript
-   .\build.ps1 -config Debug
-   ```
+# Build
+# Windows
+.\build.ps1 -config Release -editor -angelscript
 
-   **Batch parameters**:
-   - `-config `: Build configuration (default = Debug)
-   - `-g ""`       : CMake generator (e.g. `"Visual Studio 17 2022"`, `"Ninja"`)
-   - `-editor`                 : Enable in-engine editor
-   - `-console`                : Enable external console overlay
-   - `-angelscript`            : Enable AngelScript integration
+# Linux/macOS
+./build.sh release
 
-### Linux/macOS (bash)
-
-1. Ensure `build.sh` is executable:  
-   ```
-   chmod +x build.sh
-   ```
-2. Generate (configure) only:
-   ```
-   ./generate.sh                # Debug + Unix Makefiles
-   ./generate.sh release        # Release + Unix Makefiles
-   ./generate.sh -g Ninja       # Debug + Ninja
-   ```
-3. Build:
-   ```
-   ./build.sh debug             # Build Debug
-   ./build.sh release           # Build Release
-   ```
-
-   **Shell parameters**:
-   - `debug|release`           : Build type (default = Debug)
-   - `-g `           : CMake generator (e.g. `Ninja`, `Unix Makefiles`)
-   - `-E`                       : Disable editor
-   - `-C`                       : Disable console overlay
-   - `-A`                       : Disable AngelScript integration
-
-## Running
-
-After build, execute the engine:
-
-```
+# Run
 # Windows
 build/Release/SparkEngine.exe
 
@@ -106,41 +68,76 @@ build/Release/SparkEngine.exe
 build/SparkEngine
 ```
 
-## Controls
+## 🎮 Controls
 
-- **W/A/S/D**: Move  
-- **Mouse**: Look  
-- **Space**: Jump/Move up  
-- **Ctrl**: Crouch/Move down  
-- **Esc**: Release mouse / toggle menu  
-- **Left Click**: (Re)capture mouse  
-- **` (Backtick)**: Toggle debug console  
+| Input         | Action                            |
+|---------------|-----------------------------------|
+| W/A/S/D       | Move                              |
+| Mouse         | Look                              |
+| Space         | Jump / Move Up                    |
+| Ctrl          | Crouch / Move Down                |
+| Esc           | Release Mouse / Toggle Menu       |
+| Left Click    | (Re)Capture Mouse                 |
+| ` (Backtick)  | Toggle Debug Console              |
 
-## Directory Structure
+## 🏗 Architecture Overview
 
 ```
+┌─────────────────┬─────────────────┬─────────────────┐
+│  Rendering      │  Physics        │  Audio          │
+├─────────────────┼─────────────────┼─────────────────┤
+│ • GraphicsEngine│ • PhysicsSystem │ • AudioSystem   │
+│ • ShaderManager │ • Collision     │ • Mixer         │
+│ • MeshManager   │ • RigidBodies   │ • Effects       │
+└─────────────────┴─────────────────┴─────────────────┘
+
+┌─────────────────┬─────────────────┬─────────────────┐
+│  Scripting      │  Input & UI     │  Core & Utils   │
+├─────────────────┼─────────────────┼─────────────────┤
+│ • AngelScript   │ • InputManager  │ • Engine        │
+│ • ScriptEngine  │ • Console       │ • Timer         │
+│ • Bindings      │ • ImGui Editor  │ • FileSystem    │
+└─────────────────┴─────────────────┴─────────────────┘
+```
+
+## 📂 Directory Layout
+
+```
+.
 ├── Source/
-│   ├── Core/         # Framework & entry point
-│   ├── Graphics/     # DirectX11 renderer
-│   ├── Game/         # Game logic
-│   ├── Camera/       # Camera controls
-│   ├── Input/        # Input manager
-│   ├── Utils/        # Helpers (Timer, File IO)
-│   └── Scripting/    # AngelScript integration
-├── ThirdParty/       # Submodules (EnTT, ImGui, AngelScript, stb, glm…)
-├── Shaders/          # HLSL shader files
-├── Resources/        # Assets (textures, models, audio)
-├── generate.bat      # CMake configure (Windows)
-├── build.ps1         # Build script (Windows)
-├── generate.sh       # CMake configure (Linux/macOS)
-├── build.sh          # Build script (Linux/macOS)
-├── CMakeLists.txt    # Cross-platform CMake config
-└── README.md         # Project overview
+│   ├── Core/            # Entry point & framework
+│   ├── Graphics/        # DX11 renderer, shaders
+│   ├── Game/            # Gameplay logic & objects
+│   ├── Camera/          # FPS camera
+│   ├── Input/           # Input handling & console
+│   ├── Utils/           # Timer, logging, file I/O
+│   └── Scripting/       # AngelScript integration
+├── ThirdParty/          # Submodules (EnTT, ImGui, AngelScript…)
+├── Shaders/             # HLSL files
+├── Resources/           # Models, textures, sounds
+├── generate.bat/.sh     # CMake configure-only scripts
+├── build.ps1/.sh        # Full build scripts
+├── CMakeLists.txt       # Cross-platform build config
+└── README.md            # This file
 ```
 
-## License
+## ⚙️ Configuration Options
+
+| Option                 | Default | Description                                    |
+|------------------------|---------|------------------------------------------------|
+| ENABLE_EDITOR          | ON      | Include in-engine editor                       |
+| ENABLE_CONSOLE         | ON      | External debug console overlay                 |
+| ENABLE_ANGELSCRIPT     | ON      | AngelScript hot-reload scripting               |
+| ENABLE_VULKAN          | OFF     | Build Vulkan renderer                          |
+| USE_STATIC_RUNTIME     | ON      | Static CRT on MSVC (/MT)                       |
+
+Pass these to `generate.bat/.sh` or edit `CMakeLists.txt` directly:
+
+```bash
+cmake .. -DENABLE_EDITOR=OFF -DENABLE_ANGELSCRIPT=OFF
+```
+
+## 📄 License
 
 MIT License.  
-Commercial support and extended features available under separate terms.
-
-Spark Engine delivers an **unrivaled blend of performance, flexibility, and ease-of-use**, enabling you to **ignite** your next game development adventure with confidence.
+Commercial support & enterprise add-ons available—visit our website for details.
