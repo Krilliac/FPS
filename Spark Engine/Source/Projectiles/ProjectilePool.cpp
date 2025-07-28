@@ -1,0 +1,161 @@
+﻿#include "ProjectilePool.h"
+#include "..\Projectiles\Bullet.h"
+#include "..\Projectiles\Rocket.h"
+#include "..\Projectiles\Grenade.h"
+using namespace std;
+#include "..\Projectiles\Bullet.h"
+#include "..\Projectiles\Rocket.h"
+#include "..\Projectiles\Grenade.h"
+using namespace std;
+
+ProjectilePool::ProjectilePool(size_t poolSize)
+    : m_poolSize(poolSize)
+    , m_device(nullptr)
+    , m_context(nullptr)
+{
+}
+
+ProjectilePool::~ProjectilePool()
+{
+    Shutdown();
+}
+
+HRESULT ProjectilePool::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+{
+    m_device = device;
+    m_context = context;
+    CreateProjectiles();
+    return S_OK;
+}
+
+void ProjectilePool::CreateProjectiles()
+{
+    m_projectiles.reserve(m_poolSize);
+
+    size_t bulletsCount = static_cast<size_t>(m_poolSize * 0.6f);
+    size_t rocketsCount = static_cast<size_t>(m_poolSize * 0.3f);
+    size_t grenadesCount = m_poolSize - bulletsCount - rocketsCount;
+
+    // Bullets
+    for (size_t i = 0; i < bulletsCount; ++i)
+    {
+        auto p = std::make_unique<Bullet>();
+        if (SUCCEEDED(p->Initialize(m_device, m_context)))
+        {
+            m_availableProjectiles.push(p.get());
+            m_projectiles.push_back(std::move(p));
+        }
+    }
+
+    // Rockets
+    for (size_t i = 0; i < rocketsCount; ++i)
+    {
+        auto p = std::make_unique<Rocket>();
+        if (SUCCEEDED(p->Initialize(m_device, m_context)))
+        {
+            m_availableProjectiles.push(p.get());
+            m_projectiles.push_back(std::move(p));
+        }
+    }
+
+    // Grenades
+    for (size_t i = 0; i < grenadesCount; ++i)
+    {
+        auto p = std::make_unique<Grenade>();
+        if (SUCCEEDED(p->Initialize(m_device, m_context)))
+        {
+            m_availableProjectiles.push(p.get());
+            m_projectiles.push_back(std::move(p));
+        }
+    }
+}
+
+void ProjectilePool::Update(float deltaTime)
+{
+    for (auto& up : m_projectiles)
+    {
+        if (up->IsActive())
+        {
+            up->Update(deltaTime);
+            if (!up->IsActive())
+                ReturnProjectile(up.get());
+        }
+    }
+}
+
+void ProjectilePool::Render(const XMMATRIX& view, const XMMATRIX& projection)
+{
+    for (auto& up : m_projectiles)
+    {
+        if (up->IsActive())
+            up->Render(view, projection);
+    }
+}
+
+void ProjectilePool::Shutdown()
+{
+    m_projectiles.clear();
+    while (!m_availableProjectiles.empty())
+        m_availableProjectiles.pop();
+}
+
+Projectile* ProjectilePool::GetProjectile()
+{
+    if (m_availableProjectiles.empty())
+        return nullptr;
+    Projectile* p = m_availableProjectiles.front();
+    m_availableProjectiles.pop();
+    return p;
+}
+
+void ProjectilePool::ReturnProjectile(Projectile* p)
+{
+    p->Reset();
+    m_availableProjectiles.push(p);
+}
+
+void ProjectilePool::FireBullet(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
+{
+    Projectile* p = GetProjectile();
+    if (p) p->Fire(pos, dir, speed);
+}
+
+void ProjectilePool::FireRocket(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
+{
+    Projectile* p = GetProjectile();
+    if (p) p->Fire(pos, dir, speed);
+}
+
+void ProjectilePool::FireGrenade(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
+{
+    Projectile* p = GetProjectile();
+    if (p)
+    {
+        p->SetGravity(true, 1.0f);
+        p->Fire(pos, dir, speed);
+    }
+}
+
+void ProjectilePool::FireProjectile(ProjectileType type, const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
+{
+    switch (type)
+    {
+    case ProjectileType::BULLET:  FireBullet(pos, dir, speed); break;
+    case ProjectileType::ROCKET:  FireRocket(pos, dir, speed); break;
+    case ProjectileType::GRENADE: FireGrenade(pos, dir, speed); break;
+    }
+}
+
+size_t ProjectilePool::GetActiveCount() const
+{
+    size_t count = 0;
+    for (const auto& up : m_projectiles)
+        if (up->IsActive()) ++count;
+    return count;
+}
+
+size_t ProjectilePool::GetAvailableCount() const
+{
+    return m_availableProjectiles.size();
+}
+

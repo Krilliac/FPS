@@ -1,4 +1,4 @@
-# ThirdParty Dependencies CMakeLists.txt
+﻿# ThirdParty Dependencies CMakeLists.txt
 cmake_minimum_required(VERSION 3.16)
 
 # Set C++ standard
@@ -33,3 +33,4 @@ target_include_directories(glm INTERFACE Utils/glm)
 # spdlog - Header only
 add_library(spdlog INTERFACE)
 target_include_directories(spdlog INTERFACE Utils/spdlog/include)
+
