@@ -1,4 +1,4 @@
-cbuffer PerFrame:register(b0){float4x4 WorldViewProj;float3 CameraPos;float Time;}
+cbuffer PerFrame:register(b1){float4x4 WorldViewProj;float3 CameraPos;float Time;}
 Texture2D RefractionMap:register(t0);
 Texture2D ReflectionMap:register(t1);
 Texture2D NormalMap:register(t2);

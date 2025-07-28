@@ -1,5 +1,5 @@
 Texture2D InputTex:register(t0);SamplerState Sam:register(s0);
-cbuffer ThresholdCB:register(b0){float Threshold;}
+cbuffer ThresholdCB:register(b1){float Threshold;}
 float4 PS_BloomExtract(float2 uv:TEXCOORD):SV_Target
 {
     float3 c=InputTex.Sample(Sam,uv).rgb;

@@ -1,4 +1,4 @@
-cbuffer PerFrame:register(b0){float4x4 World;float4x4 ViewProj;float3 LightDir;float Padding;float3 LightColor;float SpecPower;}
+cbuffer PerFrame:register(b1){float4x4 World;float4x4 ViewProj;float3 LightDir;float Padding;float3 LightColor;float SpecPower;}
 struct VS_IN{float3 Pos:POSITION;float3 Normal:NORMAL;};
 struct PS_IN{float4 Pos:SV_POSITION;float3 WorldN:TEXCOORD0;float3 WorldV:TEXCOORD1;};
 PS_IN VS_Phong(VS_IN i){PS_IN o;float4 wp=mul(float4(i.Pos,1),World);o.Pos=mul(wp,ViewProj);o.WorldN=normalize(mul(i.Normal,(float3x3)World));o.WorldV=normalize(-wp.xyz);return o;}

@@ -1,4 +1,4 @@
-cbuffer PerFrame : register(b0)
+cbuffer PerFrame : register(b1)
 {
     float4x4 WVProj; float3 CameraPos; float Roughness;
 };

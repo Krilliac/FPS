@@ -1,4 +1,4 @@
-cbuffer PerFrame : register(b0)
+cbuffer PerFrame : register(b1)
 {
     float4x4 World; float4x4 View; float4x4 Projection;
     float3   CameraPos; float    _padding;

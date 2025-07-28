@@ -1,4 +1,6 @@
-﻿#include <Windows.h>
+﻿// Game.cpp
+
+#include <Windows.h>
 #include <cstdint>
 #include <cstdarg>
 #include <cstdio>
@@ -40,8 +42,7 @@ HRESULT Game::Initialize(GraphicsEngine* graphics,
 
     /* Camera ------------------------------------------------*/
     m_camera = std::make_unique<FPSCamera>();
-    float aspect =
-        float(m_graphics->GetWindowWidth()) /
+    float aspect = float(m_graphics->GetWindowWidth()) /
         float(m_graphics->GetWindowHeight());
     m_camera->Initialize(aspect);
     m_camera->SetPosition({ 0.0f, 2.0f, -5.0f });
@@ -138,7 +139,7 @@ void Game::Render()
 
     // Overlay console
     if (g_console.IsVisible())
-        g_console.Render(m_graphics->GetContext());
+        g_console.Render(g_graphics->GetContext());
 }
 
 /*-------------------------------------------------------------*/
@@ -156,37 +157,46 @@ void Game::UpdateGameObjects(float dt)
 }
 
 /*-------------------------------------------------------------
-  WASD + mouse look input handling
+  WASD + mouse look, zoom, and shooting input handling
 --------------------------------------------------------------*/
 void Game::HandleInput(float dt)
 {
     if (!m_input || !m_camera) return;
 
-    // Movement
-    float speed = 10.0f * dt;
-    if (m_input->IsKeyDown('W'))        m_camera->MoveForward(speed);
-    if (m_input->IsKeyDown('S'))        m_camera->MoveForward(-speed);
-    if (m_input->IsKeyDown('A'))        m_camera->MoveRight(-speed);
-    if (m_input->IsKeyDown('D'))        m_camera->MoveRight(speed);
-    if (m_input->IsKeyDown(VK_SPACE))   m_camera->MoveUp(speed);
-    if (m_input->IsKeyDown(VK_LCONTROL))m_camera->MoveUp(-speed);
-
-    // Mouse look
+    // --- Mouse look for yaw/pitch ---
     int dx, dy;
     if (m_input->GetMouseDelta(dx, dy))
     {
-        constexpr float sens = 0.005f;
-        m_camera->Yaw(dx * sens);
-        m_camera->Pitch(-dy * sens);
+        constexpr float mouseSens = 0.005f;
+        m_camera->Yaw(dx * mouseSens);
+        m_camera->Pitch(-dy * mouseSens);
     }
 
-    // Fire projectile
+    // --- Movement (WASD = forward/back & strafe) ---
+    float moveSpeed = 10.0f * dt;
+    if (m_input->IsKeyDown('W'))        m_camera->MoveForward(moveSpeed);
+    if (m_input->IsKeyDown('S'))        m_camera->MoveForward(-moveSpeed);
+    if (m_input->IsKeyDown('A'))        m_camera->MoveRight(-moveSpeed);
+    if (m_input->IsKeyDown('D'))        m_camera->MoveRight(moveSpeed);
+    if (m_input->IsKeyDown(VK_SPACE))   m_camera->MoveUp(moveSpeed);
+    if (m_input->IsKeyDown(VK_LCONTROL))m_camera->MoveUp(-moveSpeed);
+
+    // --- Zoom on right-mouse button ---
+    if (m_input->IsMouseButtonDown(1))  // right button held
+        m_camera->SetZoom(true);
+    else
+        m_camera->SetZoom(false);
+
+    // --- Shoot on left-mouse click ---
     if (m_input->WasMouseButtonPressed(0) && m_projectilePool)
     {
         auto pos = m_camera->GetPosition();
         auto dir = m_camera->GetForward();
         m_projectilePool->FireProjectile(
-            ProjectileType::BULLET, pos, dir, 50.0f);
+            ProjectileType::BULLET,
+            pos, dir,
+            50.0f
+        );
     }
 }
 
@@ -198,7 +208,8 @@ void Game::CreateTestObjects()
     // Ground plane
     {
         auto ground = std::make_unique<PlaneObject>(20.0f, 20.0f);
-        ground->Initialize(m_graphics->GetDevice(),
+        ground->Initialize(
+            m_graphics->GetDevice(),
             m_graphics->GetContext());
         ground->SetPosition({ 0.0f, -1.0f, 0.0f });
         m_gameObjects.push_back(std::move(ground));
@@ -208,7 +219,8 @@ void Game::CreateTestObjects()
     for (int i = 0; i < 5; ++i)
     {
         auto cube = std::make_unique<CubeObject>(1.0f);
-        cube->Initialize(m_graphics->GetDevice(),
+        cube->Initialize(
+            m_graphics->GetDevice(),
             m_graphics->GetContext());
         cube->SetPosition({ i * 3.0f - 6.0f, 1.0f, 10.0f });
         m_gameObjects.push_back(std::move(cube));
@@ -217,7 +229,8 @@ void Game::CreateTestObjects()
     // Single sphere
     {
         auto sphere = std::make_unique<SphereObject>(1.0f, 16, 16);
-        sphere->Initialize(m_graphics->GetDevice(),
+        sphere->Initialize(
+            m_graphics->GetDevice(),
             m_graphics->GetContext());
         sphere->SetPosition({ 5.0f, 0.0f, 0.0f });
         m_gameObjects.push_back(std::move(sphere));

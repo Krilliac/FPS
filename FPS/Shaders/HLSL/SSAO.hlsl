@@ -1,4 +1,4 @@
-cbuffer CB:register(b0){float4x4 InvProj;float2 ScreenSize;float Radius;float Bias;}
+cbuffer CB:register(b1){float4x4 InvProj;float2 ScreenSize;float Radius;float Bias;}
 Texture2D DepthTex:register(t0);SamplerState Sam:register(s0);
 static const float2 samples[16]={float2(1,0),float2(-1,0),float2(0,1),float2(0,-1),float2(.707,.707),float2(-.707,.707),float2(.707,-.707),float2(-.707,-.707),float2(1,1),float2(-1,1),float2(1,-1),float2(-1,-1),float2(.5,0),float2(-.5,0),float2(0,.5),float2(0,-.5)};
 float4 main(float2 uv:TEXCOORD):SV_Target{
