@@ -4,12 +4,12 @@
 #include "Spark Engine/Source/Utils/CrashHandler.h"
 #include <dbghelp.h>
 #include <curl/curl.h>
+#include <vector>
+#include <string>
 #include <wincodec.h>
 #include <TlHelp32.h>
 #include <dxgi.h>
 #include <d3d11.h>
-#define MINIZ_HEADER_FILE_ONLY
-#include "../ThirdParty/Utils/miniz/miniz.c"
 #include <fstream>
 #include <sstream>
 #include <mutex>
