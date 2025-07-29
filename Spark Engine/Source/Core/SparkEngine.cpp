@@ -1,5 +1,4 @@
-﻿// ===================================================================================
-// SparkEngine.cpp – unified entry point with Win32 boilerplate + Spark Engine integration
+﻿// SparkEngine.cpp – unified entry point with Win32 boilerplate + classic subsystems
 // ===================================================================================
 
 #include "framework.h"
@@ -8,14 +7,14 @@
 #include <Windows.h>
 #include <memory>
 #include <DirectXMath.h>
+#include <cstdio>              // for swprintf_s
 
 #include "..\Graphics\GraphicsEngine.h"
 #include "..\Game\Game.h"
 #include "..\Input\InputManager.h"
 #include "..\Utils\Timer.h"
 #include "..\Game\Console.h"
-#include "Engine/Core/Engine.h"          // ← Engine singleton
-#include "Spark Engine/Source/Utils/CrashHandler.h"
+#include "Utils/CrashHandler.h"
 
 // -----------------------------------------------------------------------------
 // Globals & constants
@@ -26,7 +25,7 @@ HINSTANCE                          g_hInst;
 WCHAR                              g_szTitle[MAX_LOADSTRING];
 WCHAR                              g_szClass[MAX_LOADSTRING];
 
-// Classic systems
+// Classic subsystems
 std::unique_ptr<GraphicsEngine>    g_graphics;
 std::unique_ptr<Game>              g_game;
 std::unique_ptr<InputManager>      g_input;
@@ -43,46 +42,50 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 //                                    wWinMain
 // ===================================================================================
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                      _In_opt_ HINSTANCE,
-                      _In_ LPWSTR,
-                      _In_ int nCmdShow)
+    _In_opt_ HINSTANCE,
+    _In_ LPWSTR,
+    _In_ int nCmdShow)
 {
-    // ------------------------------------------------
-    // 1. Crash handler (runs before anything else)
-    // ------------------------------------------------
-    CrashConfig crashCfg;
-    crashCfg.dumpPrefix         = L"SparkCrash";
-    crashCfg.uploadURL          = "https://crash.placeholder.com/upload";
-    crashCfg.captureScreenshot  = true;
-    crashCfg.captureSystemInfo  = true;
-    crashCfg.captureAllThreads  = true;
-    crashCfg.zipBeforeUpload    = true;
+    // 1. Crash handler
+    CrashConfig crashCfg{};
+    crashCfg.dumpPrefix = L"SparkCrash";
+    crashCfg.uploadURL = "https://crash.placeholder.com/upload";
+    crashCfg.captureScreenshot = true;
+    crashCfg.captureSystemInfo = true;
+    crashCfg.captureAllThreads = true;
+    crashCfg.zipBeforeUpload = true;
     InstallCrashHandler(crashCfg);
 
-    // ------------------------------------------------
-    // 2. Stock Win32 setup
-    // ------------------------------------------------
-    LoadStringW(hInstance, IDS_APP_TITLE, g_szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_SparkEngine,       g_szClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+    // 2. Hard-code our class & window title
+    wcscpy_s(g_szClass, MAX_LOADSTRING, L"SparkEngineWindowClass");
+    wcscpy_s(g_szTitle, MAX_LOADSTRING, L"Spark Engine");
+
+    // 3. Register window class
+    if (MyRegisterClass(hInstance) == 0)
+    {
+        MessageBoxW(nullptr, L"RegisterClassExW failed", L"Fatal Error", MB_ICONERROR);
+        return -1;
+    }
+
+    // 4. Create window & initialize everything else
     if (!InitInstance(hInstance, nCmdShow))
         return -1;
 
-    // ------------------------------------------------
-    // 3. Normal message loop
-    // ------------------------------------------------
+    // 5. Main message loop + subsystem tick
     HACCEL accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SparkEngine));
-    MSG     msg  = {};
-    g_timer      = std::make_unique<Timer>();
+    MSG     msg = {};
+    g_timer = std::make_unique<Timer>();
 
     while (msg.message != WM_QUIT)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            // Feed console first
-            if (msg.message == WM_CHAR && g_console.HandleChar(static_cast<wchar_t>(msg.wParam)))
+            // Give console first crack at input
+            if (msg.message == WM_CHAR &&
+                g_console.HandleChar(static_cast<wchar_t>(msg.wParam)))
                 continue;
-            if (msg.message == WM_KEYDOWN && g_console.HandleKeyDown(msg.wParam))
+            if (msg.message == WM_KEYDOWN &&
+                g_console.HandleKeyDown(msg.wParam))
                 continue;
 
             if (!TranslateAccelerator(msg.hwnd, accel, &msg))
@@ -95,7 +98,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             float dt = g_timer->GetDeltaTime();
 
-            if (g_input) g_input->Update();
+            if (g_input)                      g_input->Update();
             if (g_game && !g_console.IsVisible()) g_game->Update(dt);
 
             g_graphics->BeginFrame();
@@ -105,6 +108,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             g_graphics->EndFrame();
         }
     }
+
     return static_cast<int>(msg.wParam);
 }
 
@@ -114,45 +118,44 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 ATOM MyRegisterClass(HINSTANCE hInst)
 {
     WNDCLASSEXW wc{};
-    wc.cbSize        = sizeof(WNDCLASSEX);
-    wc.style         = CS_HREDRAW | CS_VREDRAW;
-    wc.lpfnWndProc   = WndProc;
-    wc.hInstance     = hInst;
-    wc.hIcon         = LoadIcon(hInst, MAKEINTRESOURCE(IDI_SparkEngine));
-    wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-    wc.lpszMenuName  = MAKEINTRESOURCEW(IDC_SparkEngine);
+    wc.cbSize = sizeof(WNDCLASSEX);
+    wc.style = CS_HREDRAW | CS_VREDRAW;
+    wc.lpfnWndProc = WndProc;
+    wc.hInstance = hInst;
+    wc.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_SparkEngine));
+    wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wc.lpszMenuName = MAKEINTRESOURCEW(IDC_SparkEngine);
     wc.lpszClassName = g_szClass;
-    wc.hIconSm       = LoadIcon(hInst, MAKEINTRESOURCE(IDI_SMALL));
+    wc.hIconSm = LoadIcon(hInst, MAKEINTRESOURCE(IDI_SMALL));
+
     return RegisterClassExW(&wc);
 }
 
 BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
 {
     g_hInst = hInst;
+
+    // Create the window
     HWND hWnd = CreateWindowW(
         g_szClass, g_szTitle,
-        WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, 1280, 720,
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, 1280, 720,
         nullptr, nullptr, hInst, nullptr);
-    if (!hWnd) return FALSE;
 
-    // 1. Spark Engine bootstrap (owns main loop/tick internally)
-    EngineConfig cfg;
-    cfg.enableEditor   = true;
-    cfg.projectPath    = "Assets/";
-    cfg.windowWidth    = 1280;
-    cfg.windowHeight   = 720;
-    cfg.windowTitle    = "Spark Engine";
-    Engine& engine     = Engine::Instance();
-    if (!engine.Initialize(cfg))
+    if (!hWnd)
     {
-        MessageBoxW(hWnd, L"Engine init failed", L"Fatal", MB_ICONERROR);
+        DWORD err = GetLastError();
+        wchar_t buf[256];
+        swprintf_s(buf, L"CreateWindowW failed (0x%08X)", err);
+        MessageBoxW(nullptr, buf, L"Fatal Error", MB_ICONERROR);
         return FALSE;
     }
 
-    // 2. Classic subsystems (migrate into Engine later)
+    // 1. Initialize Console
     g_console.Initialize(1280, 720);
 
+    // 2. Initialize Graphics
     g_graphics = std::make_unique<GraphicsEngine>();
     if (FAILED(g_graphics->Initialize(hWnd)))
     {
@@ -160,14 +163,30 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
         return FALSE;
     }
 
+    // 3. Initialize Input
     g_input = std::make_unique<InputManager>();
     g_input->Initialize(hWnd);
 
+    // 4. Initialize Game
     g_game = std::make_unique<Game>();
-    g_game->Initialize(g_graphics.get(), g_input.get());
+    {
+        HRESULT hr = g_game->Initialize(
+            g_graphics.get(),
+            g_input.get());
+        if (FAILED(hr))
+        {
+            MessageBoxW(nullptr,
+                L"Game initialization failed",
+                L"Fatal Error",
+                MB_ICONERROR);
+            return FALSE;
+        }
+    }
 
+    // 5. Show window
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+
     return TRUE;
 }
 
@@ -178,26 +197,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
-        case WM_KEYDOWN:
-            if (wParam == VK_OEM_3) { g_console.Toggle(); return 0; }
-            if (g_input) g_input->HandleMessage(msg, wParam, lParam);
-            break;
-
-        case WM_KEYUP:
-        case WM_MOUSEMOVE:
-        case WM_LBUTTONDOWN: case WM_LBUTTONUP:
-        case WM_RBUTTONDOWN: case WM_RBUTTONUP:
-            if (g_input) g_input->HandleMessage(msg, wParam, lParam);
-            break;
-
-        case WM_SIZE:
-            if (g_graphics) g_graphics->OnResize(LOWORD(lParam), HIWORD(lParam));
-            break;
-
-        case WM_DESTROY:
-            Engine::Instance().Shutdown();
-            PostQuitMessage(0);
+    case WM_KEYDOWN:
+        if (wParam == VK_OEM_3)
+        {
+            g_console.Toggle();
             return 0;
+        }
+        if (g_input) g_input->HandleMessage(msg, wParam, lParam);
+        break;
+
+    case WM_KEYUP:
+    case WM_MOUSEMOVE:
+    case WM_LBUTTONDOWN: case WM_LBUTTONUP:
+    case WM_RBUTTONDOWN: case WM_RBUTTONUP:
+        if (g_input) g_input->HandleMessage(msg, wParam, lParam);
+        break;
+
+    case WM_SIZE:
+        if (g_graphics)
+            g_graphics->OnResize(LOWORD(lParam), HIWORD(lParam));
+        break;
+
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        return 0;
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
@@ -207,9 +230,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT msg, WPARAM wParam, LPARAM)
     if (msg == WM_COMMAND &&
         (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL))
     {
-        EndDialog(hDlg, LOWORD(wParam)); return TRUE;
+        EndDialog(hDlg, LOWORD(wParam));
+        return TRUE;
     }
     return FALSE;
 }
-
-

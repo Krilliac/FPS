@@ -105,9 +105,6 @@
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Core\targetver.h">
       <Filter>Source\Spark Engine\Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Engine\Core\Engine.h">
-      <Filter>Source\Spark Engine\Source\Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Engine\ECS\Components.h">
       <Filter>Source\Spark Engine\Source\Engine\ECS</Filter>
     </ClInclude>
@@ -217,9 +214,6 @@
     </Filter>
     <Filter Include="Source\Spark Engine\Source\Engine">
       <UniqueIdentifier>{7BF1C33B-564F-3102-9722-9D7FC8F3096B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Spark Engine\Source\Engine\Core">
-      <UniqueIdentifier>{0C319857-428E-383E-B350-E345C447243C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Spark Engine\Source\Engine\ECS">
       <UniqueIdentifier>{47FA6BBD-691B-338C-AA03-B612F2B34235}</UniqueIdentifier>

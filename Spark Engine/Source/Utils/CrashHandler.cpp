@@ -1,7 +1,7 @@
 ﻿#include "miniz_export.h"
 #include <Windows.h>
 #undef WIN32_LEAN_AND_MEAN
-#include "Spark Engine/Source/Utils/CrashHandler.h"
+#include "Utils/CrashHandler.h"
 #include <dbghelp.h>
 #include <curl/curl.h>
 #include <vector>

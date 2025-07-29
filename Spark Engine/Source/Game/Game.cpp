@@ -1,4 +1,5 @@
-﻿// Game.cpp
+﻿// Game.cpp – core game logic
+// ===================================================================================
 
 #include <Windows.h>
 #include <cstdint>
@@ -53,6 +54,7 @@ HRESULT Game::Initialize(GraphicsEngine* graphics,
         m_graphics->GetDevice(),
         m_graphics->GetContext());
     if (FAILED(hr)) return hr;
+
     if (FAILED(m_shader->LoadVertexShader(L"Shaders\\HLSL\\BasicVS.hlsl")))
         return hr;
     if (FAILED(m_shader->LoadPixelShader(L"Shaders\\HLSL\\BasicPS.hlsl")))
@@ -133,9 +135,12 @@ void Game::Render()
         obj->Render(view, proj);
     }
 
-    // Draw player-related elements
-    m_player->Render(view, proj);
-    m_projectilePool->Render(view, proj);
+    // Draw player-related elements (only if valid)
+    if (m_player)
+        m_player->Render(view, proj);
+
+    if (m_projectilePool)
+        m_projectilePool->Render(view, proj);
 
     // Overlay console
     if (g_console.IsVisible())
@@ -163,7 +168,7 @@ void Game::HandleInput(float dt)
 {
     if (!m_input || !m_camera) return;
 
-    // --- Mouse look for yaw/pitch ---
+    // Mouse look
     int dx, dy;
     if (m_input->GetMouseDelta(dx, dy))
     {
@@ -172,7 +177,7 @@ void Game::HandleInput(float dt)
         m_camera->Pitch(-dy * mouseSens);
     }
 
-    // --- Movement (WASD = forward/back & strafe) ---
+    // Movement
     float moveSpeed = 10.0f * dt;
     if (m_input->IsKeyDown('W'))        m_camera->MoveForward(moveSpeed);
     if (m_input->IsKeyDown('S'))        m_camera->MoveForward(-moveSpeed);
@@ -181,13 +186,13 @@ void Game::HandleInput(float dt)
     if (m_input->IsKeyDown(VK_SPACE))   m_camera->MoveUp(moveSpeed);
     if (m_input->IsKeyDown(VK_LCONTROL))m_camera->MoveUp(-moveSpeed);
 
-    // --- Zoom on right-mouse button ---
-    if (m_input->IsMouseButtonDown(1))  // right button held
+    // Zoom
+    if (m_input->IsMouseButtonDown(1))
         m_camera->SetZoom(true);
     else
         m_camera->SetZoom(false);
 
-    // --- Shoot on left-mouse click ---
+    // Shoot
     if (m_input->WasMouseButtonPressed(0) && m_projectilePool)
     {
         auto pos = m_camera->GetPosition();
@@ -201,7 +206,7 @@ void Game::HandleInput(float dt)
 }
 
 /*-------------------------------------------------------------
-  Spawn placeholder objects – replace with real assets later
+  Spawn placeholder objects
 --------------------------------------------------------------*/
 void Game::CreateTestObjects()
 {
