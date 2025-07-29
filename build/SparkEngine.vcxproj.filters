@@ -129,6 +129,9 @@
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\Model.h">
       <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
+    <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\ModelVertex.h">
+      <Filter>Source\Spark Engine\Source\Game</Filter>
+    </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\PlaceholderMesh.h">
       <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>

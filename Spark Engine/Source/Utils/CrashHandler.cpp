@@ -1,7 +1,8 @@
-﻿#define WIN32_LEAN_AND_MEAN
+﻿#include <miniz_export.h>
+
 #include <Windows.h>
 #undef WIN32_LEAN_AND_MEAN
-#include "CrashHandler.h"
+#include "Spark Engine/Source/Utils/CrashHandler.h"
 #include <dbghelp.h>
 #include <curl/curl.h>
 #include <wincodec.h>
@@ -177,4 +178,8 @@ static std::wstring ThreadStacks() { return L""; }
 static void SaveScreenshot(const std::wstring& file) { }
 static void ZipFiles(const std::wstring& zip, const std::vector<std::wstring>& files) { }
 static bool Upload(const std::string& url, const std::wstring& file, const std::string& field) { return true; }
+
+
+
+
 

@@ -15,7 +15,7 @@
 #include "..\Utils\Timer.h"
 #include "..\Game\Console.h"
 #include "Engine/Core/Engine.h"          // ← Engine singleton
-#include "Source/Utilities/CrashHandler.h"
+#include "Spark Engine/Source/Utils/CrashHandler.h"
 
 // -----------------------------------------------------------------------------
 // Globals & constants
@@ -143,7 +143,6 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
     cfg.windowWidth    = 1280;
     cfg.windowHeight   = 720;
     cfg.windowTitle    = L"Spark Engine";
-    cfg.externalHwnd   = hWnd;                 // <— pass the Win32 window
     Engine& engine     = Engine::Instance();
     if (!engine.Initialize(cfg))
     {
@@ -212,3 +211,5 @@ INT_PTR CALLBACK About(HWND hDlg, UINT msg, WPARAM wParam, LPARAM)
     }
     return FALSE;
 }
+
+

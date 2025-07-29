@@ -1,7 +1,9 @@
-﻿#include "Model.h"
+﻿#include "ModelVertex.h"
+#include <tiny_obj_loader.h>
+#include "Model.h"
 #include "tiny_obj_loader.h"
 
-struct Vert {
+struct ModelVertex {
     float x, y, z;
     float u, v;
     float nx, ny, nz;
@@ -25,7 +27,7 @@ HRESULT Model::LoadObj(const std::wstring& filename,
     std::vector<UINT>        idxs;
     for (auto& shape : shapes) {
         for (auto& idx : shape.mesh.indices) {
-            Vert v = {};
+            ModelVertex v = {};
             v.Position = {
                 attrib.vertices[3*idx.vertex_index+0],
                 attrib.vertices[3*idx.vertex_index+1],
@@ -75,3 +77,6 @@ void Model::Render(ID3D11DeviceContext* ctx)
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ctx->DrawIndexed(m_indexCount, 0, 0);
 }
+
+
+

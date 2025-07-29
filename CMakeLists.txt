@@ -109,3 +109,27 @@ endif()
 # ─────────────────────────────────────────────────────────────
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 source_group(TREE "${CMAKE_SOURCE_DIR}" PREFIX "Source" FILES ${ENGINE_SRC} ${ENGINE_INC})
+# ---- auto-fix include paths ----
+target_include_directories(SparkEngine PRIVATE
+  "${CMAKE_SOURCE_DIR}"
+  "${CMAKE_SOURCE_DIR}/Source"
+  "${CMAKE_SOURCE_DIR}/Spark Engine/Source"
+  "${CMAKE_SOURCE_DIR}/Engine"
+  "${CMAKE_SOURCE_DIR}/Engine/Core"
+  "${CMAKE_SOURCE_DIR}/ThirdParty"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/include"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/glm"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/stb"
+)
+
+find_library(CURL_LIB
+  NAMES libcurl_a libcurl
+  PATHS "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/lib"
+  NO_DEFAULT_PATH
+)
+if (CURL_LIB)
+  target_link_libraries(SparkEngine PRIVATE ${CURL_LIB})
+endif()
+
