@@ -117,6 +117,7 @@ target_include_directories(SparkEngine PRIVATE
   "${CMAKE_SOURCE_DIR}/Engine"
   "${CMAKE_SOURCE_DIR}/Engine/Core"
   "${CMAKE_SOURCE_DIR}/ThirdParty"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz"
   "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader"
   "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include"
   "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/include"

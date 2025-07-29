@@ -142,7 +142,7 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
     cfg.projectPath    = "Assets/";
     cfg.windowWidth    = 1280;
     cfg.windowHeight   = 720;
-    cfg.windowTitle    = L"Spark Engine";
+    cfg.windowTitle    = "Spark Engine";
     Engine& engine     = Engine::Instance();
     if (!engine.Initialize(cfg))
     {
