@@ -1,9 +1,9 @@
-﻿cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project(SparkEngine LANGUAGES C CXX)
 
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 # Global compiler setup
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -13,9 +13,9 @@ if (MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 # Engine Options
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 option(ENABLE_EDITOR      "Build with in-engine editor UI"      ON)
 option(ENABLE_CONSOLE     "External debug console overlay"      ON)
 option(ENABLE_ANGELSCRIPT "Embed AngelScript scripting"         ON)
@@ -24,9 +24,9 @@ message(STATUS "Editor..............: ${ENABLE_EDITOR}")
 message(STATUS "Console.............: ${ENABLE_CONSOLE}")
 message(STATUS "AngelScript.........: ${ENABLE_ANGELSCRIPT}")
 
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 # Find all source files
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 file(GLOB_RECURSE ENGINE_SRC
     CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/*.cpp"
@@ -50,10 +50,34 @@ if(NOT ENGINE_SRC)
 endif()
 
 add_executable(SparkEngine ${ENGINE_SRC} ${ENGINE_INC})
+# <<< Miniz Integration >>>
+#--- Begin Miniz Integration ---
+if (NOT TARGET miniz)
+    add_library(miniz
+        "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz/miniz.c"
+    )
+    target_include_directories(miniz PUBLIC
+        "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz"
+    )
+endif()
+target_link_libraries(SparkEngine PRIVATE miniz)
+#--- End Miniz Integration ---
+# <<< End Miniz Integration >>>
 
-# ─────────────────────────────────────────────────────────────
+#--- Begin tinyobjloader Integration ---
+if (NOT TARGET tinyobjloader)
+  add_library(tinyobjloader INTERFACE)
+  target_include_directories(tinyobjloader INTERFACE
+    "\/ThirdParty/Utils/tinyobjloader/include"
+  )
+endif()
+target_link_libraries(SparkEngine PRIVATE miniz tinyobjloader)
+#--- End tinyobjloader Integration ---
+# <<< ThirdParty Integration >>>
+
+# -------------------------------------------------------------
 # Comprehensive include directories
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 target_include_directories(SparkEngine PRIVATE
     # Project roots
     "${CMAKE_SOURCE_DIR}"
@@ -81,9 +105,9 @@ target_compile_definitions(SparkEngine PRIVATE
     _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 )
 
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 # AngelScript
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 if (ENABLE_ANGELSCRIPT)
     set(AS_CMAKE_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake")
     if (EXISTS "${AS_CMAKE_DIR}/CMakeLists.txt")
@@ -93,9 +117,9 @@ if (ENABLE_ANGELSCRIPT)
     endif()
 endif()
 
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 # Platform libraries
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 if (WIN32)
     target_link_libraries(SparkEngine PRIVATE
         d3d11 dxgi dxguid
@@ -104,9 +128,9 @@ if (WIN32)
     )
 endif()
 
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 # IDE organization
-# ─────────────────────────────────────────────────────────────
+# -------------------------------------------------------------
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 source_group(TREE "${CMAKE_SOURCE_DIR}" PREFIX "Source" FILES ${ENGINE_SRC} ${ENGINE_INC})
 # ---- auto-fix include paths ----

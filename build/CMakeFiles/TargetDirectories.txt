@@ -1,4 +1,5 @@
 D:/Game/FPSGame/build/CMakeFiles/SparkEngine.dir
+D:/Game/FPSGame/build/CMakeFiles/miniz.dir
 D:/Game/FPSGame/build/CMakeFiles/INSTALL.dir
 D:/Game/FPSGame/build/CMakeFiles/ALL_BUILD.dir
 D:/Game/FPSGame/build/CMakeFiles/ZERO_CHECK.dir
