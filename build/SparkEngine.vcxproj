@@ -100,15 +100,15 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
@@ -121,14 +121,14 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Debug\miniz.lib;libcurl-d.lib;angelscript\Debug\angelscriptd.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Game/FPSGame/build/curl/lib/Debug;D:/Game/FPSGame/build/curl/lib/Debug/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Debug\miniz.lib;Debug\tinyobjloader.lib;curl\lib\Debug\libcurl.lib;angelscript\Debug\angelscriptd.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>D:/Game/FPSGame/build/Debug/SparkEngine.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Game/FPSGame/build/Debug/SparkEngine.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -147,17 +147,17 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
@@ -170,14 +170,14 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Release\miniz.lib;curl\lib\Release\libcurl.lib;angelscript\Release\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Game/FPSGame/build/curl/lib/Release;D:/Game/FPSGame/build/curl/lib/Release/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Release\miniz.lib;Release\tinyobjloader.lib;curl\lib\Release\libcurl.lib;angelscript\Release\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>D:/Game/FPSGame/build/Release/SparkEngine.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Game/FPSGame/build/Release/SparkEngine.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -196,17 +196,17 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
@@ -219,14 +219,14 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>MinSizeRel\miniz.lib;angelscript\MinSizeRel\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Game/FPSGame/build/curl/lib/MinSizeRel;D:/Game/FPSGame/build/curl/lib/MinSizeRel/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>MinSizeRel\miniz.lib;MinSizeRel\tinyobjloader.lib;curl\lib\MinSizeRel\libcurl.lib;angelscript\MinSizeRel\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>D:/Game/FPSGame/build/MinSizeRel/SparkEngine.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Game/FPSGame/build/MinSizeRel/SparkEngine.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -246,15 +246,15 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\miniz;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
@@ -267,14 +267,14 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>RelWithDebInfo\miniz.lib;angelscript\RelWithDebInfo\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Game/FPSGame/build/curl/lib/RelWithDebInfo;D:/Game/FPSGame/build/curl/lib/RelWithDebInfo/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RelWithDebInfo\miniz.lib;RelWithDebInfo\tinyobjloader.lib;curl\lib\RelWithDebInfo\libcurl.lib;angelscript\RelWithDebInfo\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImportLibrary>D:/Game/FPSGame/build/RelWithDebInfo/SparkEngine.lib</ImportLibrary>
       <ProgramDataBaseFile>D:/Game/FPSGame/build/RelWithDebInfo/SparkEngine.pdb</ProgramDataBaseFile>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -293,7 +293,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Game/FPSGame/CMakeLists.txt</Message>
@@ -306,7 +306,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Game/FPSGame/CMakeLists.txt</Message>
@@ -319,7 +319,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Game/FPSGame/CMakeLists.txt</Message>
@@ -332,7 +332,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
@@ -420,6 +420,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="D:\Game\FPSGame\build\miniz.vcxproj">
       <Project>{C6B99E9E-67E5-38B5-96FE-2CE4147254AD}</Project>
       <Name>miniz</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\tinyobjloader.vcxproj">
+      <Project>{E09911C4-CD27-387E-8A15-DAC945D4FFB9}</Project>
+      <Name>tinyobjloader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

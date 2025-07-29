@@ -60,7 +60,7 @@ set_target_properties(CURL::libcurl_static PROPERTIES
 set_property(TARGET CURL::libcurl_static APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(CURL::libcurl_static PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
-  IMPORTED_LOCATION_DEBUG "D:/Game/FPSGame/build/curl/lib/Debug/libcurl-d.lib"
+  IMPORTED_LOCATION_DEBUG "D:/Game/FPSGame/build/curl/lib/Debug/libcurl.lib"
   )
 
 # Import target "CURL::libcurl_static" for configuration "Release"
