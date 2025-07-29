@@ -6,134 +6,106 @@ project(SparkEngine LANGUAGES C CXX)
 # -------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 if (MSVC)
-    add_compile_options(/permissive- /Zc:__cplusplus)
-    # Static runtime linking
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  add_compile_options(/permissive- /Zc:__cplusplus)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
 # -------------------------------------------------------------
-# Engine Options
+# Engine build options
 # -------------------------------------------------------------
-option(ENABLE_EDITOR      "Build with in-engine editor UI"      ON)
-option(ENABLE_CONSOLE     "External debug console overlay"      ON)
-option(ENABLE_ANGELSCRIPT "Embed AngelScript scripting"         ON)
+option(ENABLE_EDITOR      "Build with in-engine editor UI" ON)
+option(ENABLE_CONSOLE     "External debug console overlay" ON)
+option(ENABLE_ANGELSCRIPT "Embed AngelScript scripting" ON)
 
 message(STATUS "Editor..............: ${ENABLE_EDITOR}")
 message(STATUS "Console.............: ${ENABLE_CONSOLE}")
 message(STATUS "AngelScript.........: ${ENABLE_ANGELSCRIPT}")
 
 # -------------------------------------------------------------
-# Find all source files
+# Gather engine sources & headers
 # -------------------------------------------------------------
 file(GLOB_RECURSE ENGINE_SRC
-    CONFIGURE_DEPENDS
-    "${CMAKE_SOURCE_DIR}/*.cpp"
-    "${CMAKE_SOURCE_DIR}/*.c"
+  CONFIGURE_DEPENDS
+  "${CMAKE_SOURCE_DIR}/*.cpp"
+  "${CMAKE_SOURCE_DIR}/*.c"
 )
 file(GLOB_RECURSE ENGINE_INC
-    CONFIGURE_DEPENDS
-    "${CMAKE_SOURCE_DIR}/*.h"
-    "${CMAKE_SOURCE_DIR}/*.hpp"
+  CONFIGURE_DEPENDS
+  "${CMAKE_SOURCE_DIR}/*.h"
+  "${CMAKE_SOURCE_DIR}/*.hpp"
 )
 
-# Filter out build and third-party
 list(FILTER ENGINE_SRC EXCLUDE REGEX "build/|ThirdParty/")
 list(FILTER ENGINE_INC EXCLUDE REGEX "build/|ThirdParty/")
+message(STATUS "Found ${ENGINE_SRC_COUNT} source files")
 
-list(LENGTH ENGINE_SRC SRC_COUNT)
-message(STATUS "Found ${SRC_COUNT} source files")
-
-if(NOT ENGINE_SRC)
-    message(FATAL_ERROR "No source files found!")
+if (NOT ENGINE_SRC)
+  message(FATAL_ERROR "No source files found!")
 endif()
 
-add_executable(SparkEngine ${ENGINE_SRC} ${ENGINE_INC})
-# <<< Miniz Integration >>>
-#--- Begin Miniz Integration ---
+# -------------------------------------------------------------
+# Primary executable target
+# -------------------------------------------------------------
+add_executable(SparkEngine
+  ${ENGINE_SRC}
+  ${ENGINE_INC}
+)
+
+# -------------------------------------------------------------
+# ThirdParty integration (Miniz, tinyobjloader, libcurl)
+# -------------------------------------------------------------
+# <<< ThirdParty Integration >>>
+
+# Miniz
 if (NOT TARGET miniz)
-    add_library(miniz
-        "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz/miniz.c"
-    )
-    target_include_directories(miniz PUBLIC
-        "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz"
-    )
+  add_library(miniz
+    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz/miniz.c"
+  )
+  target_include_directories(miniz PUBLIC
+    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz"
+  )
 endif()
 target_link_libraries(SparkEngine PRIVATE miniz)
-#--- End Miniz Integration ---
-# <<< End Miniz Integration >>>
 
-#--- Begin tinyobjloader Integration ---
+# tinyobjloader
 if (NOT TARGET tinyobjloader)
   add_library(tinyobjloader INTERFACE)
   target_include_directories(tinyobjloader INTERFACE
-    "\/ThirdParty/Utils/tinyobjloader/include"
+    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include"
   )
 endif()
-target_link_libraries(SparkEngine PRIVATE miniz tinyobjloader)
-#--- End tinyobjloader Integration ---
-# <<< ThirdParty Integration >>>
+target_link_libraries(SparkEngine PRIVATE tinyobjloader)
 
-# -------------------------------------------------------------
-# Comprehensive include directories
-# -------------------------------------------------------------
+# libcurl build from submodule
+set(BUILD_SHARED_LIBS      OFF CACHE BOOL "" FORCE)
+set(BUILD_CURL_EXE         OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING          OFF CACHE BOOL "" FORCE)
+set(CURL_USE_SCHANNEL      ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_LDAP      ON  CACHE BOOL "" FORCE)
+set(CURL_USE_LIBPSL        OFF CACHE BOOL "" FORCE)    # <— disable libpsl [1]
+set(CURL_ZLIB              OFF CACHE BOOL "" FORCE)    # <— disable zlib
+set(CURL_BROTLI            OFF CACHE BOOL "" FORCE)    # <— disable brotli
+set(CURL_ZSTD              OFF CACHE BOOL "" FORCE)    # <— disable zstd
+set(CURL_HTTP2             OFF CACHE BOOL "" FORCE)    # <— disable nghttp2
+set(CURL_USE_LIBIDN2       OFF CACHE BOOL "" FORCE)    # <— disable libidn2
+
+add_subdirectory(
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl"
+  "${CMAKE_BINARY_DIR}/curl"
+)
+
+target_link_libraries(SparkEngine PRIVATE libcurl)     # libcurl target from curl subdir
 target_include_directories(SparkEngine PRIVATE
-    # Project roots
-    "${CMAKE_SOURCE_DIR}"
-    "${CMAKE_SOURCE_DIR}/Source"
-    "${CMAKE_SOURCE_DIR}/Spark Engine/Source"
-    
-    # Engine directories
-    "${CMAKE_SOURCE_DIR}/Engine"
-    "${CMAKE_SOURCE_DIR}/Engine/Core"
-    "${CMAKE_SOURCE_DIR}/Source/Core"
-    "${CMAKE_SOURCE_DIR}/Spark Engine/Source/Core"
-    
-    # Third-party
-    "${CMAKE_SOURCE_DIR}/ThirdParty"
-    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader"
-    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/glm"
-    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/stb"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/install/include"
 )
+target_compile_definitions(SparkEngine PRIVATE CURL_STATICLIB)
 
-# Compiler definitions
-target_compile_definitions(SparkEngine PRIVATE
-    _CRT_SECURE_NO_WARNINGS
-    NOMINMAX
-    WIN32_LEAN_AND_MEAN
-    _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
-)
+# <<< End ThirdParty Integration >>>
 
 # -------------------------------------------------------------
-# AngelScript
+# Engine include dirs
 # -------------------------------------------------------------
-if (ENABLE_ANGELSCRIPT)
-    set(AS_CMAKE_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake")
-    if (EXISTS "${AS_CMAKE_DIR}/CMakeLists.txt")
-        add_subdirectory("${AS_CMAKE_DIR}" "${CMAKE_BINARY_DIR}/angelscript")
-        target_link_libraries(SparkEngine PRIVATE angelscript_static)
-        target_compile_definitions(SparkEngine PRIVATE WITH_ANGELSCRIPT=1)
-    endif()
-endif()
-
-# -------------------------------------------------------------
-# Platform libraries
-# -------------------------------------------------------------
-if (WIN32)
-    target_link_libraries(SparkEngine PRIVATE
-        d3d11 dxgi dxguid
-        Shlwapi user32 gdi32 winmm
-        dbghelp
-    )
-endif()
-
-# -------------------------------------------------------------
-# IDE organization
-# -------------------------------------------------------------
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-source_group(TREE "${CMAKE_SOURCE_DIR}" PREFIX "Source" FILES ${ENGINE_SRC} ${ENGINE_INC})
-# ---- auto-fix include paths ----
 target_include_directories(SparkEngine PRIVATE
   "${CMAKE_SOURCE_DIR}"
   "${CMAKE_SOURCE_DIR}/Source"
@@ -142,19 +114,48 @@ target_include_directories(SparkEngine PRIVATE
   "${CMAKE_SOURCE_DIR}/Engine/Core"
   "${CMAKE_SOURCE_DIR}/ThirdParty"
   "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz"
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader"
   "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include"
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/include"
+  "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/install/include"
   "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/glm"
   "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/stb"
 )
 
-find_library(CURL_LIB
-  NAMES libcurl_a libcurl
-  PATHS "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/lib"
-  NO_DEFAULT_PATH
-)
-if (CURL_LIB)
-  target_link_libraries(SparkEngine PRIVATE ${CURL_LIB})
+# -------------------------------------------------------------
+# AngelScript integration
+# -------------------------------------------------------------
+if (ENABLE_ANGELSCRIPT)
+  set(AS_CMAKE_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake")
+  if (EXISTS "${AS_CMAKE_DIR}/CMakeLists.txt")
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    add_subdirectory("${AS_CMAKE_DIR}" "${CMAKE_BINARY_DIR}/angelscript")
+    target_link_libraries(SparkEngine PRIVATE angelscript_static)
+    target_compile_definitions(SparkEngine PRIVATE WITH_ANGELSCRIPT=1)
+  endif()
 endif()
 
+# -------------------------------------------------------------
+# Platform system libs
+# -------------------------------------------------------------
+if (WIN32)
+  target_link_libraries(SparkEngine PRIVATE
+    d3d11 dxgi dxguid
+    Shlwapi user32 gdi32 winmm
+    dbghelp windowscodecs
+  )
+  target_compile_definitions(SparkEngine PRIVATE
+    NOMINMAX
+    _CRT_SECURE_NO_WARNINGS
+    WIN32_LEAN_AND_MEAN
+    CURL_STATICLIB
+  )
+endif()
+
+# -------------------------------------------------------------
+# IDE organization
+# -------------------------------------------------------------
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+source_group(
+  TREE "${CMAKE_SOURCE_DIR}"
+  PREFIX "Source"
+  FILES ${ENGINE_SRC} ${ENGINE_INC}
+)

@@ -1,0 +1,627 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{73EEFF2C-E2F0-3CBE-B752-A338CF9115A4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>curl-examples</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\Game\FPSGame\build\ZERO_CHECK.vcxproj">
+      <Project>{62366160-65DC-377C-BAF1-1FD1D6DE2541}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-10-at-a-time.vcxproj">
+      <Project>{226BF999-2111-3C83-956C-4D7DEBFE66FC}</Project>
+      <Name>curl-example-10-at-a-time</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-address-scope.vcxproj">
+      <Project>{15FB27C9-0E67-3038-818F-7E1A9C994034}</Project>
+      <Name>curl-example-address-scope</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-altsvc.vcxproj">
+      <Project>{574D2026-AE98-343E-9F7A-BC7F0928F4D1}</Project>
+      <Name>curl-example-altsvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-anyauthput.vcxproj">
+      <Project>{BD8ACF88-CCCD-32DA-A2B6-8A93E8E3B1BF}</Project>
+      <Name>curl-example-anyauthput</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-block_ip.vcxproj">
+      <Project>{AF84CAAE-4DDF-3CC2-B001-2C1EE055FA8E}</Project>
+      <Name>curl-example-block_ip</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-certinfo.vcxproj">
+      <Project>{49AB4511-8084-3BD2-AA3A-722D3DD81119}</Project>
+      <Name>curl-example-certinfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-chkspeed.vcxproj">
+      <Project>{22723E7A-B0D7-332E-B203-875F1579DBD6}</Project>
+      <Name>curl-example-chkspeed</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-connect-to.vcxproj">
+      <Project>{5868D35B-BFB5-36C7-A260-D42D5886920D}</Project>
+      <Name>curl-example-connect-to</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-cookie_interface.vcxproj">
+      <Project>{C333DD2A-35C7-3C78-98E0-DB9B52B08AC6}</Project>
+      <Name>curl-example-cookie_interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-debug.vcxproj">
+      <Project>{294D819A-EDBB-305A-8FF6-FA1B76B629C1}</Project>
+      <Name>curl-example-debug</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-default-scheme.vcxproj">
+      <Project>{9D0D6BA0-5020-399D-A85E-128A0F9E5A38}</Project>
+      <Name>curl-example-default-scheme</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-externalsocket.vcxproj">
+      <Project>{104284D3-6D7A-38D4-A586-E7F684129D10}</Project>
+      <Name>curl-example-externalsocket</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-fileupload.vcxproj">
+      <Project>{E5FE6FD2-4DE3-37E3-8D07-C81CE89941AE}</Project>
+      <Name>curl-example-fileupload</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftp-delete.vcxproj">
+      <Project>{EF846126-01ED-3E83-90F9-BEDB2F5E9F1E}</Project>
+      <Name>curl-example-ftp-delete</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftp-wildcard.vcxproj">
+      <Project>{B60C155D-D7FD-3C3C-AB76-02DFB4EF5532}</Project>
+      <Name>curl-example-ftp-wildcard</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftpget.vcxproj">
+      <Project>{32B0CBF6-F530-3989-904D-28566D9A17DD}</Project>
+      <Name>curl-example-ftpget</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftpgetinfo.vcxproj">
+      <Project>{7781C312-7294-3086-B0A3-E0B885CC0CE1}</Project>
+      <Name>curl-example-ftpgetinfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftpgetresp.vcxproj">
+      <Project>{7A6A26D2-6328-36A3-93ED-378A0CAD73B4}</Project>
+      <Name>curl-example-ftpgetresp</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftpsget.vcxproj">
+      <Project>{3E085CF7-0C0E-30AE-9C0B-A511C9E94210}</Project>
+      <Name>curl-example-ftpsget</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftpupload.vcxproj">
+      <Project>{47671CFE-607C-3235-9C31-1D7CC9EC61E0}</Project>
+      <Name>curl-example-ftpupload</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftpuploadfrommem.vcxproj">
+      <Project>{580696BE-095C-3CCB-AC1E-28A9A1A56E64}</Project>
+      <Name>curl-example-ftpuploadfrommem</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ftpuploadresume.vcxproj">
+      <Project>{4E0341FF-7D94-396C-85CB-6095561ADDA2}</Project>
+      <Name>curl-example-ftpuploadresume</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-getinfo.vcxproj">
+      <Project>{3966EE6D-9B2B-3565-81EE-9073F6414CEF}</Project>
+      <Name>curl-example-getinfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-getinmemory.vcxproj">
+      <Project>{ABEEAE33-3461-30ED-ACA2-BC3F847727C0}</Project>
+      <Name>curl-example-getinmemory</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-getredirect.vcxproj">
+      <Project>{F245F093-BAC9-30AC-AB60-C4B72A4E0C63}</Project>
+      <Name>curl-example-getredirect</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-getreferrer.vcxproj">
+      <Project>{63881881-A9BE-3F06-A1DA-EB5DC79F944B}</Project>
+      <Name>curl-example-getreferrer</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-headerapi.vcxproj">
+      <Project>{2951E41A-B2C1-3950-B870-DBC8A811339E}</Project>
+      <Name>curl-example-headerapi</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-hsts-preload.vcxproj">
+      <Project>{16C50333-597C-324B-8C07-6277D70981AB}</Project>
+      <Name>curl-example-hsts-preload</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http-options.vcxproj">
+      <Project>{4C720530-77CF-3095-B7C3-2643BAE5E879}</Project>
+      <Name>curl-example-http-options</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http-post.vcxproj">
+      <Project>{60ED9DB4-26C2-3D97-8BF2-D37DA14DBE4B}</Project>
+      <Name>curl-example-http-post</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http2-download.vcxproj">
+      <Project>{7A8C033F-42AC-3820-A030-449C29AA0FAD}</Project>
+      <Name>curl-example-http2-download</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http2-pushinmemory.vcxproj">
+      <Project>{7E84EE4B-1814-390F-BABA-DC9F7E64FCA5}</Project>
+      <Name>curl-example-http2-pushinmemory</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http2-serverpush.vcxproj">
+      <Project>{0AFD1F2C-8684-3EDD-B94E-E249875E9C46}</Project>
+      <Name>curl-example-http2-serverpush</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http2-upload.vcxproj">
+      <Project>{40B3908A-1F9A-36CE-8E4D-BB98FCD24F34}</Project>
+      <Name>curl-example-http2-upload</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http3.vcxproj">
+      <Project>{E2889184-574F-3CB0-AFF3-3250A4CD4A2E}</Project>
+      <Name>curl-example-http3</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-http3-present.vcxproj">
+      <Project>{08EA9419-F0D7-3018-8DA4-5340E6B6045A}</Project>
+      <Name>curl-example-http3-present</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-httpcustomheader.vcxproj">
+      <Project>{BE114F7F-8AEB-328A-8F02-5F468FF79EA9}</Project>
+      <Name>curl-example-httpcustomheader</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-httpput.vcxproj">
+      <Project>{1901E9CA-A1D9-3CEF-8188-0A80FF203F6B}</Project>
+      <Name>curl-example-httpput</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-httpput-postfields.vcxproj">
+      <Project>{DE18C7D1-C477-34E5-A57F-0427D2C0BC83}</Project>
+      <Name>curl-example-httpput-postfields</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-https.vcxproj">
+      <Project>{F10DC7F3-4AFD-308F-B42B-E2B033843785}</Project>
+      <Name>curl-example-https</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-append.vcxproj">
+      <Project>{42E1B01A-D8A2-3063-9D45-9C4CB06739FD}</Project>
+      <Name>curl-example-imap-append</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-authzid.vcxproj">
+      <Project>{3971DD24-C603-30B6-ABA3-96B27243ADE9}</Project>
+      <Name>curl-example-imap-authzid</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-copy.vcxproj">
+      <Project>{155A059F-BDA6-3775-8B8C-67279093A51B}</Project>
+      <Name>curl-example-imap-copy</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-create.vcxproj">
+      <Project>{F12FDE68-35C8-3928-B622-1B8E2D2E2FA2}</Project>
+      <Name>curl-example-imap-create</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-delete.vcxproj">
+      <Project>{772522C3-41D7-3698-8CBE-A1153D53879F}</Project>
+      <Name>curl-example-imap-delete</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-examine.vcxproj">
+      <Project>{F85F11FB-3D33-31B3-AA7D-A2A2D49ADAF0}</Project>
+      <Name>curl-example-imap-examine</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-fetch.vcxproj">
+      <Project>{021BD5C5-3555-3E9A-9B89-85054DA354E7}</Project>
+      <Name>curl-example-imap-fetch</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-list.vcxproj">
+      <Project>{F2D2B6B8-AEE4-3C82-BB3B-7BD1471D28A9}</Project>
+      <Name>curl-example-imap-list</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-lsub.vcxproj">
+      <Project>{DE774BD2-07BD-3B8A-8B0C-6B64B616DE5A}</Project>
+      <Name>curl-example-imap-lsub</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-multi.vcxproj">
+      <Project>{5AD47896-8CE5-3BDB-8E2E-AA375CC2E2D3}</Project>
+      <Name>curl-example-imap-multi</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-noop.vcxproj">
+      <Project>{54319EF2-1C90-376C-A711-CC8CD56883B1}</Project>
+      <Name>curl-example-imap-noop</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-search.vcxproj">
+      <Project>{6A8C0126-A9A4-3803-9601-453F5E43557F}</Project>
+      <Name>curl-example-imap-search</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-ssl.vcxproj">
+      <Project>{E70FC9D2-0982-3BAD-99D4-01F4F746C135}</Project>
+      <Name>curl-example-imap-ssl</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-store.vcxproj">
+      <Project>{43350C4F-974B-3954-87AF-0B8445130FA7}</Project>
+      <Name>curl-example-imap-store</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-imap-tls.vcxproj">
+      <Project>{AD06AE56-EE36-36D0-AE00-E9FCE97D3B53}</Project>
+      <Name>curl-example-imap-tls</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-interface.vcxproj">
+      <Project>{3147A2EA-BCCC-3001-A1B6-B02103C87407}</Project>
+      <Name>curl-example-interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-ipv6.vcxproj">
+      <Project>{FED633CA-B2A8-3268-90D9-5170B76E3EB5}</Project>
+      <Name>curl-example-ipv6</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-keepalive.vcxproj">
+      <Project>{24353AC6-78A5-3952-81AC-564A84172BB2}</Project>
+      <Name>curl-example-keepalive</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-localport.vcxproj">
+      <Project>{2934B330-CE1A-3463-81A0-E191CC00E99E}</Project>
+      <Name>curl-example-localport</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-maxconnects.vcxproj">
+      <Project>{69A449F2-A1C1-3B77-ABCC-57CCBC4C8A17}</Project>
+      <Name>curl-example-maxconnects</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-multi-app.vcxproj">
+      <Project>{9A3D2EFE-DA74-3C51-B6D3-FCED35F0A2D2}</Project>
+      <Name>curl-example-multi-app</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-multi-debugcallback.vcxproj">
+      <Project>{6A6428DA-BF1F-33E3-B8AF-B2BF06E46FBA}</Project>
+      <Name>curl-example-multi-debugcallback</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-multi-double.vcxproj">
+      <Project>{07570F44-391B-3F6A-8EA5-6FF90E634A0C}</Project>
+      <Name>curl-example-multi-double</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-multi-formadd.vcxproj">
+      <Project>{79913109-BACF-30D7-82B1-731231DD77CA}</Project>
+      <Name>curl-example-multi-formadd</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-multi-legacy.vcxproj">
+      <Project>{55EB8CBF-465F-3527-8263-3BABB33FBD09}</Project>
+      <Name>curl-example-multi-legacy</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-multi-post.vcxproj">
+      <Project>{90034F93-4343-345D-B53E-3254036C8F25}</Project>
+      <Name>curl-example-multi-post</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-multi-single.vcxproj">
+      <Project>{7FE2E4FB-8BBD-3030-BE59-72F8361A84D2}</Project>
+      <Name>curl-example-multi-single</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-netrc.vcxproj">
+      <Project>{2D0EB33B-0A7B-30C8-9582-8FE773CF9F5D}</Project>
+      <Name>curl-example-netrc</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-parseurl.vcxproj">
+      <Project>{87BF4D0B-F08E-38FC-B0A1-BB62149151CA}</Project>
+      <Name>curl-example-parseurl</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-persistent.vcxproj">
+      <Project>{2CD41C94-853C-37E9-A5C2-D88CA6CE8BBC}</Project>
+      <Name>curl-example-persistent</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-authzid.vcxproj">
+      <Project>{D296041D-F505-3711-9CBD-03A7DA29CD76}</Project>
+      <Name>curl-example-pop3-authzid</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-dele.vcxproj">
+      <Project>{F9A10991-A877-3686-839C-491BDD889373}</Project>
+      <Name>curl-example-pop3-dele</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-list.vcxproj">
+      <Project>{1BCBF7EF-2886-3842-8A06-E68FB2D07370}</Project>
+      <Name>curl-example-pop3-list</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-multi.vcxproj">
+      <Project>{F9DAD726-6846-3033-9491-2974CC689F15}</Project>
+      <Name>curl-example-pop3-multi</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-noop.vcxproj">
+      <Project>{4A45730E-C18F-3544-9E4F-BF27907247AB}</Project>
+      <Name>curl-example-pop3-noop</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-retr.vcxproj">
+      <Project>{0E868F35-6A5E-3BC7-832C-3ADBF968CDBD}</Project>
+      <Name>curl-example-pop3-retr</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-ssl.vcxproj">
+      <Project>{6335BA6B-AF2A-3A0B-B52C-D1A5961C9B4E}</Project>
+      <Name>curl-example-pop3-ssl</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-stat.vcxproj">
+      <Project>{850263B2-70F9-3539-99CE-C3DB417EFD59}</Project>
+      <Name>curl-example-pop3-stat</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-tls.vcxproj">
+      <Project>{4DE8CBB8-DD3D-3BBA-AD2B-ACC7E8CE8893}</Project>
+      <Name>curl-example-pop3-tls</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-top.vcxproj">
+      <Project>{9BFA798D-BAE4-381C-A1BF-D9FD396E2230}</Project>
+      <Name>curl-example-pop3-top</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-pop3-uidl.vcxproj">
+      <Project>{35F35809-EBE1-3B5A-80B9-9CAE0AB97ECC}</Project>
+      <Name>curl-example-pop3-uidl</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-post-callback.vcxproj">
+      <Project>{AD3FB4EB-F10C-39FF-9D71-21FCB479DDC5}</Project>
+      <Name>curl-example-post-callback</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-postinmemory.vcxproj">
+      <Project>{9CDFB481-A035-3A86-984C-E4B661E2D9D8}</Project>
+      <Name>curl-example-postinmemory</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-postit2.vcxproj">
+      <Project>{B1638365-53B2-38AC-9FC3-5E1416306EF4}</Project>
+      <Name>curl-example-postit2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-postit2-formadd.vcxproj">
+      <Project>{B2EC5551-2DC8-387F-900D-238D9D55B5EA}</Project>
+      <Name>curl-example-postit2-formadd</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-progressfunc.vcxproj">
+      <Project>{C34C9F01-BB16-324B-B0BF-B621D18CFCA2}</Project>
+      <Name>curl-example-progressfunc</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-protofeats.vcxproj">
+      <Project>{938B7566-BF7D-307B-95EE-B53839BCC99A}</Project>
+      <Name>curl-example-protofeats</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-range.vcxproj">
+      <Project>{45D597AE-7393-395B-BD70-59DE3538C8C8}</Project>
+      <Name>curl-example-range</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-resolve.vcxproj">
+      <Project>{4289D4CD-37E4-3977-807C-04347EF35C9B}</Project>
+      <Name>curl-example-resolve</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-rtsp-options.vcxproj">
+      <Project>{363752F6-7E6A-39F8-BE6D-D37FBE71BE46}</Project>
+      <Name>curl-example-rtsp-options</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-sendrecv.vcxproj">
+      <Project>{A76E3175-6FA2-3E62-8FC6-697BEAE83767}</Project>
+      <Name>curl-example-sendrecv</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-sepheaders.vcxproj">
+      <Project>{3AF04128-3A47-3E39-B541-65FBEB5ED1BE}</Project>
+      <Name>curl-example-sepheaders</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-sftpget.vcxproj">
+      <Project>{349AC33D-424A-31BB-B18B-8CC2AC2374A1}</Project>
+      <Name>curl-example-sftpget</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-sftpuploadresume.vcxproj">
+      <Project>{9369BF2D-518A-32EF-A84A-009034F8B088}</Project>
+      <Name>curl-example-sftpuploadresume</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-shared-connection-cache.vcxproj">
+      <Project>{8D8C7F8B-BD8D-3885-A561-717ADD7FBB2A}</Project>
+      <Name>curl-example-shared-connection-cache</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-simple.vcxproj">
+      <Project>{EFA53944-6798-388A-BD6E-9368743931BE}</Project>
+      <Name>curl-example-simple</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-simplepost.vcxproj">
+      <Project>{314D01D9-0A3B-3323-8F33-DE758D9EDA24}</Project>
+      <Name>curl-example-simplepost</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-simplessl.vcxproj">
+      <Project>{47246EE0-64B1-3508-9EAD-52E356A85944}</Project>
+      <Name>curl-example-simplessl</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-authzid.vcxproj">
+      <Project>{CF862A1B-25E4-395D-AC3E-7AD6E7BAAB27}</Project>
+      <Name>curl-example-smtp-authzid</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-expn.vcxproj">
+      <Project>{6B807406-761F-3D7A-A5B5-491AA26AB8D3}</Project>
+      <Name>curl-example-smtp-expn</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-mail.vcxproj">
+      <Project>{A304F674-7B91-3F74-9F5F-5D4F1E2ED5D3}</Project>
+      <Name>curl-example-smtp-mail</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-mime.vcxproj">
+      <Project>{180EEBCE-D16F-3BA5-ACAD-3AC4DBDB434C}</Project>
+      <Name>curl-example-smtp-mime</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-multi.vcxproj">
+      <Project>{5EAFA1B3-E66B-30A6-9C97-8B0C0C692E1F}</Project>
+      <Name>curl-example-smtp-multi</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-ssl.vcxproj">
+      <Project>{F31A7C9B-FC1C-31A6-BED8-345EFFBBBA98}</Project>
+      <Name>curl-example-smtp-ssl</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-tls.vcxproj">
+      <Project>{13401E11-CB56-3D23-A4D8-E33A7B631A2C}</Project>
+      <Name>curl-example-smtp-tls</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-smtp-vrfy.vcxproj">
+      <Project>{AC081F1F-6704-37B2-B721-DFF45AF38EB5}</Project>
+      <Name>curl-example-smtp-vrfy</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-sslbackend.vcxproj">
+      <Project>{AF603170-3D72-3732-A4F0-0B4EC6D26226}</Project>
+      <Name>curl-example-sslbackend</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-unixsocket.vcxproj">
+      <Project>{A1A2087C-30E1-3085-ACAD-D54E86C67E16}</Project>
+      <Name>curl-example-unixsocket</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-url2file.vcxproj">
+      <Project>{909731E5-CA96-38BD-B634-84F2C14D192A}</Project>
+      <Name>curl-example-url2file</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-urlapi.vcxproj">
+      <Project>{F837007E-E56F-3A8E-B78D-73B679016198}</Project>
+      <Name>curl-example-urlapi</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-websocket.vcxproj">
+      <Project>{22900370-8E8D-34A5-BBE3-EE42321404CD}</Project>
+      <Name>curl-example-websocket</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\docs\examples\curl-example-websocket-cb.vcxproj">
+      <Project>{B2CD57E0-C1C9-389E-9397-91437F398F18}</Project>
+      <Name>curl-example-websocket-cb</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
+</Project>

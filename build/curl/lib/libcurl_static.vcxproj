@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B6A75D45-C9A0-3572-BA73-82D0698DA719}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>libcurl_static</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\curl\lib\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">libcurl_static.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">libcurl-d</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\curl\lib\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">libcurl_static.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">libcurl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\curl\lib\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">libcurl_static.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">libcurl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\curl\lib\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">libcurl_static.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">libcurl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </MASM>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </MASM>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </MASM>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;CURL_HIDDEN_SYMBOLS;HAVE_CONFIG_H;BUILDING_LIBCURL;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </MASM>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;D:\Game\FPSGame\build\curl\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/lib/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\lib\Makefile.inc;D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_config.h.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\lib\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\curl\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/lib/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\lib\Makefile.inc;D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_config.h.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\lib\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\curl\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/lib/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\lib\Makefile.inc;D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_config.h.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\lib\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\curl\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/lib/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\lib\Makefile.inc;D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_config.h.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\lib\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\curl\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\altsvc.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\amigaos.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\asyn-ares.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\asyn-base.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\asyn-thrdd.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\bufq.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\bufref.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cf-h1-proxy.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cf-h2-proxy.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cf-haproxy.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cf-https-connect.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cf-socket.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cfilters.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\conncache.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\connect.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\content_encoding.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cookie.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cshutdn.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_addrinfo.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_des.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_endian.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_fnmatch.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_get_line.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_gethostname.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_gssapi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_memrchr.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_ntlm_core.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_range.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_rtmp.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_sasl.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_sha512_256.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_sspi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_threads.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_trc.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cw-out.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cw-pause.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\dict.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\doh.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\dynhds.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\easy.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\easygetopt.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\easyoptions.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\escape.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\fake_addrinfo.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\file.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\fileinfo.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\fopen.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\formdata.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\ftp.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\ftplistparser.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\getenv.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\getinfo.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\gopher.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\hash.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\headers.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\hmac.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\hostip.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\hostip4.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\hostip6.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\hsts.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http1.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http2.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http_aws_sigv4.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http_chunks.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http_digest.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http_negotiate.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http_ntlm.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\http_proxy.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\httpsrr.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\idn.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\if2ip.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\imap.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\krb5.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\ldap.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\llist.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\macos.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\md4.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\md5.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\memdebug.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\mime.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\mprintf.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\mqtt.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\multi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\multi_ev.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\netrc.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\noproxy.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\openldap.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\parsedate.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\pingpong.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\pop3.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\progress.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\psl.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\rand.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\rename.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\request.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\rtsp.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\select.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\sendf.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\setopt.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\sha256.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\share.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\slist.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\smb.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\smtp.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\socketpair.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\socks.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\socks_gssapi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\socks_sspi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\speedcheck.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\splay.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\strcase.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\strdup.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\strequal.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\strerror.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\system_win32.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\telnet.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\tftp.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\transfer.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\uint-bset.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\uint-hash.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\uint-spbset.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\uint-table.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\url.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\urlapi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\version.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\ws.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cleartext.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cram.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\digest.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\digest_sspi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\gsasl.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\krb5_gssapi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\krb5_sspi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\ntlm.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\ntlm_sspi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\oauth2.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\spnego_gssapi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\spnego_sspi.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\vauth.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\cipher_suite.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\gtls.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\hostcheck.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\keylog.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\mbedtls.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\mbedtls_threadlock.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\openssl.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\rustls.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\schannel.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\schannel_verify.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\vtls.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\vtls_scache.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\vtls_spack.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\wolfssl.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\x509asn1.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_ngtcp2.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_osslq.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_quiche.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\vquic.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\vquic-tls.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\libssh.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\libssh2.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\curl_path.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\wolfssh.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\base64.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\dynbuf.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\inet_ntop.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\inet_pton.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\multibyte.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\nonblock.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\strparse.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\timediff.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\timeval.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\version_win32.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\wait.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\warnless.obj" />
+    <Object Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.dir\$(Configuration)\winapi.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\Game\FPSGame\build\ZERO_CHECK.vcxproj">
+      <Project>{62366160-65DC-377C-BAF1-1FD1D6DE2541}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Game\FPSGame\build\curl\lib\libcurl_object.vcxproj">
+      <Project>{4B981747-D4C5-318A-A473-FBEDD0DE2742}</Project>
+      <Name>libcurl_object</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
+</Project>
