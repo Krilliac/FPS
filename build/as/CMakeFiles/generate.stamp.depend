@@ -1,0 +1,26 @@
+# CMake generation dependency list for this directory.
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeASMCompiler.cmake.in
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeASMInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeASM_MASMInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeCompilerIdDetection.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeDetermineASMCompiler.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeDetermineASM_MASMCompiler.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeDetermineCompiler.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeDetermineCompilerId.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeFindBinUtils.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeTestASMCompiler.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CMakeTestASM_MASMCompiler.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CheckCSourceCompiles.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CheckIncludeFile.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/CheckLibraryExists.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/FindPackageMessage.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/FindThreads.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/Internal/CheckSourceCompiles.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/WriteBasicConfigVersionFile.cmake
+D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/CMakeLists.txt
+D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/cmake/AngelscriptConfig.cmake
+D:/Game/FPSGame/build/CMakeFiles/3.25.2/CMakeASM_MASMCompiler.cmake
+D:/Game/FPSGame/build/CMakeFiles/cmake.verify_globs

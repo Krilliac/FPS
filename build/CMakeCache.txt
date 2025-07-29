@@ -14,8 +14,37 @@
 # EXTERNAL cache entries
 ########################
 
+ANGELSCRIPT_LIBRARY_NAME:STRING=angelscript
+
+//Disable installation of AngelScript
+AS_DISABLE_INSTALL:BOOL=OFF
+
+//Disable exception handling in script context
+AS_NO_EXCEPTIONS:BOOL=OFF
+
+//Build shared library
+BUILD_SHARED_LIBS:BOOL=OFF
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
+
+//ASM_MASM compiler
+CMAKE_ASM_MASM_COMPILER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/ml64.exe
+
+//Flags used by the ASM_MASM compiler during all build types.
+CMAKE_ASM_MASM_FLAGS:STRING=
+
+//Flags used by the ASM_MASM compiler during DEBUG builds.
+CMAKE_ASM_MASM_FLAGS_DEBUG:STRING=
+
+//Flags used by the ASM_MASM compiler during MINSIZEREL builds.
+CMAKE_ASM_MASM_FLAGS_MINSIZEREL:STRING=
+
+//Flags used by the ASM_MASM compiler during RELEASE builds.
+CMAKE_ASM_MASM_FLAGS_RELEASE:STRING=
+
+//Flags used by the ASM_MASM compiler during RELWITHDEBINFO builds.
+CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO:STRING=
 
 //No help, variable specified on the command line.
 CMAKE_BUILD_TYPE:UNINITIALIZED=Debug
@@ -188,20 +217,23 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//Embed AngelScript scripting (requires submodule)
+//AngelScript scripting
 ENABLE_ANGELSCRIPT:BOOL=ON
 
-//Bullet physics support
+//Bullet physics
 ENABLE_BULLET:BOOL=OFF
 
-//External debug console overlay
+//Console overlay
 ENABLE_CONSOLE:BOOL=ON
 
-//Build with in-engine editor UI
+//Editor UI
 ENABLE_EDITOR:BOOL=ON
 
-//Enable Vulkan renderer in addition to D3D11
+//Vulkan renderer
 ENABLE_VULKAN:BOOL=OFF
+
+//Compiler flags to use with MSVC
+MSVC_COMPILE_FLAGS:STRING=/MP
 
 //Value Computed by CMake
 SparkEngine_BINARY_DIR:STATIC=D:/Game/FPSGame/build
@@ -212,8 +244,17 @@ SparkEngine_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 SparkEngine_SOURCE_DIR:STATIC=D:/Game/FPSGame
 
-//Link the MSVC static runtime (/MT)
+//Link static CRT
 USE_STATIC_RUNTIME:BOOL=ON
+
+//Value Computed by CMake
+angelscript_BINARY_DIR:STATIC=D:/Game/FPSGame/build/as
+
+//Value Computed by CMake
+angelscript_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+angelscript_SOURCE_DIR:STATIC=D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake
 
 
 ########################
@@ -222,6 +263,19 @@ USE_STATIC_RUNTIME:BOOL=ON
 
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_COMPILER
+CMAKE_ASM_MASM_COMPILER-ADVANCED:INTERNAL=1
+CMAKE_ASM_MASM_COMPILER_WORKS:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS
+CMAKE_ASM_MASM_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_DEBUG
+CMAKE_ASM_MASM_FLAGS_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_MINSIZEREL
+CMAKE_ASM_MASM_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_RELEASE
+CMAKE_ASM_MASM_FLAGS_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO
+CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=d:/Game/FPSGame/build
 //Major version of cmake used to create the current loaded cache
@@ -282,6 +336,12 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Test CMAKE_HAVE_LIBC_PTHREAD
+CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=
+//Have library pthreads
+CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
+//Have library pthread
+CMAKE_HAVE_PTHREAD_CREATE:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=D:/Game/FPSGame
@@ -346,4 +406,6 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 

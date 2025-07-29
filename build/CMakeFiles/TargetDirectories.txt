@@ -1,0 +1,7 @@
+D:/Game/FPSGame/build/CMakeFiles/SparkEngine.dir
+D:/Game/FPSGame/build/CMakeFiles/INSTALL.dir
+D:/Game/FPSGame/build/CMakeFiles/ALL_BUILD.dir
+D:/Game/FPSGame/build/CMakeFiles/ZERO_CHECK.dir
+D:/Game/FPSGame/build/as/CMakeFiles/angelscript.dir
+D:/Game/FPSGame/build/as/CMakeFiles/INSTALL.dir
+D:/Game/FPSGame/build/as/CMakeFiles/ALL_BUILD.dir

@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 #include <wincodec.h>
 #include <TlHelp32.h>
+#include <Windows.h>
 #include <dxgi.h>
 #include <d3d11.h>
 #define MINIZ_HEADER_FILE_ONLY
