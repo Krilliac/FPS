@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="D:\Game\FPSGame\build\CMakeFiles\4b97c485a3fcf7963fbedf0e5fdd3646\INSTALL_force.rule">
+    <CustomBuild Include="D:\Game\FPSGame\build\CMakeFiles\94069d86ce50eb4659c12e73dd7fd45e\INSTALL_force.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -1,6 +1,13 @@
 ﻿#include "Model.h"
 #include "tiny_obj_loader.h"
 
+struct Vert {
+    float x, y, z;
+    float u, v;
+    float nx, ny, nz;
+};
+
+
 HRESULT Model::LoadObj(const std::wstring& filename,
                        ID3D11Device* device)
 {

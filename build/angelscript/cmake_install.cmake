@@ -34,13 +34,13 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/as/Debug/angelscriptd.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/angelscript/Debug/angelscriptd.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/as/Release/angelscript.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/angelscript/Release/angelscript.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/as/MinSizeRel/angelscript.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/angelscript/MinSizeRel/angelscript.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/as/RelWithDebInfo/angelscript.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Game/FPSGame/build/angelscript/RelWithDebInfo/angelscript.lib")
   endif()
 endif()
 
@@ -52,7 +52,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript/AngelscriptTargets.cmake")
     file(DIFFERENT _cmake_export_file_changed FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript/AngelscriptTargets.cmake"
-         "D:/Game/FPSGame/build/as/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets.cmake")
+         "D:/Game/FPSGame/build/angelscript/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets.cmake")
     if(_cmake_export_file_changed)
       file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript/AngelscriptTargets-*.cmake")
       if(_cmake_old_config_files)
@@ -65,25 +65,25 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     endif()
     unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/as/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/angelscript/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets.cmake")
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/as/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/angelscript/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-debug.cmake")
   endif()
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/as/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-minsizerel.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/angelscript/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-minsizerel.cmake")
   endif()
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/as/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-relwithdebinfo.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/angelscript/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-relwithdebinfo.cmake")
   endif()
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/as/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-release.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES "D:/Game/FPSGame/build/angelscript/CMakeFiles/Export/7d8cbdd81f211f8a933f4e480fe3726f/AngelscriptTargets-release.cmake")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Angelscript" TYPE FILE FILES
     "D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/cmake/AngelscriptConfig.cmake"
-    "D:/Game/FPSGame/build/as/Angelscript/AngelscriptConfigVersion.cmake"
+    "D:/Game/FPSGame/build/angelscript/Angelscript/AngelscriptConfigVersion.cmake"
     )
 endif()
 

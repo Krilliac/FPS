@@ -1,60 +1,111 @@
-﻿cmake_minimum_required(VERSION 3.20)
+﻿cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project(SparkEngine LANGUAGES C CXX)
+
+# ─────────────────────────────────────────────────────────────
+# Global compiler setup
+# ─────────────────────────────────────────────────────────────
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Static CRT on MSVC
-option(USE_STATIC_RUNTIME "Link static CRT" ON)
-if (MSVC AND USE_STATIC_RUNTIME)
-  foreach(flag CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_DEBUG)
-    string(REPLACE "/MD" "/MT" ${flag} "${${flag}}")
-  endforeach()
+if (MSVC)
+    add_compile_options(/permissive- /Zc:__cplusplus)
+    # Static runtime linking
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-# Toggles
-option(ENABLE_EDITOR      "Editor UI" ON)
-option(ENABLE_CONSOLE     "Console overlay" ON)
-option(ENABLE_ANGELSCRIPT "AngelScript scripting" ON)
-option(ENABLE_VULKAN      "Vulkan renderer" OFF)
-option(ENABLE_BULLET      "Bullet physics" OFF)
+# ─────────────────────────────────────────────────────────────
+# Engine Options
+# ─────────────────────────────────────────────────────────────
+option(ENABLE_EDITOR      "Build with in-engine editor UI"      ON)
+option(ENABLE_CONSOLE     "External debug console overlay"      ON)
+option(ENABLE_ANGELSCRIPT "Embed AngelScript scripting"         ON)
 
-# ------------  project sources  ------------
-file(GLOB_RECURSE SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/*.cpp" "${CMAKE_SOURCE_DIR}/*.c")
-file(GLOB_RECURSE INC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/*.h"   "${CMAKE_SOURCE_DIR}/*.hpp")
-list(FILTER SRC EXCLUDE REGEX "build/|ThirdParty/")
-list(FILTER INC EXCLUDE REGEX "build/|ThirdParty/")
-add_executable(SparkEngine ${SRC} ${INC})
+message(STATUS "Editor..............: ${ENABLE_EDITOR}")
+message(STATUS "Console.............: ${ENABLE_CONSOLE}")
+message(STATUS "AngelScript.........: ${ENABLE_ANGELSCRIPT}")
 
-# ------------  include paths  ------------
-target_include_directories(SparkEngine PRIVATE
-  "${CMAKE_SOURCE_DIR}"                   # <---- project root (Engine/Core/Engine.h)
-  "${CMAKE_SOURCE_DIR}/Source"
-  "${CMAKE_SOURCE_DIR}/ThirdParty"
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader"
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/glm"
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/stb"
+# ─────────────────────────────────────────────────────────────
+# Find all source files
+# ─────────────────────────────────────────────────────────────
+file(GLOB_RECURSE ENGINE_SRC
+    CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/*.cpp"
+    "${CMAKE_SOURCE_DIR}/*.c"
+)
+file(GLOB_RECURSE ENGINE_INC
+    CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/*.h"
+    "${CMAKE_SOURCE_DIR}/*.hpp"
 )
 
-# ------------  AngelScript  ------------
+# Filter out build and third-party
+list(FILTER ENGINE_SRC EXCLUDE REGEX "build/|ThirdParty/")
+list(FILTER ENGINE_INC EXCLUDE REGEX "build/|ThirdParty/")
+
+list(LENGTH ENGINE_SRC SRC_COUNT)
+message(STATUS "Found ${SRC_COUNT} source files")
+
+if(NOT ENGINE_SRC)
+    message(FATAL_ERROR "No source files found!")
+endif()
+
+add_executable(SparkEngine ${ENGINE_SRC} ${ENGINE_INC})
+
+# ─────────────────────────────────────────────────────────────
+# Comprehensive include directories
+# ─────────────────────────────────────────────────────────────
+target_include_directories(SparkEngine PRIVATE
+    # Project roots
+    "${CMAKE_SOURCE_DIR}"
+    "${CMAKE_SOURCE_DIR}/Source"
+    "${CMAKE_SOURCE_DIR}/Spark Engine/Source"
+    
+    # Engine directories
+    "${CMAKE_SOURCE_DIR}/Engine"
+    "${CMAKE_SOURCE_DIR}/Engine/Core"
+    "${CMAKE_SOURCE_DIR}/Source/Core"
+    "${CMAKE_SOURCE_DIR}/Spark Engine/Source/Core"
+    
+    # Third-party
+    "${CMAKE_SOURCE_DIR}/ThirdParty"
+    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader"
+    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/glm"
+    "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/stb"
+)
+
+# Compiler definitions
+target_compile_definitions(SparkEngine PRIVATE
+    _CRT_SECURE_NO_WARNINGS
+    NOMINMAX
+    WIN32_LEAN_AND_MEAN
+    _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+)
+
+# ─────────────────────────────────────────────────────────────
+# AngelScript
+# ─────────────────────────────────────────────────────────────
 if (ENABLE_ANGELSCRIPT)
-  add_subdirectory(ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake
-                   ${CMAKE_BINARY_DIR}/as)
-  target_link_libraries(SparkEngine PRIVATE angelscript_static)
-  target_compile_definitions(SparkEngine PRIVATE WITH_ANGELSCRIPT)
+    set(AS_CMAKE_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake")
+    if (EXISTS "${AS_CMAKE_DIR}/CMakeLists.txt")
+        add_subdirectory("${AS_CMAKE_DIR}" "${CMAKE_BINARY_DIR}/angelscript")
+        target_link_libraries(SparkEngine PRIVATE angelscript_static)
+        target_compile_definitions(SparkEngine PRIVATE WITH_ANGELSCRIPT=1)
+    endif()
 endif()
 
-# ------------  platform libs  ------------
+# ─────────────────────────────────────────────────────────────
+# Platform libraries
+# ─────────────────────────────────────────────────────────────
 if (WIN32)
-  target_link_libraries(SparkEngine PRIVATE d3d11 dxgi dxguid Shlwapi)
-  target_compile_definitions(SparkEngine PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
-elseif(APPLE)
-  find_library(COCOA Cocoa REQUIRED)
-  target_link_libraries(SparkEngine PRIVATE ${COCOA})
-else()
-  find_package(X11 REQUIRED)
-  target_link_libraries(SparkEngine PRIVATE X11::X11 pthread dl)
+    target_link_libraries(SparkEngine PRIVATE
+        d3d11 dxgi dxguid
+        Shlwapi user32 gdi32 winmm
+        dbghelp
+    )
 endif()
 
-# ------------  ide tidy  ------------
+# ─────────────────────────────────────────────────────────────
+# IDE organization
+# ─────────────────────────────────────────────────────────────
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-source_group(TREE "${CMAKE_SOURCE_DIR}" PREFIX "Src" FILES ${SRC} ${INC})
+source_group(TREE "${CMAKE_SOURCE_DIR}" PREFIX "Source" FILES ${ENGINE_SRC} ${ENGINE_INC})

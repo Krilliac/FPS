@@ -2,245 +2,245 @@
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Audio\AudioEngine.cpp">
-      <Filter>Src\Spark Engine\Source\Audio</Filter>
+      <Filter>Source\Spark Engine\Source\Audio</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Audio\SoundEffect.cpp">
-      <Filter>Src\Spark Engine\Source\Audio</Filter>
+      <Filter>Source\Spark Engine\Source\Audio</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Camera\SparkEngineCamera.cpp">
-      <Filter>Src\Spark Engine\Source\Camera</Filter>
+      <Filter>Source\Spark Engine\Source\Camera</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Core\SparkEngine.cpp">
-      <Filter>Src\Spark Engine\Source\Core</Filter>
+      <Filter>Source\Spark Engine\Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\Console.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\CubeObject.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\Game.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\GameObject.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\Model.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\PlaneObject.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\Player.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\Primitives.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\SphereObject.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Game\Terrain.cpp">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Graphics\GraphicsEngine.cpp">
-      <Filter>Src\Spark Engine\Source\Graphics</Filter>
+      <Filter>Source\Spark Engine\Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Graphics\Mesh.cpp">
-      <Filter>Src\Spark Engine\Source\Graphics</Filter>
+      <Filter>Source\Spark Engine\Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Graphics\Shader.cpp">
-      <Filter>Src\Spark Engine\Source\Graphics</Filter>
+      <Filter>Source\Spark Engine\Source\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Input\InputManager.cpp">
-      <Filter>Src\Spark Engine\Source\Input</Filter>
+      <Filter>Source\Spark Engine\Source\Input</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Physics\CollisionSystem.cpp">
-      <Filter>Src\Spark Engine\Source\Physics</Filter>
+      <Filter>Source\Spark Engine\Source\Physics</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Bullet.cpp">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Grenade.cpp">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Projectile.cpp">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\ProjectilePool.cpp">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Rocket.cpp">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\CrashHandler.cpp">
-      <Filter>Src\Spark Engine\Source\Utils</Filter>
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\MathUtils.cpp">
-      <Filter>Src\Spark Engine\Source\Utils</Filter>
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\Timer.cpp">
-      <Filter>Src\Spark Engine\Source\Utils</Filter>
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Audio\AudioEngine.h">
-      <Filter>Src\Spark Engine\Source\Audio</Filter>
+      <Filter>Source\Spark Engine\Source\Audio</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Audio\SoundEffect.h">
-      <Filter>Src\Spark Engine\Source\Audio</Filter>
+      <Filter>Source\Spark Engine\Source\Audio</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Camera\SparkEngineCamera.h">
-      <Filter>Src\Spark Engine\Source\Camera</Filter>
+      <Filter>Source\Spark Engine\Source\Camera</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Core\SparkEngine.h">
-      <Filter>Src\Spark Engine\Source\Core</Filter>
+      <Filter>Source\Spark Engine\Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Core\framework.h">
-      <Filter>Src\Spark Engine\Source\Core</Filter>
+      <Filter>Source\Spark Engine\Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Core\resource.h">
-      <Filter>Src\Spark Engine\Source\Core</Filter>
+      <Filter>Source\Spark Engine\Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Core\targetver.h">
-      <Filter>Src\Spark Engine\Source\Core</Filter>
+      <Filter>Source\Spark Engine\Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Engine\Core\Engine.h">
-      <Filter>Src\Spark Engine\Source\Engine\Core</Filter>
+      <Filter>Source\Spark Engine\Source\Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Engine\ECS\Components.h">
-      <Filter>Src\Spark Engine\Source\Engine\ECS</Filter>
+      <Filter>Source\Spark Engine\Source\Engine\ECS</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Engine\Scripting\AngelScriptEngine.h">
-      <Filter>Src\Spark Engine\Source\Engine\Scripting</Filter>
+      <Filter>Source\Spark Engine\Source\Engine\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\Console.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\CubeObject.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\Game.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\GameObject.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\Model.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\PlaceholderMesh.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\PlaneObject.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\Player.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\Primitives.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\SphereObject.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Game\Terrain.h">
-      <Filter>Src\Spark Engine\Source\Game</Filter>
+      <Filter>Source\Spark Engine\Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Graphics\GraphicsEngine.h">
-      <Filter>Src\Spark Engine\Source\Graphics</Filter>
+      <Filter>Source\Spark Engine\Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Graphics\Mesh.h">
-      <Filter>Src\Spark Engine\Source\Graphics</Filter>
+      <Filter>Source\Spark Engine\Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Graphics\Shader.h">
-      <Filter>Src\Spark Engine\Source\Graphics</Filter>
+      <Filter>Source\Spark Engine\Source\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Input\InputManager.h">
-      <Filter>Src\Spark Engine\Source\Input</Filter>
+      <Filter>Source\Spark Engine\Source\Input</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Physics\CollisionSystem.h">
-      <Filter>Src\Spark Engine\Source\Physics</Filter>
+      <Filter>Source\Spark Engine\Source\Physics</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Bullet.h">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Grenade.h">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Projectile.h">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\ProjectilePool.h">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Rocket.h">
-      <Filter>Src\Spark Engine\Source\Projectiles</Filter>
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\CrashHandler.h">
-      <Filter>Src\Spark Engine\Source\Utils</Filter>
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\MathUtils.h">
-      <Filter>Src\Spark Engine\Source\Utils</Filter>
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\ObjectPool.h">
-      <Filter>Src\Spark Engine\Source\Utils</Filter>
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\Timer.h">
-      <Filter>Src\Spark Engine\Source\Utils</Filter>
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\Game\FPSGame\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Src">
-      <UniqueIdentifier>{52FA1275-2185-3D5D-BB34-0F42281DA8C2}</UniqueIdentifier>
+    <Filter Include="Source">
+      <UniqueIdentifier>{38550370-2C41-3EDF-9BD5-CB88B88A95E0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine">
-      <UniqueIdentifier>{C271E5E3-1D07-301C-9C84-14DBE49815D4}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine">
+      <UniqueIdentifier>{9282D889-AFEF-3DC8-9F87-DCCDAA0E9DD3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source">
-      <UniqueIdentifier>{760A9222-6CEC-39D5-8F01-2A58638951BC}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source">
+      <UniqueIdentifier>{242341AC-9EE1-3AFF-B25B-310F726327C3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Audio">
-      <UniqueIdentifier>{6679B6AD-A829-3F44-9449-443B0BED38A3}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Audio">
+      <UniqueIdentifier>{4E3F392B-0E78-3AC2-A1F7-64CC56F8B303}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Camera">
-      <UniqueIdentifier>{81780CA9-0C9A-3130-87A1-475675E8FB97}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Camera">
+      <UniqueIdentifier>{987AC3AE-9F8D-36EF-802F-D3B2C515C765}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Core">
-      <UniqueIdentifier>{EE1C79E2-F758-322B-AB86-A16D506DA2AE}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Core">
+      <UniqueIdentifier>{222F51BD-01FD-3B78-8B6B-41A9135661E1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Engine">
-      <UniqueIdentifier>{B2BD6FB3-C23E-39CF-8C8C-9605FFE6FD74}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Engine">
+      <UniqueIdentifier>{7BF1C33B-564F-3102-9722-9D7FC8F3096B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Engine\Core">
-      <UniqueIdentifier>{8DBAD451-EA4E-3AFD-A9D6-07F9DD21ADA0}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Engine\Core">
+      <UniqueIdentifier>{0C319857-428E-383E-B350-E345C447243C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Engine\ECS">
-      <UniqueIdentifier>{688C9C22-D467-39C8-A962-1C5FD908E048}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Engine\ECS">
+      <UniqueIdentifier>{47FA6BBD-691B-338C-AA03-B612F2B34235}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Engine\Scripting">
-      <UniqueIdentifier>{9EE14668-29BE-3AF4-874A-5D291E7536BA}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Engine\Scripting">
+      <UniqueIdentifier>{D6C86BA9-F4E3-3519-BB82-887297DAF166}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Game">
-      <UniqueIdentifier>{9EB02C92-B51A-3B59-945E-7C6AAF41E306}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Game">
+      <UniqueIdentifier>{A4709579-4F64-372E-A2A6-7F2C729EA84F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Graphics">
-      <UniqueIdentifier>{E21DF760-70C8-3AC4-89D7-72B77A9E9736}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Graphics">
+      <UniqueIdentifier>{A59B8FDF-40DD-3103-8AC5-F9DCF1631694}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Input">
-      <UniqueIdentifier>{0D3A2C0A-75EE-3776-B72D-EEAD86D5A271}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Input">
+      <UniqueIdentifier>{DC7F38B4-0391-31A6-A268-3E10E46039D0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Physics">
-      <UniqueIdentifier>{891E3A10-A965-3CB7-AB9C-B11F1F8056F3}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Physics">
+      <UniqueIdentifier>{621DC910-17C0-3457-BF26-B28DA2905A04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Projectiles">
-      <UniqueIdentifier>{0327ADEE-018F-30B9-A46F-0E4DD9318753}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Projectiles">
+      <UniqueIdentifier>{700AF246-937E-3A87-A01F-1A775851355A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Spark Engine\Source\Utils">
-      <UniqueIdentifier>{67D87A8F-9F37-3150-9459-E1DCA2FEDF1B}</UniqueIdentifier>
+    <Filter Include="Source\Spark Engine\Source\Utils">
+      <UniqueIdentifier>{E9EF51D3-3822-362D-91DB-19F05072EB55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -178,7 +178,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{329B84FD-7E80-3292-A5AE-39CB1E65A676}</Project>
       <Name>SparkEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="D:\Game\FPSGame\build\as\angelscript.vcxproj">
+    <ProjectReference Include="D:\Game\FPSGame\build\angelscript\angelscript.vcxproj">
       <Project>{6894C980-B8ED-3046-9379-69C7EEC064F6}</Project>
       <Name>angelscript</Name>
     </ProjectReference>

@@ -1,4 +1,5 @@
 ﻿#include "Player.h"
+class Console;
 #include "..\Camera\SparkEngineCamera.h"
 #include "..\Input\InputManager.h"
 #include "..\Projectiles\ProjectilePool.h"

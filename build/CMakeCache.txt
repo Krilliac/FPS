@@ -217,20 +217,14 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//AngelScript scripting
+//Embed AngelScript scripting
 ENABLE_ANGELSCRIPT:BOOL=ON
 
-//Bullet physics
-ENABLE_BULLET:BOOL=OFF
-
-//Console overlay
+//External debug console overlay
 ENABLE_CONSOLE:BOOL=ON
 
-//Editor UI
+//Build with in-engine editor UI
 ENABLE_EDITOR:BOOL=ON
-
-//Vulkan renderer
-ENABLE_VULKAN:BOOL=OFF
 
 //Compiler flags to use with MSVC
 MSVC_COMPILE_FLAGS:STRING=/MP
@@ -244,11 +238,8 @@ SparkEngine_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 SparkEngine_SOURCE_DIR:STATIC=D:/Game/FPSGame
 
-//Link static CRT
-USE_STATIC_RUNTIME:BOOL=ON
-
 //Value Computed by CMake
-angelscript_BINARY_DIR:STATIC=D:/Game/FPSGame/build/as
+angelscript_BINARY_DIR:STATIC=D:/Game/FPSGame/build/angelscript
 
 //Value Computed by CMake
 angelscript_IS_TOP_LEVEL:STATIC=OFF

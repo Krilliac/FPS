@@ -87,31 +87,33 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -119,7 +121,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -134,31 +136,33 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -166,7 +170,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -181,31 +185,33 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -213,7 +219,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -228,30 +234,32 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;WITH_ANGELSCRIPT;NOMINMAX;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WITH_ANGELSCRIPT=1;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <IncludePaths>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Game\FPSGame;D:\Game\FPSGame\Source;D:\Game\FPSGame\Spark Engine\Source;D:\Game\FPSGame\Engine;D:\Game\FPSGame\Engine\Core;D:\Game\FPSGame\Source\Core;D:\Game\FPSGame\Spark Engine\Source\Core;D:\Game\FPSGame\ThirdParty;D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader;D:\Game\FPSGame\ThirdParty\Utils\glm;D:\Game\FPSGame\ThirdParty\Utils\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -259,7 +267,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>angelscript_static.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>

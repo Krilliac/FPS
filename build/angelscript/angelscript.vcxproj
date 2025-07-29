@@ -60,19 +60,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\as\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\angelscript\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">angelscript.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">angelscriptd</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\as\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\angelscript\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">angelscript.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">angelscript</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\as\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\angelscript\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">angelscript.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">angelscript</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\as\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\angelscript\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">angelscript.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">angelscript</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
@@ -80,8 +80,10 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
@@ -89,7 +91,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;ANGELSCRIPT_EXPORT;_LIB;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -118,14 +120,16 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;ANGELSCRIPT_EXPORT;_LIB;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -156,14 +160,16 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;ANGELSCRIPT_EXPORT;_LIB;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -194,7 +200,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -202,7 +210,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;ANGELSCRIPT_EXPORT;_LIB;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -233,7 +241,7 @@
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/as/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/angelscript/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -242,11 +250,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASM_MASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckCSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckLibraryExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindThreads.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\cmake\AngelscriptConfig.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeASM_MASMCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\as\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\angelscript\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/as/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/angelscript/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -255,11 +263,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASM_MASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckCSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckLibraryExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindThreads.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\cmake\AngelscriptConfig.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeASM_MASMCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\as\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\angelscript\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/as/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/angelscript/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -268,11 +276,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASM_MASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckCSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckLibraryExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindThreads.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\cmake\AngelscriptConfig.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeASM_MASMCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\as\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\angelscript\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/as/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/angelscript/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -281,7 +289,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMCompiler.cmake.in;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeASM_MASMInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeFindBinUtils.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeTestASM_MASMCompiler.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckCSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckIncludeFile.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CheckLibraryExists.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindPackageMessage.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\FindThreads.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;D:\Game\FPSGame\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\cmake\AngelscriptConfig.cmake;D:\Game\FPSGame\build\CMakeFiles\3.25.2\CMakeASM_MASMCompiler.cmake;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\as\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\angelscript\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
