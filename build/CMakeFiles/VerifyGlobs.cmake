@@ -3,123 +3,123 @@
 cmake_policy(SET CMP0009 NEW)
 
 # ENGINE_SRCS at CMakeLists.txt:39 (file)
-file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Game/FPSGame/Engine/Core/*.cpp")
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/Engine/Core/*.cpp")
 set(OLD_GLOB
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "D:/Game/FPSGame/build/CMakeFiles/cmake.verify_globs")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
 endif()
 
 # ENGINE_HDRS at CMakeLists.txt:44 (file)
-file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Game/FPSGame/Engine/Core/*.h")
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/Engine/Core/*.h")
 set(OLD_GLOB
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "D:/Game/FPSGame/build/CMakeFiles/cmake.verify_globs")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
 endif()
 
 # ENGINE_SRCS at CMakeLists.txt:39 (file)
-file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Game/FPSGame/Source/*.cpp")
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/Source/*.cpp")
 set(OLD_GLOB
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "D:/Game/FPSGame/build/CMakeFiles/cmake.verify_globs")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
 endif()
 
 # ENGINE_HDRS at CMakeLists.txt:44 (file)
-file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Game/FPSGame/Source/*.h")
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/Source/*.h")
 set(OLD_GLOB
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "D:/Game/FPSGame/build/CMakeFiles/cmake.verify_globs")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
 endif()
 
 # ENGINE_SRCS at CMakeLists.txt:39 (file)
-file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Game/FPSGame/Spark Engine/Source/*.cpp")
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/Spark Engine/Source/*.cpp")
 set(OLD_GLOB
-  "D:/Game/FPSGame/Spark Engine/Source/Audio/AudioEngine.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Audio/SoundEffect.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Camera/SparkEngineCamera.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Core/SparkEngine.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Console.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/CubeObject.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Game.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/GameObject.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Model.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/PlaneObject.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Player.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Primitives.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/SphereObject.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Terrain.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Graphics/GraphicsEngine.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Graphics/Mesh.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Graphics/Shader.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Input/InputManager.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Physics/CollisionSystem.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Bullet.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Grenade.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Projectile.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/ProjectilePool.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Rocket.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/CrashHandler.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/CrashHandlerHelpers.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/D3DUtils.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/MathUtils.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/Timer.cpp"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/TinyObjImpl.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Audio/AudioEngine.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Audio/SoundEffect.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Camera/SparkEngineCamera.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Core/SparkEngine.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Console.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/CubeObject.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Game.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/GameObject.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Model.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/PlaneObject.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Player.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Primitives.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/SphereObject.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Terrain.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Graphics/GraphicsEngine.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Graphics/Mesh.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Graphics/Shader.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Input/InputManager.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Physics/CollisionSystem.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Bullet.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Grenade.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Projectile.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/ProjectilePool.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Rocket.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/CrashHandler.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/CrashHandlerHelpers.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/D3DUtils.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/MathUtils.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/Timer.cpp"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/TinyObjImpl.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "D:/Game/FPSGame/build/CMakeFiles/cmake.verify_globs")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
 endif()
 
 # ENGINE_HDRS at CMakeLists.txt:44 (file)
-file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Game/FPSGame/Spark Engine/Source/*.h")
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/Spark Engine/Source/*.h")
 set(OLD_GLOB
-  "D:/Game/FPSGame/Spark Engine/Source/Audio/AudioEngine.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Audio/SoundEffect.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Camera/SparkEngineCamera.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Core/SparkEngine.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Core/framework.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Core/resource.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Core/targetver.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Engine/ECS/Components.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Engine/Scripting/AngelScriptEngine.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Console.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/CubeObject.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Game.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/GameObject.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Model.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/ModelVertex.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/PlaceholderMesh.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/PlaneObject.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Player.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Primitives.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/SphereObject.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Game/Terrain.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Graphics/GraphicsEngine.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Graphics/Mesh.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Graphics/Shader.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Input/InputManager.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Physics/CollisionSystem.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Bullet.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Grenade.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Projectile.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/ProjectilePool.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Rocket.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/WeaponStats.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/Assert.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/CrashHandler.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/D3DUtils.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/MathUtils.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/ObjectPool.h"
-  "D:/Game/FPSGame/Spark Engine/Source/Utils/Timer.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Audio/AudioEngine.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Audio/SoundEffect.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Camera/SparkEngineCamera.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Core/SparkEngine.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Core/framework.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Core/resource.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Core/targetver.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Engine/ECS/Components.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Engine/Scripting/AngelScriptEngine.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Console.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/CubeObject.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Game.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/GameObject.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Model.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/ModelVertex.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/PlaceholderMesh.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/PlaneObject.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Player.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Primitives.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/SphereObject.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Game/Terrain.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Graphics/GraphicsEngine.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Graphics/Mesh.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Graphics/Shader.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Input/InputManager.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Physics/CollisionSystem.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Bullet.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Grenade.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Projectile.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/ProjectilePool.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/Rocket.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Projectiles/WeaponStats.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/Assert.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/CrashHandler.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/D3DUtils.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/MathUtils.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/ObjectPool.h"
+  "D:/Spark Engine/SparkEngine/Spark Engine/Source/Utils/Timer.h"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
-  file(TOUCH_NOCREATE "D:/Game/FPSGame/build/CMakeFiles/cmake.verify_globs")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
 endif()

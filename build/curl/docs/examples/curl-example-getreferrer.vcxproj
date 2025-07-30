@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{63881881-A9BE-3F06-A1DA-EB5DC79F944B}</ProjectGuid>
+    <ProjectGuid>{B905A14B-6B80-3ECA-A472-67A8F3B7DB44}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -60,25 +60,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\curl\docs\examples\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">curl-example-getreferrer.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">getreferrer</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\curl\docs\examples\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">curl-example-getreferrer.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">getreferrer</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\curl\docs\examples\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">curl-example-getreferrer.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">getreferrer</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\curl\docs\examples\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">curl-example-getreferrer.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">getreferrer</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
@@ -87,7 +87,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -107,15 +107,15 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
+      <IncludePaths>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -128,8 +128,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Game/FPSGame/build/curl/docs/examples/Debug/getreferrer.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Game/FPSGame/build/curl/docs/examples/Debug/getreferrer.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/curl/docs/examples/Debug/getreferrer.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/curl/docs/examples/Debug/getreferrer.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -138,7 +138,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
@@ -158,15 +158,15 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
+      <IncludePaths>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -179,8 +179,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Game/FPSGame/build/curl/docs/examples/Release/getreferrer.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Game/FPSGame/build/curl/docs/examples/Release/getreferrer.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/curl/docs/examples/Release/getreferrer.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/curl/docs/examples/Release/getreferrer.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -189,7 +189,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
@@ -209,15 +209,15 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
+      <IncludePaths>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -230,8 +230,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Game/FPSGame/build/curl/docs/examples/MinSizeRel/getreferrer.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Game/FPSGame/build/curl/docs/examples/MinSizeRel/getreferrer.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/curl/docs/examples/MinSizeRel/getreferrer.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/curl/docs/examples/MinSizeRel/getreferrer.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -240,7 +240,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
@@ -259,15 +259,15 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_NO_OLDIES;_CRT_SECURE_NO_DEPRECATE;HAVE_CONFIG_H;CURL_STATICLIB;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
-      <IncludePaths>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
+      <IncludePaths>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(IncludePaths)</IncludePaths>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Game\FPSGame\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -280,8 +280,8 @@
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Game/FPSGame/build/curl/docs/examples/RelWithDebInfo/getreferrer.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Game/FPSGame/build/curl/docs/examples/RelWithDebInfo/getreferrer.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/curl/docs/examples/RelWithDebInfo/getreferrer.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/curl/docs/examples/RelWithDebInfo/getreferrer.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -289,11 +289,11 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\CMakeLists.txt">
+    <CustomBuild Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\docs\examples\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" "-SD:/Spark Engine/SparkEngine" "-BD:/Spark Engine/SparkEngine/build" --check-stamp-file "D:/Spark Engine/SparkEngine/build/curl/docs/examples/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -301,12 +301,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;D:\Spark Engine\SparkEngine\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" "-SD:/Spark Engine/SparkEngine" "-BD:/Spark Engine/SparkEngine/build" --check-stamp-file "D:/Spark Engine/SparkEngine/build/curl/docs/examples/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -314,12 +314,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;D:\Spark Engine\SparkEngine\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" "-SD:/Spark Engine/SparkEngine" "-BD:/Spark Engine/SparkEngine/build" --check-stamp-file "D:/Spark Engine/SparkEngine/build/curl/docs/examples/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -327,12 +327,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;D:\Spark Engine\SparkEngine\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Game/FPSGame/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl/docs/examples/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -SD:/Game/FPSGame -BD:/Game/FPSGame/build --check-stamp-file D:/Game/FPSGame/build/curl/docs/examples/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\CMake\bin\cmake.exe" "-SD:/Spark Engine/SparkEngine" "-BD:/Spark Engine/SparkEngine/build" --check-stamp-file "D:/Spark Engine/SparkEngine/build/curl/docs/examples/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -340,23 +340,23 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Game\FPSGame\build\CMakeFiles\cmake.verify_globs;D:\Game\FPSGame\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Game\FPSGame\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\docs\examples\Makefile.inc;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;D:\Spark Engine\SparkEngine\build\curl\docs\examples\Makefile.inc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Spark Engine\SparkEngine\build\curl\docs\examples\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\docs\examples\getreferrer.c" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\docs\examples\getreferrer.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\Game\FPSGame\build\ZERO_CHECK.vcxproj">
-      <Project>{62366160-65DC-377C-BAF1-1FD1D6DE2541}</Project>
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\ZERO_CHECK.vcxproj">
+      <Project>{3B3EAB84-A10F-3C55-886F-BA9E58BEA0D1}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\Game\FPSGame\build\curl\lib\libcurl_static.vcxproj">
-      <Project>{B6A75D45-C9A0-3572-BA73-82D0698DA719}</Project>
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\curl\lib\libcurl_static.vcxproj">
+      <Project>{5B7D6315-CE17-38E6-A8B8-21C4436243A4}</Project>
       <Name>libcurl_static</Name>
     </ProjectReference>
   </ItemGroup>

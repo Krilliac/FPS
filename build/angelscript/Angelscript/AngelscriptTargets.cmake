@@ -50,7 +50,7 @@ unset(_cmake_expected_targets)
 add_library(Angelscript::angelscript STATIC IMPORTED)
 
 set_target_properties(Angelscript::angelscript PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "D:/Game/FPSGame/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/../../include"
+  INTERFACE_INCLUDE_DIRECTORIES "D:/Spark Engine/SparkEngine/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake/../../include"
   INTERFACE_LINK_LIBRARIES "Threads::Threads"
 )
 
@@ -58,28 +58,28 @@ set_target_properties(Angelscript::angelscript PROPERTIES
 set_property(TARGET Angelscript::angelscript APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(Angelscript::angelscript PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "ASM_MASM;CXX"
-  IMPORTED_LOCATION_DEBUG "D:/Game/FPSGame/build/angelscript/Debug/angelscriptd.lib"
+  IMPORTED_LOCATION_DEBUG "D:/Spark Engine/SparkEngine/build/angelscript/Debug/angelscriptd.lib"
   )
 
 # Import target "Angelscript::angelscript" for configuration "Release"
 set_property(TARGET Angelscript::angelscript APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(Angelscript::angelscript PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "ASM_MASM;CXX"
-  IMPORTED_LOCATION_RELEASE "D:/Game/FPSGame/build/angelscript/Release/angelscript.lib"
+  IMPORTED_LOCATION_RELEASE "D:/Spark Engine/SparkEngine/build/angelscript/Release/angelscript.lib"
   )
 
 # Import target "Angelscript::angelscript" for configuration "MinSizeRel"
 set_property(TARGET Angelscript::angelscript APPEND PROPERTY IMPORTED_CONFIGURATIONS MINSIZEREL)
 set_target_properties(Angelscript::angelscript PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_MINSIZEREL "ASM_MASM;CXX"
-  IMPORTED_LOCATION_MINSIZEREL "D:/Game/FPSGame/build/angelscript/MinSizeRel/angelscript.lib"
+  IMPORTED_LOCATION_MINSIZEREL "D:/Spark Engine/SparkEngine/build/angelscript/MinSizeRel/angelscript.lib"
   )
 
 # Import target "Angelscript::angelscript" for configuration "RelWithDebInfo"
 set_property(TARGET Angelscript::angelscript APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
 set_target_properties(Angelscript::angelscript PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_RELWITHDEBINFO "ASM_MASM;CXX"
-  IMPORTED_LOCATION_RELWITHDEBINFO "D:/Game/FPSGame/build/angelscript/RelWithDebInfo/angelscript.lib"
+  IMPORTED_LOCATION_RELWITHDEBINFO "D:/Spark Engine/SparkEngine/build/angelscript/RelWithDebInfo/angelscript.lib"
   )
 
 # This file does not depend on other imported targets which have

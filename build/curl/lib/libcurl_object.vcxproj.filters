@@ -1,1065 +1,1065 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\altsvc.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\altsvc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\amigaos.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\amigaos.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\asyn-ares.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\asyn-ares.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\asyn-base.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\asyn-base.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\asyn-thrdd.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\asyn-thrdd.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\bufq.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\bufq.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\bufref.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\bufref.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-h1-proxy.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-h1-proxy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-h2-proxy.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-h2-proxy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-haproxy.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-haproxy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-https-connect.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-https-connect.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-socket.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-socket.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cfilters.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cfilters.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\conncache.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\conncache.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\connect.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\connect.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\content_encoding.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\content_encoding.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cookie.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cookie.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cshutdn.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cshutdn.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_addrinfo.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_addrinfo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_des.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_des.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_endian.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_endian.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_fnmatch.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_fnmatch.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_get_line.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_get_line.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_gethostname.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_gethostname.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_gssapi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_gssapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_memrchr.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_memrchr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_ntlm_core.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_ntlm_core.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_range.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_range.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_rtmp.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_rtmp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_sasl.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_sasl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_sha512_256.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_sha512_256.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_sspi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_sspi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_threads.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_threads.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_trc.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_trc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cw-out.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cw-out.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cw-pause.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cw-pause.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\dict.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\dict.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\doh.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\doh.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\dynhds.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\dynhds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\easy.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\easy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\easygetopt.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\easygetopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\easyoptions.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\easyoptions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\escape.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\escape.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\fake_addrinfo.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\fake_addrinfo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\file.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\file.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\fileinfo.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\fileinfo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\fopen.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\fopen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\formdata.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\formdata.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\ftp.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ftp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\ftplistparser.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ftplistparser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\getenv.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\getenv.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\getinfo.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\getinfo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\gopher.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\gopher.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hash.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hash.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\headers.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\headers.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hmac.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hmac.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hostip.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hostip.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hostip4.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hostip4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hostip6.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hostip6.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hsts.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hsts.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http1.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http1.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http2.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_aws_sigv4.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_aws_sigv4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_chunks.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_chunks.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_digest.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_digest.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_negotiate.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_negotiate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_ntlm.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_ntlm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_proxy.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_proxy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\httpsrr.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\httpsrr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\idn.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\idn.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\if2ip.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\if2ip.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\imap.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\imap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\krb5.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\krb5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\ldap.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ldap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\llist.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\llist.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\macos.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\macos.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\md4.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\md4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\md5.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\md5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\memdebug.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\memdebug.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\mime.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\mime.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\mprintf.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\mprintf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\mqtt.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\mqtt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\multi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\multi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\multi_ev.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\multi_ev.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\netrc.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\netrc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\noproxy.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\noproxy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\openldap.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\openldap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\parsedate.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\parsedate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\pingpong.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\pingpong.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\pop3.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\pop3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\progress.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\progress.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\psl.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\psl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\rand.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\rand.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\rename.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\rename.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\request.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\request.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\rtsp.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\rtsp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\select.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\select.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\sendf.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\sendf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\setopt.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\setopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\sha256.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\sha256.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\share.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\share.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\slist.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\slist.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\smb.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\smb.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\smtp.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\smtp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\socketpair.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\socketpair.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\socks.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\socks.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\socks_gssapi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\socks_gssapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\socks_sspi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\socks_sspi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\speedcheck.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\speedcheck.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\splay.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\splay.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\strcase.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\strcase.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\strdup.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\strdup.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\strequal.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\strequal.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\strerror.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\strerror.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\system_win32.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\system_win32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\telnet.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\telnet.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\tftp.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\tftp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\transfer.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\transfer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-bset.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-bset.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-hash.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-hash.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-spbset.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-spbset.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-table.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-table.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\url.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\url.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\urlapi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\urlapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\version.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\version.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\ws.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ws.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\cleartext.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\cleartext.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\cram.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\cram.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\digest.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\digest.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\digest_sspi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\digest_sspi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\gsasl.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\gsasl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\krb5_gssapi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\krb5_gssapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\krb5_sspi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\krb5_sspi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\ntlm.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\ntlm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\ntlm_sspi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\ntlm_sspi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\oauth2.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\oauth2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\spnego_gssapi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\spnego_gssapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\spnego_sspi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\spnego_sspi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\vauth.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\vauth.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\cipher_suite.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\cipher_suite.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\gtls.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\gtls.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\hostcheck.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\hostcheck.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\keylog.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\keylog.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\mbedtls.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\mbedtls.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\mbedtls_threadlock.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\mbedtls_threadlock.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\openssl.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\openssl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\rustls.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\rustls.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\schannel.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\schannel.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\schannel_verify.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\schannel_verify.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\vtls.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\vtls.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\vtls_scache.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\vtls_scache.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\vtls_spack.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\vtls_spack.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\wolfssl.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\wolfssl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\x509asn1.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\x509asn1.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\curl_ngtcp2.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\curl_ngtcp2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\curl_osslq.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\curl_osslq.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\curl_quiche.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\curl_quiche.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\vquic.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\vquic.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\vquic-tls.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\vquic-tls.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vssh\libssh.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vssh\libssh.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vssh\libssh2.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vssh\libssh2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vssh\curl_path.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vssh\curl_path.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vssh\wolfssh.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vssh\wolfssh.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\base64.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\base64.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\dynbuf.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\dynbuf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\inet_ntop.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\inet_ntop.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\inet_pton.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\inet_pton.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\multibyte.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\multibyte.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\nonblock.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\nonblock.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\strparse.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\strparse.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\timediff.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\timediff.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\timeval.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\timeval.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\version_win32.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\version_win32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\wait.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\wait.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\warnless.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\warnless.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\winapi.c">
+    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\winapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\altsvc.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\altsvc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\amigaos.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\amigaos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\arpa_telnet.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\arpa_telnet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\asyn.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\asyn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\bufq.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\bufq.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\bufref.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\bufref.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-h1-proxy.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-h1-proxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-h2-proxy.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-h2-proxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-haproxy.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-haproxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-https-connect.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-https-connect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cf-socket.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cf-socket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cfilters.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cfilters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\conncache.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\conncache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cshutdn.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cshutdn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\connect.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\connect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\content_encoding.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\content_encoding.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cookie.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cookie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_addrinfo.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_addrinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_ctype.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_ctype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_des.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_des.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_endian.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_endian.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_fnmatch.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_fnmatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_get_line.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_get_line.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_gethostname.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_gethostname.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_gssapi.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_gssapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_hmac.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_hmac.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_krb5.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_krb5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_ldap.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_ldap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_md4.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_md4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_md5.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_memory.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_memrchr.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_memrchr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_ntlm_core.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_ntlm_core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_printf.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_printf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_range.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_range.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_rtmp.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_rtmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_sasl.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_sasl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_setup.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_setup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_setup_once.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_setup_once.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_sha256.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_sha256.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_sha512_256.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_sha512_256.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_sspi.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_sspi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_threads.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_threads.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curl_trc.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curl_trc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cw-out.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cw-out.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\cw-pause.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\cw-pause.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\dict.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\dict.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\doh.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\doh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\dynhds.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\dynhds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\easy_lock.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\easy_lock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\easyif.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\easyif.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\easyoptions.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\easyoptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\escape.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\escape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\fake_addrinfo.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\fake_addrinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\file.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\fileinfo.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\fileinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\fopen.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\fopen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\formdata.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\formdata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\ftp.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ftp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\ftplistparser.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ftplistparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\functypes.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\functypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\getinfo.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\getinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\gopher.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\gopher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hash.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\headers.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hostip.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hostip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\hsts.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\hsts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http1.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http2.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_aws_sigv4.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_aws_sigv4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_chunks.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_chunks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_digest.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_digest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_negotiate.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_negotiate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_ntlm.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_ntlm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\http_proxy.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\http_proxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\httpsrr.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\httpsrr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\idn.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\idn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\if2ip.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\if2ip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\imap.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\imap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\llist.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\llist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\macos.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\macos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\memdebug.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\memdebug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\mime.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\mime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\mqtt.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\mqtt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\multihandle.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\multihandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\multi_ev.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\multi_ev.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\multiif.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\multiif.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\netrc.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\netrc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\noproxy.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\noproxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\parsedate.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\parsedate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\pingpong.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\pingpong.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\pop3.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\pop3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\progress.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\progress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\psl.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\psl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\rand.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\rand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\rename.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\rename.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\request.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\request.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\rtsp.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\rtsp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\select.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\select.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\sendf.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\sendf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\setopt.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\setopt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\setup-os400.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\setup-os400.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\setup-vms.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\setup-vms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\setup-win32.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\setup-win32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\share.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\share.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\sigpipe.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\sigpipe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\slist.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\slist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\smb.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\smb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\smtp.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\smtp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\sockaddr.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\sockaddr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\socketpair.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\socketpair.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\socks.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\socks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\speedcheck.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\speedcheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\splay.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\splay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\strcase.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\strcase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\strdup.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\strdup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\strerror.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\strerror.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\system_win32.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\system_win32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\telnet.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\telnet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\tftp.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\tftp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\transfer.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\transfer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-bset.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-bset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-hash.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-hash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-spbset.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-spbset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\uint-table.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\uint-table.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\url.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\url.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\urlapi-int.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\urlapi-int.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\urldata.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\urldata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\ws.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ws.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\digest.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\digest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vauth\vauth.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vauth\vauth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\cipher_suite.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\cipher_suite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\gtls.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\gtls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\hostcheck.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\hostcheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\keylog.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\keylog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\mbedtls.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\mbedtls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\mbedtls_threadlock.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\mbedtls_threadlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\openssl.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\openssl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\rustls.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\rustls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\schannel.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\schannel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\schannel_int.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\schannel_int.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\vtls.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\vtls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\vtls_int.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\vtls_int.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\vtls_scache.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\vtls_scache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\vtls_spack.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\vtls_spack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\wolfssl.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\wolfssl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vtls\x509asn1.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\x509asn1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\curl_ngtcp2.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\curl_ngtcp2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\curl_osslq.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\curl_osslq.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\curl_quiche.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\curl_quiche.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\vquic.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\vquic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\vquic_int.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\vquic_int.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vquic\vquic-tls.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vquic\vquic-tls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vssh\curl_path.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vssh\curl_path.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\vssh\ssh.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vssh\ssh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\binmode.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\binmode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\base64.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\base64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\curlx.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\curlx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\dynbuf.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\dynbuf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\inet_ntop.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\inet_ntop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\inet_pton.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\inet_pton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\multibyte.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\multibyte.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\nonblock.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\nonblock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\strparse.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\strparse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\timediff.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\timediff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\timeval.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\timeval.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\version_win32.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\version_win32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\wait.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\wait.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\warnless.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\warnless.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\curlx\winapi.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\curlx\winapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Game\FPSGame\build\curl\lib\curl_config.h">
+    <ClInclude Include="D:\Spark Engine\SparkEngine\build\curl\lib\curl_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Game\FPSGame\ThirdParty\Networking\curl\lib\CMakeLists.txt" />
+    <CustomBuild Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{F2426037-4E81-38AB-AADE-B67A4B21116A}</UniqueIdentifier>
+      <UniqueIdentifier>{7605DFC4-54C5-31D0-9F82-EA016A5A7956}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{1DB7BC91-D043-3A20-8182-AC01AF4E8D2F}</UniqueIdentifier>
+      <UniqueIdentifier>{4AF27A27-6CD6-3C89-9D26-5F15DBF96027}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

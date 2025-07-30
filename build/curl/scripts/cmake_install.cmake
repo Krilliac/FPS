@@ -1,4 +1,4 @@
-# Install script for directory: D:/Game/FPSGame/ThirdParty/Networking/curl/scripts
+# Install script for directory: D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl/scripts
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -51,7 +51,7 @@ add_library(CURL::libcurl_static STATIC IMPORTED)
 
 set_target_properties(CURL::libcurl_static PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "CURL_STATICLIB"
-  INTERFACE_INCLUDE_DIRECTORIES "D:/Game/FPSGame/ThirdParty/Networking/curl/include"
+  INTERFACE_INCLUDE_DIRECTORIES "D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl/include"
   INTERFACE_LINK_DIRECTORIES ""
   INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:bcrypt>;\$<LINK_ONLY:advapi32>;\$<LINK_ONLY:crypt32>;\$<LINK_ONLY:secur32>;\$<LINK_ONLY:ws2_32>;\$<LINK_ONLY:iphlpapi>"
 )
@@ -60,28 +60,28 @@ set_target_properties(CURL::libcurl_static PROPERTIES
 set_property(TARGET CURL::libcurl_static APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(CURL::libcurl_static PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
-  IMPORTED_LOCATION_DEBUG "D:/Game/FPSGame/build/curl/lib/Debug/libcurl.lib"
+  IMPORTED_LOCATION_DEBUG "D:/Spark Engine/SparkEngine/build/curl/lib/Debug/libcurl.lib"
   )
 
 # Import target "CURL::libcurl_static" for configuration "Release"
 set_property(TARGET CURL::libcurl_static APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(CURL::libcurl_static PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
-  IMPORTED_LOCATION_RELEASE "D:/Game/FPSGame/build/curl/lib/Release/libcurl.lib"
+  IMPORTED_LOCATION_RELEASE "D:/Spark Engine/SparkEngine/build/curl/lib/Release/libcurl.lib"
   )
 
 # Import target "CURL::libcurl_static" for configuration "MinSizeRel"
 set_property(TARGET CURL::libcurl_static APPEND PROPERTY IMPORTED_CONFIGURATIONS MINSIZEREL)
 set_target_properties(CURL::libcurl_static PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_MINSIZEREL "C"
-  IMPORTED_LOCATION_MINSIZEREL "D:/Game/FPSGame/build/curl/lib/MinSizeRel/libcurl.lib"
+  IMPORTED_LOCATION_MINSIZEREL "D:/Spark Engine/SparkEngine/build/curl/lib/MinSizeRel/libcurl.lib"
   )
 
 # Import target "CURL::libcurl_static" for configuration "RelWithDebInfo"
 set_property(TARGET CURL::libcurl_static APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
 set_target_properties(CURL::libcurl_static PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_RELWITHDEBINFO "C"
-  IMPORTED_LOCATION_RELWITHDEBINFO "D:/Game/FPSGame/build/curl/lib/RelWithDebInfo/libcurl.lib"
+  IMPORTED_LOCATION_RELWITHDEBINFO "D:/Spark Engine/SparkEngine/build/curl/lib/RelWithDebInfo/libcurl.lib"
   )
 
 # This file does not depend on other imported targets which have
