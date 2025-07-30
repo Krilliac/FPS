@@ -6,6 +6,7 @@ project(SparkEngine LANGUAGES C CXX)
 # -------------------------------------------------------------
 set(CMAKE_CXX_STANDARD        17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 if(MSVC)
   add_compile_options(/permissive- /Zc:__cplusplus)
@@ -96,6 +97,28 @@ add_executable(SparkEngine WIN32
   ${ENGINE_SRCS}
 )
 target_sources(SparkEngine PRIVATE ${ENGINE_HDRS})
+
+# Ensure the Shaders folder exists next to the exe in the build tree:
+set(SHADERS_SRC_DIR "${CMAKE_SOURCE_DIR}/Spark Engine/Shaders/HLSL")
+set(SHADERS_DST_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Shaders/HLSL")
+
+# Recursively copy HLSL shaders into the runtime output dir
+file(GLOB_RECURSE SHADER_FILES
+     "${SHADERS_SRC_DIR}/*.hlsl"
+)
+
+# Create destination directory
+file(MAKE_DIRECTORY "${SHADERS_DST_DIR}")
+
+# Copy each file preserving its filename
+foreach(_shader ${SHADER_FILES})
+    get_filename_component(_fname ${_shader} NAME)
+    configure_file(
+        "${_shader}"
+        "${SHADERS_DST_DIR}/${_fname}"
+        COPYONLY
+    )
+endforeach()
 
 # -------------------------------------------------------------
 # 7) Engine include directories

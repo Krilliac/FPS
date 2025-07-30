@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "..\Utils\MathUtils.h"
 #include "Utils/Assert.h"
+#include <iostream>
 
 using namespace DirectX;
 
@@ -72,6 +73,9 @@ void GameObject::Render(const XMMATRIX&, const XMMATRIX&)
         UpdateWorldMatrix();
 
     ASSERT(m_mesh);
+	ASSERT_MSG(m_device != nullptr, "GameObject::Render - device is null");
+    ASSERT_MSG(m_context != nullptr, "GameObject::Render - context is null");
+    ASSERT_MSG(m_mesh->GetVertexCount() > 0 && m_mesh->GetIndexCount() > 0, "Mesh has no vertices or indices to render");
 	m_mesh->Render(m_context);
 }
 
@@ -172,7 +176,31 @@ void GameObject::CreateMesh()
 {
     if (m_mesh)
         m_mesh->CreateCube(1.0f);  // placeholder default
+
+    // Debug logging
+    std::wcerr << L"[DEBUG] GameObject ID " << m_id
+        << L" created mesh: Vertices=" << m_mesh->GetVertexCount()
+        << L", Indices=" << m_mesh->GetIndexCount()
+        << std::endl;
+
+    // Simple null-pointer assert
     ASSERT(m_mesh);
+
+    // Formatted assert must use ASSERT_MSG and its own comma-separated args
+    ASSERT_MSG(m_mesh->GetVertexCount() > 0 && m_mesh->GetIndexCount() > 0,
+        "Mesh creation failed: verts=%u, inds=%u",
+        m_mesh->GetVertexCount(), m_mesh->GetIndexCount());
+
+    m_worldMatrixDirty = true;  // Ensure world matrix updates
+
+    m_name = "GameObject_" + std::to_string(m_id);
+    std::cout << "GameObject created with ID: " << m_id
+        << " and name: " << m_name << std::endl;
+
+    // Assertions on other members
+    ASSERT_MSG(!m_name.empty(), "GameObject name unexpected empty");
+    ASSERT_MSG(m_device != nullptr, "GameObject device is null");
+    ASSERT_MSG(m_context != nullptr, "GameObject context is null");
 }
 
 void GameObject::UpdateWorldMatrix()

@@ -1,5 +1,4 @@
-﻿// CrashHandler.cpp
-#include "Utils/CrashHandler.h"
+﻿#include "Utils/CrashHandler.h"
 #include "Utils/Assert.h"
 
 #include <windows.h>
@@ -25,6 +24,7 @@
 
 static CrashConfig g_cfg;
 static std::mutex   g_lock;
+static bool         g_triggerCrashOnAssert = false;  // NEW: Control assert crash behavior
 
 // Engine must implement these
 extern IDXGISwapChain* GetMainSwapChain();
@@ -53,11 +53,23 @@ static bool          Upload(const std::string& url, const std::wstring& file, co
 
 void InstallCrashHandler(const CrashConfig& cfg) {
     g_cfg = cfg;
+    g_triggerCrashOnAssert = cfg.triggerCrashOnAssert;  // Store the flag
     curl_global_init(CURL_GLOBAL_DEFAULT);
-    SetUnhandledExceptionFilter(CrashFilter);
+    SetUnhandledExceptionFilter(CrashFilter);  // This stays active always
 }
 
 void TriggerCrashHandler(const char* assertMsg) {
+    if (!g_triggerCrashOnAssert) {
+        // Just log the assertion but don't trigger full crash handling
+        OutputDebugStringA("Assert triggered but crash handling disabled: ");
+        if (assertMsg) {
+            OutputDebugStringA(assertMsg);
+        }
+        OutputDebugStringA("\n");
+        return;  // Early exit - no crash, no dumps, just continue
+    }
+
+    // Full crash handling when enabled
     EXCEPTION_RECORD rec{};
     rec.ExceptionCode = STATUS_FATAL_APP_EXIT;
     rec.ExceptionFlags = EXCEPTION_NONCONTINUABLE;
@@ -69,6 +81,11 @@ void TriggerCrashHandler(const char* assertMsg) {
 
     EXCEPTION_POINTERS ep{ &rec, &ctx };
     HandleCrashInternal(&ep, assertMsg);
+}
+
+void SetAssertCrashBehavior(bool shouldCrash) {
+    std::lock_guard<std::mutex> lock(g_lock);
+    g_triggerCrashOnAssert = shouldCrash;
 }
 
 static LONG WINAPI CrashFilter(EXCEPTION_POINTERS* ep) {

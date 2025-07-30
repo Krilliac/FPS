@@ -22,7 +22,7 @@ void PlaneObject::CreateMesh()
     ASSERT_ALWAYS_MSG(!md.vertices.empty() && !md.indices.empty(),
         "Generated plane mesh is empty");
 
-    LoadOrPlaceholderMesh(*m_mesh, m_modelPath, md);
+    LoadOrPlaceholderMesh(*m_mesh, m_modelPath);
 
     // Ensure mesh is valid
     ASSERT(m_mesh != nullptr);

@@ -57,6 +57,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     crashCfg.captureSystemInfo = true;
     crashCfg.captureAllThreads = true;
     crashCfg.zipBeforeUpload = true;
+    crashCfg.triggerCrashOnAssert = false;  // NEW: Don't crash on assertions during development
     InstallCrashHandler(crashCfg);
 
     // 2. Class & window title

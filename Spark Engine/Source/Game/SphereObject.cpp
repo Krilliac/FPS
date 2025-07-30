@@ -25,6 +25,6 @@ void SphereObject::CreateMesh()
     auto md = Primitives::CreateSphere(m_radius, m_slices, m_stacks);
     ASSERT_ALWAYS_MSG(!md.vertices.empty() && !md.indices.empty(),
         "CreateSphere produced empty mesh");
-    LoadOrPlaceholderMesh(*m_mesh, m_modelPath, md);
+    LoadOrPlaceholderMesh(*m_mesh, m_modelPath);
     ASSERT(m_mesh);
 }

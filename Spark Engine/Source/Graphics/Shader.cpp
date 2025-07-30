@@ -3,6 +3,7 @@
 #include "Utils/Assert.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <filesystem>
 
 Shader::Shader()
 {
@@ -136,6 +137,23 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
     ASSERT_MSG(!filename.empty(), "CompileShaderFromFile: filename empty");
     ASSERT(blobOut != nullptr);
 
+    // Check if file exists first
+    if (!std::filesystem::exists(filename)) {
+        std::wstring errorMsg = L"Shader file not found: " + filename;
+        OutputDebugStringW(errorMsg.c_str());
+        OutputDebugStringW(L"\n");
+
+        // Also print current working directory for debugging
+        wchar_t currentDir[MAX_PATH];
+        GetCurrentDirectoryW(MAX_PATH, currentDir);
+        std::wstring cwdMsg = L"Current working directory: ";
+        cwdMsg += currentDir;
+        cwdMsg += L"\n";
+        OutputDebugStringW(cwdMsg.c_str());
+
+        return E_FAIL;
+    }
+
     DWORD flags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
@@ -153,11 +171,18 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
         blobOut,
         &errorBlob);
 
-    if (FAILED(hr) && errorBlob)
-    {
-        OutputDebugStringA(
-            reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"D3DCompileFromFile failed for: " + filename + L"\n";
+        errorMsg += L"HRESULT: 0x" + std::to_wstring(hr) + L"\n";
+        OutputDebugStringW(errorMsg.c_str());
+
+        if (errorBlob) {
+            OutputDebugStringA("Shader compilation errors:\n");
+            OutputDebugStringA(reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
+            OutputDebugStringA("\n");
+        }
     }
+
     if (errorBlob) errorBlob->Release();
 
     ASSERT_MSG(SUCCEEDED(hr), "D3DCompileFromFile failed");

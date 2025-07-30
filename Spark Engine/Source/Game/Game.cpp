@@ -18,6 +18,7 @@
 #include "Player.h"
 #include "..\Game\Console.h"
 #include "..\Projectiles\ProjectilePool.h"
+#include <iostream>
 
 // Pull in globals defined in SparkEngine.cpp
 extern std::unique_ptr<GraphicsEngine> g_graphics;
@@ -138,17 +139,25 @@ void Game::Render()
     XMMATRIX view = m_camera->GetViewMatrix();
     XMMATRIX proj = m_camera->GetProjectionMatrix();
 
-    ConstantBuffer cb;
+    int renderedCount = 0;
     for (auto& obj : m_gameObjects)
     {
         if (!obj || !obj->IsActive() || !obj->IsVisible())
             continue;
 
+        ConstantBuffer cb{};
         cb.World = obj->GetWorldMatrix();
         cb.View = view;
         cb.Projection = proj;
         m_shader->UpdateConstantBuffer(cb);
         obj->Render(view, proj);
+        ++renderedCount;
+    }
+
+    static int frameNum = 0;
+    if (++frameNum % 60 == 0)  // once per 60 frames
+    {
+        std::wcerr << L"[DEBUG] Rendered " << renderedCount << L" placeholder objects this frame\n";
     }
 
     if (m_player)         m_player->Render(view, proj);
@@ -214,13 +223,19 @@ void Game::HandleInput(float dt)
 --------------------------------------------------------------*/
 void Game::CreateTestObjects()
 {
+    std::wcerr << L"[DEBUG] CreateTestObjects() begin, will spawn placeholder objects\n";
+
     // Ground plane
     {
         auto ground = std::make_unique<PlaneObject>(20.0f, 20.0f);
         ASSERT(ground);
-        ground->Initialize(
-            m_graphics->GetDevice(),
-            m_graphics->GetContext());
+        HRESULT hr = ground->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        std::wcerr << L"[DEBUG] Ground mesh counts: Vertices="
+            << ground->GetMesh()->GetVertexCount()
+            << L", Indices=" << ground->GetMesh()->GetIndexCount() << std::endl;
+        std::wcerr << (SUCCEEDED(hr)
+            ? L"[DEBUG] Ground plane initialized\n"
+            : L"[ERROR] Ground plane initialization FAILED\n");
         ground->SetPosition({ 0.0f, -1.0f, 0.0f });
         m_gameObjects.push_back(std::move(ground));
     }
@@ -230,9 +245,13 @@ void Game::CreateTestObjects()
     {
         auto cube = std::make_unique<CubeObject>(1.0f);
         ASSERT(cube);
-        cube->Initialize(
-            m_graphics->GetDevice(),
-            m_graphics->GetContext());
+        HRESULT hr = cube->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        std::wcerr << L"[DEBUG] Cube " << i << L" mesh counts: Vertices="
+            << cube->GetMesh()->GetVertexCount()
+            << L", Indices=" << cube->GetMesh()->GetIndexCount() << std::endl;
+        std::wcerr << (SUCCEEDED(hr)
+            ? L"[DEBUG] Cube " + std::to_wstring(i) + L" initialized\n"
+            : L"[ERROR] Cube " + std::to_wstring(i) + L" FAILED to initialize\n");
         cube->SetPosition({ i * 3.0f - 6.0f, 1.0f, 10.0f });
         m_gameObjects.push_back(std::move(cube));
     }
@@ -241,10 +260,16 @@ void Game::CreateTestObjects()
     {
         auto sphere = std::make_unique<SphereObject>(1.0f, 16, 16);
         ASSERT(sphere);
-        sphere->Initialize(
-            m_graphics->GetDevice(),
-            m_graphics->GetContext());
+        HRESULT hr = sphere->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        std::wcerr << L"[DEBUG] Sphere mesh counts: Vertices="
+            << sphere->GetMesh()->GetVertexCount()
+            << L", Indices=" << sphere->GetMesh()->GetIndexCount() << std::endl;
+        std::wcerr << (SUCCEEDED(hr)
+            ? L"[DEBUG] Sphere initialized\n"
+            : L"[ERROR] Sphere FAILED to initialize\n");
         sphere->SetPosition({ 5.0f, 0.0f, 0.0f });
         m_gameObjects.push_back(std::move(sphere));
     }
+
+    std::wcerr << L"[DEBUG] Created total " << m_gameObjects.size() << L" game objects\n";
 }

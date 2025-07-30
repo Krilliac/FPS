@@ -27,7 +27,7 @@ void CubeObject::CreateMesh()
     ASSERT_MSG(!md.vertices.empty() && !md.indices.empty(), "Primitive cube mesh is empty");
 
     // Load model from file or placeholder if missing
-    LoadOrPlaceholderMesh(*m_mesh, m_modelPath, md);
+    LoadOrPlaceholderMesh(*m_mesh, m_modelPath);
 
     // Ensure mesh was assigned
     ASSERT(m_mesh != nullptr);

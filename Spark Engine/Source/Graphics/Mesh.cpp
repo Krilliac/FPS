@@ -7,6 +7,7 @@
 #include <fstream>
 #include <filesystem>   // C++17 for path handling
 #include <cmath>
+#include <iostream>
 
 using namespace DirectX;
 
@@ -39,60 +40,98 @@ bool Mesh::LoadFromFile(const std::wstring& path)
     // Convert wide path to UTF-8 for tinyobjloader
     std::string u8Path = std::filesystem::path(path).u8string();
 
-    tinyobj::ObjReader       reader;
+    // Debug: report attempt
+    std::wcerr << L"[DEBUG] Attempting to load mesh from: " << path << std::endl;
+
+    tinyobj::ObjReader reader;
     tinyobj::ObjReaderConfig cfg;
     cfg.mtl_search_path = std::filesystem::path(path).parent_path().u8string();
 
     if (!reader.ParseFromFile(u8Path, cfg))
     {
+        // Report tinyobj error
         if (!reader.Error().empty())
-            OutputDebugStringA(("tinyobj error: " + reader.Error() + '\n').c_str());
+        {
+            std::string err = "tinyobj error: " + reader.Error() + "\n";
+            OutputDebugStringA(err.c_str());
+            std::cerr << err;
+        }
+
+        // Fallback: create placeholder cube
+        std::wcerr << L"[DEBUG] Failed to load mesh. Creating placeholder cube." << std::endl;
+        HRESULT hr = CreateCube(1.0f);
+        if (SUCCEEDED(hr))
+        {
+            std::wcerr << L"[DEBUG] Placeholder cube created successfully." << std::endl;
+            m_vertexCount = 0;      // actual counts set by CreateCube/CreateFromVertices
+            m_indexCount = 0;
+            // Mark as placeholder if you want to distinguish later
+            // e.g. m_isPlaceholder = true;
+            return true;
+        }
+        std::wcerr << L"[ERROR] Failed to create placeholder cube!" << std::endl;
         return false;
     }
+
+    // Report tinyobj warnings
     if (!reader.Warning().empty())
-        OutputDebugStringA(("tinyobj warning: " + reader.Warning() + '\n').c_str());
+    {
+        std::string warn = "tinyobj warning: " + reader.Warning() + "\n";
+        OutputDebugStringA(warn.c_str());
+        std::cerr << warn;
+    }
 
-    const tinyobj::attrib_t& attrib = reader.GetAttrib();
-    const std::vector<tinyobj::shape_t>& shapes = reader.GetShapes();
+    // Parse geometry
+    const auto& attrib = reader.GetAttrib();
+    const auto& shapes = reader.GetShapes();
 
-    std::vector<Vertex>       verts;
+    std::vector<Vertex> verts;
     std::vector<unsigned int> inds;
     verts.reserve(attrib.vertices.size() / 3);
 
-    for (const auto& sh : shapes)
+    for (const auto& shape : shapes)
     {
-        for (const auto& idx : sh.mesh.indices)
+        for (const auto& idx : shape.mesh.indices)
         {
-            XMFLOAT3 pos{
+            Vertex v{};
+            // Position
+            v.Position = {
                 attrib.vertices[3 * idx.vertex_index + 0],
                 attrib.vertices[3 * idx.vertex_index + 1],
                 attrib.vertices[3 * idx.vertex_index + 2]
             };
-
-            XMFLOAT3 nrm{ 0, 1, 0 };
+            // Normal
             if (idx.normal_index >= 0)
             {
-                nrm = {
+                v.Normal = {
                     attrib.normals[3 * idx.normal_index + 0],
                     attrib.normals[3 * idx.normal_index + 1],
                     attrib.normals[3 * idx.normal_index + 2]
                 };
             }
-
-            XMFLOAT2 uv{ 0, 0 };
+            else
+            {
+                v.Normal = { 0, 1, 0 };
+            }
+            // TexCoord
             if (idx.texcoord_index >= 0)
             {
-                uv = {
+                v.TexCoord = {
                     attrib.texcoords[2 * idx.texcoord_index + 0],
                     1.0f - attrib.texcoords[2 * idx.texcoord_index + 1]
                 };
             }
+            else
+            {
+                v.TexCoord = { 0, 0 };
+            }
 
-            verts.emplace_back(pos, nrm, uv);
+            verts.push_back(v);
             inds.push_back(static_cast<unsigned int>(inds.size()));
         }
     }
 
+    // Ensure we got geometry
     ASSERT_ALWAYS_MSG(!verts.empty() && !inds.empty(), "tinyobj produced empty mesh data");
 
     m_vertices = std::move(verts);
@@ -100,15 +139,25 @@ bool Mesh::LoadFromFile(const std::wstring& path)
     m_vertexCount = static_cast<UINT>(m_vertices.size());
     m_indexCount = static_cast<UINT>(m_indices.size());
 
-    // Recompute normals if any came in as zero
-    bool anyZeroNormal = std::any_of(
+    // Recompute normals if any were zero
+    bool anyZero = std::any_of(
         m_vertices.begin(), m_vertices.end(),
-        [](const Vertex& v) { return v.Normal.x == 0 && v.Normal.y == 0 && v.Normal.z == 0; });
-
-    if (anyZeroNormal)
+        [](const Vertex& v) {
+            return v.Normal.x == 0 && v.Normal.y == 0 && v.Normal.z == 0;
+        });
+    if (anyZero)
         CalculateNormals();
 
-    return SUCCEEDED(CreateBuffers());
+    // Create GPU buffers
+    HRESULT hr = CreateBuffers();
+    if (FAILED(hr))
+    {
+        std::wcerr << L"[ERROR] CreateBuffers failed in LoadFromFile!" << std::endl;
+        return false;
+    }
+
+    std::wcerr << L"[DEBUG] Successfully loaded mesh: " << path << std::endl;
+    return true;
 }
 
 HRESULT Mesh::CreateFromVertices(const std::vector<Vertex>& verts,
