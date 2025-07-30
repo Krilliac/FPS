@@ -76,6 +76,12 @@
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\CrashHandler.cpp">
       <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\CrashHandlerHelpers.cpp">
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\D3DUtils.cpp">
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\MathUtils.cpp">
       <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClCompile>
@@ -187,6 +193,9 @@
       <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\CrashHandler.h">
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\D3DUtils.h">
       <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\MathUtils.h">

@@ -1,16 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Game\FPSGame\ThirdParty\Utils\tinyobjloader\include\tiny_obj_loader.h">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\TinyObjImpl.cpp">
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\Game\FPSGame\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{F2426037-4E81-38AB-AADE-B67A4B21116A}</UniqueIdentifier>
+    <Filter Include="Source">
+      <UniqueIdentifier>{38550370-2C41-3EDF-9BD5-CB88B88A95E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Spark Engine">
+      <UniqueIdentifier>{9282D889-AFEF-3DC8-9F87-DCCDAA0E9DD3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Spark Engine\Source">
+      <UniqueIdentifier>{242341AC-9EE1-3AFF-B25B-310F726327C3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Spark Engine\Source\Utils">
+      <UniqueIdentifier>{E9EF51D3-3822-362D-91DB-19F05072EB55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

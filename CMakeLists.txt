@@ -10,20 +10,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(MSVC)
   add_compile_options(/permissive- /Zc:__cplusplus)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  # strip “-d” off static libs so we always get libcurl.lib
   set(CMAKE_DEBUG_POSTFIX "" CACHE STRING "" FORCE)
 endif()
 
 # -------------------------------------------------------------
-# 2) Build options
+# 2) Build options + verbosity toggle
 # -------------------------------------------------------------
-option(ENABLE_EDITOR      "Build with in-engine editor UI"      ON)
-option(ENABLE_CONSOLE     "External debug console overlay"      ON)
-option(ENABLE_ANGELSCRIPT "Embed AngelScript scripting"         ON)
+option(ENABLE_EDITOR        "Build with in-engine editor UI"      ON)
+option(ENABLE_CONSOLE       "External debug console overlay"      ON)
+option(ENABLE_ANGELSCRIPT   "Embed AngelScript scripting"         ON)
+option(VERBOSE_DIAGNOSTICS  "Print extra CMake diagnostics"       OFF)
+
+# Helper for conditional diagnostic messages
+function(msg_diag)
+  if(VERBOSE_DIAGNOSTICS)
+    message(STATUS "[diag] ${ARGN}")
+  endif()
+endfunction()
 
 message(STATUS "Editor:      ${ENABLE_EDITOR}")
 message(STATUS "Console:     ${ENABLE_CONSOLE}")
 message(STATUS "AngelScript: ${ENABLE_ANGELSCRIPT}")
+msg_diag("VERBOSE_DIAGNOSTICS = ${VERBOSE_DIAGNOSTICS}")
 
 # -------------------------------------------------------------
 # 3) Glob engine .cpp / .h (exclude ThirdParty)
@@ -40,7 +48,7 @@ file(GLOB_RECURSE ENGINE_HDRS CONFIGURE_DEPENDS
 )
 
 # -------------------------------------------------------------
-# 4) Force‐include Engine.cpp / Engine.h if glob missed them
+# 4) Force-include Engine.cpp / Engine.h if glob missed them
 # -------------------------------------------------------------
 set(ENGINE_CPP_FILE "${CMAKE_SOURCE_DIR}/Engine/Core/Engine.cpp")
 if(EXISTS "${ENGINE_CPP_FILE}")
@@ -50,6 +58,7 @@ if(EXISTS "${ENGINE_CPP_FILE}")
     list(APPEND ENGINE_SRCS "${ENGINE_CPP_FILE}")
   endif()
 endif()
+
 set(ENGINE_HDR_FILE "${CMAKE_SOURCE_DIR}/Engine/Core/Engine.h")
 if(EXISTS "${ENGINE_HDR_FILE}")
   list(FIND ENGINE_HDRS "${ENGINE_HDR_FILE}" _hdr_found)
@@ -60,21 +69,19 @@ if(EXISTS "${ENGINE_HDR_FILE}")
 endif()
 
 # -------------------------------------------------------------
-# 5) Debug print the globs
+# 5) Debug-print the globs
 # -------------------------------------------------------------
 message(STATUS "---- Found engine .cpp files: ----")
 foreach(src IN LISTS ENGINE_SRCS)
-  message(STATUS "  ${src}")
+  msg_diag("${src}")
 endforeach()
-message(STATUS "-----------------------------------")
 list(LENGTH ENGINE_SRCS SRCS_COUNT)
 message(STATUS "Total .cpp count: ${SRCS_COUNT}")
 
 message(STATUS "---- Found engine .h files: ----")
 foreach(hdr IN LISTS ENGINE_HDRS)
-  message(STATUS "  ${hdr}")
+  msg_diag("${hdr}")
 endforeach()
-message(STATUS "-----------------------------------")
 list(LENGTH ENGINE_HDRS HDRS_COUNT)
 message(STATUS "Total .h count: ${HDRS_COUNT}")
 
@@ -88,7 +95,6 @@ endif()
 add_executable(SparkEngine WIN32
   ${ENGINE_SRCS}
 )
-# inject headers so they appear in the IDE
 target_sources(SparkEngine PRIVATE ${ENGINE_HDRS})
 
 # -------------------------------------------------------------
@@ -112,14 +118,19 @@ target_include_directories(miniz PUBLIC
 target_link_libraries(SparkEngine PRIVATE miniz)
 
 # -------------------------------------------------------------
-# 9) ThirdParty: tinyobjloader (header-only)
+# 9) ThirdParty: tinyobjloader (compile implementation once)
 # -------------------------------------------------------------
-set(TINYOBJ_HDR
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include/tiny_obj_loader.h"
+set(TINYOBJ_IMPL_PATH
+  "${CMAKE_SOURCE_DIR}/Spark Engine/Source/Utils/TinyObjImpl.cpp"
 )
-set_source_files_properties(${TINYOBJ_HDR} PROPERTIES LANGUAGE CXX)
-add_library(tinyobjloader STATIC ${TINYOBJ_HDR})
-target_compile_definitions(tinyobjloader PUBLIC TINYOBJLOADER_IMPLEMENTATION)
+msg_diag("Expecting TinyObjImpl at: ${TINYOBJ_IMPL_PATH}")
+if(NOT EXISTS "${TINYOBJ_IMPL_PATH}")
+  message(FATAL_ERROR "TinyObjImpl.cpp NOT found at: ${TINYOBJ_IMPL_PATH}")
+endif()
+
+add_library(tinyobjloader STATIC
+  "${TINYOBJ_IMPL_PATH}"
+)
 target_include_directories(tinyobjloader PUBLIC
   "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include"
 )
@@ -128,17 +139,17 @@ target_link_libraries(SparkEngine PRIVATE tinyobjloader)
 # -------------------------------------------------------------
 # 10) ThirdParty: libcurl (static via submodule)
 # -------------------------------------------------------------
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(BUILD_CURL_EXE    OFF CACHE BOOL "" FORCE)
-set(BUILD_TESTING     OFF CACHE BOOL "" FORCE)
-set(CURL_USE_SCHANNEL ON  CACHE BOOL "" FORCE)
-set(CURL_DISABLE_LDAP ON  CACHE BOOL "" FORCE)
-set(CURL_ZLIB         OFF CACHE BOOL "" FORCE)
-set(CURL_BROTLI       OFF CACHE BOOL "" FORCE)
-set(CURL_ZSTD         OFF CACHE BOOL "" FORCE)
-set(CURL_HTTP2        OFF CACHE BOOL "" FORCE)
-set(CURL_USE_LIBPSL   OFF CACHE BOOL "" FORCE)
-set(CURL_USE_LIBIDN2  OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS    OFF CACHE BOOL "" FORCE)
+set(BUILD_CURL_EXE       OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING        OFF CACHE BOOL "" FORCE)
+set(CURL_USE_SCHANNEL    ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_LDAP    ON  CACHE BOOL "" FORCE)
+set(CURL_ZLIB            OFF CACHE BOOL "" FORCE)
+set(CURL_BROTLI          OFF CACHE BOOL "" FORCE)
+set(CURL_ZSTD            OFF CACHE BOOL "" FORCE)
+set(CURL_HTTP2           OFF CACHE BOOL "" FORCE)
+set(CURL_USE_LIBPSL      OFF CACHE BOOL "" FORCE)
+set(CURL_USE_LIBIDN2     OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(
   "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl"

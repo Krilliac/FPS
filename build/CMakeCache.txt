@@ -661,6 +661,9 @@ USE_SSLS_EXPORT:BOOL=OFF
 //Use WinIDN for IDN support
 USE_WIN32_IDN:BOOL=OFF
 
+//Print extra CMake diagnostics
+VERBOSE_DIAGNOSTICS:BOOL=OFF
+
 //Fast-track known feature detection results (Windows, some Apple)
 _CURL_PREFILL:BOOL=ON
 
