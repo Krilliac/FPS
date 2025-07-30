@@ -1,87 +1,86 @@
-﻿#pragma once
-#include "..\Core\framework.h"
+﻿// AudioEngine.h
+#pragma once
+
+#include "Utils/Assert.h"
+#include "SoundEffect.h"
+#include <d3d11.h>
 #include <xaudio2.h>
+#include <DirectXMath.h>
 #include <unordered_map>
-#include <string>
+#include <vector>
+#include <memory>
 
-#pragma comment(lib, "xaudio2.lib")
-
-class SoundEffect;
+using DirectX::XMFLOAT3;
+using DirectX::XMMATRIX;
 
 struct AudioSource
 {
     IXAudio2SourceVoice* Voice;
     XMFLOAT3 Position;
     XMFLOAT3 Velocity;
-    float Volume;
-    float Pitch;
-    bool Is3D;
-    bool IsLooping;
-    bool IsPlaying;
+    float    Volume;
+    float    Pitch;
+    bool     Is3D;
+    bool     IsLooping;
+    bool     IsPlaying;
     SoundEffect* Sound;
-    
-    AudioSource();
-    ~AudioSource();
+
+    AudioSource()
+        : Voice(nullptr)
+        , Position(0, 0, 0)
+        , Velocity(0, 0, 0)
+        , Volume(1.0f)
+        , Pitch(1.0f)
+        , Is3D(false)
+        , IsLooping(false)
+        , IsPlaying(false)
+        , Sound(nullptr)
+    {
+    }
 };
 
 class AudioEngine
 {
-private:
-    IXAudio2* m_xAudio2;
-    IXAudio2MasteringVoice* m_masterVoice;
-    
-    std::unordered_map<std::string, std::unique_ptr<SoundEffect>> m_soundEffects;
-    std::vector<std::unique_ptr<AudioSource>> m_audioSources;
-    std::vector<AudioSource*> m_availableSources;
-    
-    // Settings
-    float m_masterVolume;
-    float m_sfxVolume;
-    float m_musicVolume;
-    
-    size_t m_maxSources;
-
 public:
     AudioEngine();
     ~AudioEngine();
 
-    HRESULT Initialize(size_t maxSources = 64);
-    void Update(float deltaTime);
-    void Shutdown();
+    HRESULT Initialize(size_t maxSources);
+    void    Update(float deltaTime);
+    void    Shutdown();
 
-    // Sound loading and management
     HRESULT LoadSound(const std::string& name, const std::wstring& filename);
-    void UnloadSound(const std::string& name);
+    void    UnloadSound(const std::string& name);
     SoundEffect* GetSound(const std::string& name);
 
-    // Sound playing
     AudioSource* PlaySound(const std::string& name, float volume = 1.0f, float pitch = 1.0f, bool loop = false);
-    AudioSource* PlaySound3D(const std::string& name, const XMFLOAT3& position, 
-                            float volume = 1.0f, float pitch = 1.0f, bool loop = false);
-    
+    AudioSource* PlaySound3D(const std::string& name, const XMFLOAT3& position, float volume = 1.0f, float pitch = 1.0f, bool loop = false);
     void StopSound(AudioSource* source);
     void StopAllSounds();
     void PauseAllSounds();
     void ResumeAllSounds();
 
-    // Volume controls
     void SetMasterVolume(float volume);
     void SetSFXVolume(float volume);
     void SetMusicVolume(float volume);
-    
-    float GetMasterVolume() const { return m_masterVolume; }
-    float GetSFXVolume() const { return m_sfxVolume; }
-    float GetMusicVolume() const { return m_musicVolume; }
 
-    // Source management
     size_t GetActiveSourceCount() const;
-    size_t GetAvailableSourceCount() const { return m_availableSources.size(); }
 
 private:
+    HRESULT CreateSourceVoice(const WAVEFORMATEX& format, IXAudio2SourceVoice** voice);
+
+    void UpdateSources();
     AudioSource* GetAvailableSource();
     void ReturnSource(AudioSource* source);
-    void UpdateSources();
-    
-    HRESULT CreateSourceVoice(const WAVEFORMATEX& format, IXAudio2SourceVoice** voice);
-};
 
+    IXAudio2* m_xAudio2;
+    IXAudio2MasteringVoice* m_masterVoice;
+    float                               m_masterVolume;
+    float                               m_sfxVolume;
+    float                               m_musicVolume;
+    size_t                              m_maxSources;
+
+    std::vector<std::unique_ptr<AudioSource>> m_audioSources;
+    std::vector<AudioSource*>                m_availableSources;
+    std::unordered_map<std::string, std::unique_ptr<SoundEffect>> m_soundEffects;
+};

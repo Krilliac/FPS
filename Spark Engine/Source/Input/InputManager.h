@@ -1,4 +1,7 @@
-﻿#pragma once
+﻿// InputManager.h
+#pragma once
+
+#include "Utils/Assert.h"
 #include "..\Core\framework.h"
 #include <unordered_map>
 
@@ -7,14 +10,14 @@ class InputManager
 private:
     std::unordered_map<int, bool> m_keyStates;
     std::unordered_map<int, bool> m_prevKeyStates;
-    
-    bool m_mouseButtons[3]; // Left, Right, Middle
+
+    bool m_mouseButtons[3];      // Left, Right, Middle
     bool m_prevMouseButtons[3];
-    
-    int m_mouseX, m_mouseY;
-    int m_prevMouseX, m_prevMouseY;
-    int m_mouseDeltaX, m_mouseDeltaY;
-    
+
+    int  m_mouseX, m_mouseY;
+    int  m_prevMouseX, m_prevMouseY;
+    int  m_mouseDeltaX, m_mouseDeltaY;
+
     HWND m_hwnd;
     bool m_mouseCaptured;
 
@@ -39,7 +42,6 @@ public:
     bool GetMouseDelta(int& deltaX, int& deltaY) const;
     void GetMousePosition(int& x, int& y) const;
 
-    // Mouse capture for SparkEngine controls
     void CaptureMouse(bool capture);
     bool IsMouseCaptured() const { return m_mouseCaptured; }
 
@@ -48,4 +50,3 @@ private:
     void UpdateMouseButton(int button, bool isDown);
     void UpdateMousePosition(int x, int y);
 };
-

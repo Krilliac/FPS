@@ -1,15 +1,22 @@
 ﻿#pragma once
+
+#include "Utils/Assert.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <string>
 
-class Model {
+//------------------------------------------------------------------------------
+//  Model ‒ loads a simple OBJ file with tinyobjloader and creates GPU buffers
+//------------------------------------------------------------------------------
+class Model
+{
 public:
-    // Load OBJ from wide‐string filename, create D3D11 buffers
-    HRESULT LoadObj(const std::wstring& filename,
-        ID3D11Device* device);
+    // Load OBJ from wide-string path and build vertex / index buffers.
+    //   - filename : full or relative path to .obj (UTF-16 wide string)
+    //   - device   : valid ID3D11Device*
+    HRESULT LoadObj(const std::wstring& filename, ID3D11Device* device);
 
-    // Render previously loaded mesh
+    // Issue draw call for the model (assumes shaders / CBs already bound)
     void Render(ID3D11DeviceContext* ctx);
 
 private:

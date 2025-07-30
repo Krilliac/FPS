@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include "GameObject.h"
 #include "..\Utils\MathUtils.h"
+#include "Utils/Assert.h"
 
 using namespace DirectX;
 
@@ -31,11 +32,15 @@ GameObject::~GameObject()
 
 HRESULT GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
+    ASSERT_MSG(device != nullptr, "GameObject::Initialize - device is null");
+    ASSERT_MSG(context != nullptr, "GameObject::Initialize - context is null");
     m_device = device;
     m_context = context;
 
     m_mesh = std::make_unique<Mesh>();
+    ASSERT(m_mesh);
     HRESULT hr = m_mesh->Initialize(device, context);
+    ASSERT_MSG(SUCCEEDED(hr), "Mesh::Initialize failed");
     if (FAILED(hr))
         return hr;
 
@@ -66,29 +71,34 @@ void GameObject::Render(const XMMATRIX&, const XMMATRIX&)
     if (m_worldMatrixDirty)
         UpdateWorldMatrix();
 
-    m_mesh->Render();
+    ASSERT(m_mesh);
+	m_mesh->Render(m_context);
 }
 
 void GameObject::SetPosition(const XMFLOAT3& pos)
 {
+    ASSERT_MSG(std::isfinite(pos.x) && std::isfinite(pos.y) && std::isfinite(pos.z), "Invalid position vector");
     m_position = pos;
     m_worldMatrixDirty = true;
 }
 
 void GameObject::SetRotation(const XMFLOAT3& rot)
 {
+    ASSERT_MSG(std::isfinite(rot.x) && std::isfinite(rot.y) && std::isfinite(rot.z), "Invalid rotation vector");
     m_rotation = rot;
     m_worldMatrixDirty = true;
 }
 
 void GameObject::SetScale(const XMFLOAT3& scl)
 {
+    ASSERT_MSG(scl.x > 0 && scl.y > 0 && scl.z > 0, "Scale must be positive");
     m_scale = scl;
     m_worldMatrixDirty = true;
 }
 
 void GameObject::Translate(const XMFLOAT3& d)
 {
+    ASSERT_MSG(std::isfinite(d.x) && std::isfinite(d.y) && std::isfinite(d.z), "Invalid translation delta");
     m_position.x += d.x;
     m_position.y += d.y;
     m_position.z += d.z;
@@ -97,6 +107,7 @@ void GameObject::Translate(const XMFLOAT3& d)
 
 void GameObject::Rotate(const XMFLOAT3& d)
 {
+    ASSERT_MSG(std::isfinite(d.x) && std::isfinite(d.y) && std::isfinite(d.z), "Invalid rotation delta");
     m_rotation.x += d.x;
     m_rotation.y += d.y;
     m_rotation.z += d.z;
@@ -105,6 +116,7 @@ void GameObject::Rotate(const XMFLOAT3& d)
 
 void GameObject::Scale(const XMFLOAT3& d)
 {
+    ASSERT_MSG(d.x > 0 && d.y > 0 && d.z > 0, "Scale factors must be positive");
     m_scale.x *= d.x;
     m_scale.y *= d.y;
     m_scale.z *= d.z;
@@ -149,6 +161,7 @@ float GameObject::GetDistanceFrom(const GameObject& other) const
 
 float GameObject::GetDistanceFrom(const XMFLOAT3& pos) const
 {
+    ASSERT_MSG(std::isfinite(pos.x) && std::isfinite(pos.y) && std::isfinite(pos.z), "Invalid distance calculation position");
     float dx = m_position.x - pos.x;
     float dy = m_position.y - pos.y;
     float dz = m_position.z - pos.z;
@@ -159,6 +172,7 @@ void GameObject::CreateMesh()
 {
     if (m_mesh)
         m_mesh->CreateCube(1.0f);  // placeholder default
+    ASSERT(m_mesh);
 }
 
 void GameObject::UpdateWorldMatrix()

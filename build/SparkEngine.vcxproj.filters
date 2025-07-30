@@ -82,6 +82,9 @@
     <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\Timer.cpp">
       <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Game\FPSGame\Spark Engine\Source\Utils\TinyObjImpl.cpp">
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Audio\AudioEngine.h">
@@ -176,6 +179,12 @@
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\Rocket.h">
       <Filter>Source\Spark Engine\Source\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Projectiles\WeaponStats.h">
+      <Filter>Source\Spark Engine\Source\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\Assert.h">
+      <Filter>Source\Spark Engine\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="D:\Game\FPSGame\Spark Engine\Source\Utils\CrashHandler.h">
       <Filter>Source\Spark Engine\Source\Utils</Filter>

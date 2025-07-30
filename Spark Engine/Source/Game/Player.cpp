@@ -1,48 +1,61 @@
 ﻿#include "Player.h"
-class Console;
+#include "Utils/Assert.h"
 #include "..\Camera\SparkEngineCamera.h"
 #include "..\Input\InputManager.h"
+#include "..\Projectiles\WeaponStats.h"
 #include "..\Projectiles\ProjectilePool.h"
 #include "..\Utils\MathUtils.h"
+#include "..\Game\Console.h"
 #include <algorithm>
 #include <DirectXMath.h>
+#include <cmath>
 
 using namespace DirectX;
 extern Console g_console;
 
-/* Constructor */
+// Constructor
 Player::Player()
-    : m_currentWeapon(GetWeaponStats(WeaponType::PISTOL)),
-    m_collisionSphere(GetPosition(), 0.5f)
+    : m_currentWeapon(GetWeaponStats(WeaponType::PISTOL))
+    , m_collisionSphere(GetPosition(), 0.5f)
 {
     SetName("Player");
     m_currentAmmo = m_currentWeapon.MagazineSize;
+    ASSERT_MSG(m_currentAmmo > 0, "Initial ammo must be positive");
 }
 
-/* Initialization */
+// Initialization
 HRESULT Player::Initialize(ID3D11Device* device,
     ID3D11DeviceContext* context,
     SparkEngineCamera* camera,
     InputManager* input)
 {
+    ASSERT_NOT_NULL(device);
+    ASSERT_NOT_NULL(context);
+    ASSERT_NOT_NULL(camera);
+    ASSERT_NOT_NULL(input);
+
     m_camera = camera;
     m_input = input;
     SetVisible(false);
 
-    // Ensure projectile pool is a raw pointer
     if (!m_projectilePool)
     {
         m_projectilePool = new ProjectilePool(50);
-        m_projectilePool->Initialize(device, context);
+        ASSERT_NOT_NULL(m_projectilePool);
+        HRESULT hr = m_projectilePool->Initialize(device, context);
+        ASSERT_MSG(SUCCEEDED(hr), "ProjectilePool::Initialize failed");
+        if (FAILED(hr)) return hr;
     }
 
     return GameObject::Initialize(device, context);
 }
 
-/* Update */
+// Per-frame update
 void Player::Update(float dt)
 {
+    ASSERT_MSG(dt >= 0.0f && std::isfinite(dt), "Delta time must be non-negative and finite");
     if (!IsAlive()) return;
+
     HandleInput(dt);
     UpdateMovement(dt);
     UpdateCombat(dt);
@@ -52,20 +65,103 @@ void Player::Update(float dt)
     GameObject::Update(dt);
 }
 
-/* Render – no mesh first-person */
-void Player::Render(const XMMATRIX&, const XMMATRIX&) {}
+// No mesh rendering for first-person
+void Player::Render(const XMMATRIX&, const XMMATRIX&)
+{
+    // Intentionally empty
+}
 
-/* Damage & healing */
+// Damage & healing
 void Player::TakeDamage(float dmg)
 {
+    ASSERT_MSG(dmg >= 0.0f, "Damage must be non-negative");
+    if (!IsAlive()) return;
+
     float absorbed = std::min(dmg * 0.5f, m_armor);
     m_armor -= absorbed;
     m_health = std::max(0.0f, m_health - (dmg - absorbed));
+    if (m_health <= 0.0f) SetActive(false);
 }
-void Player::Heal(float amt) { m_health = std::min(m_maxHealth, m_health + amt); }
-void Player::AddArmor(float amt) { m_armor = std::min(m_maxArmor, m_armor + amt); }
 
-/* Input handling */
+void Player::Heal(float amt)
+{
+    ASSERT_MSG(amt >= 0.0f, "Heal amount must be non-negative");
+    m_health = std::min(m_maxHealth, m_health + amt);
+}
+
+void Player::AddArmor(float amt)
+{
+    ASSERT_MSG(amt >= 0.0f, "Armor amount must be non-negative");
+    m_armor = std::min(m_maxArmor, m_armor + amt);
+}
+
+// Actions
+void Player::Jump()
+{
+    if (m_isGrounded && !m_isJumping && m_stamina > 20.0f)
+    {
+        m_velocity.y = m_jumpHeight;
+        m_isJumping = true;
+        m_isGrounded = false;
+        m_stamina -= 20.0f;
+    }
+}
+
+void Player::StartReload()
+{
+    if (!m_isReloading && m_currentAmmo < m_currentWeapon.MagazineSize)
+    {
+        m_isReloading = true;
+        m_reloadTimer = m_currentWeapon.ReloadTime;
+    }
+}
+
+void Player::Fire()
+{
+    if (m_isReloading || m_currentAmmo <= 0 || m_fireTimer > 0.0f) return;
+    ASSERT_NOT_NULL(m_projectilePool);
+
+    XMFLOAT3 pos = m_camera->GetPosition();
+    XMFLOAT3 dir = CalculateFireDirection();
+
+    ProjectileType type = ProjectileType::BULLET;
+    switch (m_currentWeapon.Type)
+    {
+    case WeaponType::ROCKET_LAUNCHER:   type = ProjectileType::ROCKET;   break;
+    case WeaponType::GRENADE_LAUNCHER:  type = ProjectileType::GRENADE;  break;
+    default:                            type = ProjectileType::BULLET;   break;
+    }
+
+    m_projectilePool->FireProjectile(type, pos, dir, m_currentWeapon.MuzzleVelocity);
+
+    --m_currentAmmo;
+    m_fireTimer = 60.0f / m_currentWeapon.FireRate;
+    m_isFiring = true;
+}
+
+void Player::ChangeWeapon(WeaponType t)
+{
+    if (m_isReloading) return;
+    m_currentWeapon = GetWeaponStats(t);
+    m_currentAmmo = m_currentWeapon.MagazineSize;
+    m_fireTimer = 0.0f;
+}
+
+// Hit callbacks
+void Player::OnHit(GameObject* target)
+{
+    ASSERT_NOT_NULL(target);
+    TakeDamage(m_currentWeapon.Damage);
+}
+
+void Player::OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal)
+{
+    ASSERT_MSG(std::isfinite(hitPoint.x) && std::isfinite(hitPoint.y) && std::isfinite(hitPoint.z),
+        "Invalid hitPoint");
+    TakeDamage(m_currentWeapon.Damage);
+}
+
+// Input handling
 void Player::HandleInput(float)
 {
     if (!m_input) return;
@@ -83,93 +179,36 @@ void Player::HandleInput(float)
     if (m_input->WasKeyPressed('5')) ChangeWeapon(WeaponType::GRENADE_LAUNCHER);
 }
 
-/* Movement */
+// Movement logic
 void Player::UpdateMovement(float dt)
 {
-    if (!m_input || !m_camera) return;
-
-    XMFLOAT3 move{ 0,0,0 };
-    if (m_input->IsKeyDown('W')) move.z += 1;
-    if (m_input->IsKeyDown('S')) move.z -= 1;
-    if (m_input->IsKeyDown('A')) move.x -= 1;
-    if (m_input->IsKeyDown('D')) move.x += 1;
-
+    if (!m_camera || !m_input) return;
     float speed = m_speed;
-    if (m_isRunning && m_stamina > 0)
+    if (m_isRunning && m_stamina > 0.0f)
     {
-        speed *= 2.0f;
-        m_stamina -= 30.0f * dt;
+        speed *= 2.0f; m_stamina = std::max(0.0f, m_stamina - 30.0f * dt);
     }
     else if (m_isCrouching)
     {
         speed *= 0.5f;
     }
+    speed *= dt;
 
-    if (move.x || move.z)
-    {
-        XMVECTOR v = XMVector3Normalize(XMLoadFloat3(&move));
-        XMStoreFloat3(&move, v);
-        auto fw = m_camera->GetForward();
-        XMFLOAT3 rt{ 1,0,0 };
-
-        Translate({
-            (rt.x * move.x + fw.x * move.z) * speed * dt,
-            0,
-            (rt.z * move.x + fw.z * move.z) * speed * dt
-            });
-        HandleFootsteps(dt);
-    }
+    if (m_input->IsKeyDown('W')) m_camera->MoveForward(speed);
+    if (m_input->IsKeyDown('S')) m_camera->MoveForward(-speed);
+    if (m_input->IsKeyDown('A')) m_camera->MoveRight(-speed);
+    if (m_input->IsKeyDown('D')) m_camera->MoveRight(speed);
 
     if (!m_isRunning)
         m_stamina = std::min(m_maxStamina, m_stamina + 50.0f * dt);
+
+    SetPosition(m_camera->GetPosition());
 }
 
-/* Combat */
-void Player::StartReload()
-{
-    if (!m_isReloading &&
-        m_currentAmmo < m_currentWeapon.MagazineSize)
-    {
-        m_isReloading = true;
-        m_reloadTimer = m_currentWeapon.ReloadTime;
-    }
-}
-
-void Player::Fire()
-{
-    if (m_isReloading || m_currentAmmo <= 0 ||
-        m_fireTimer > 0.0f || !m_projectilePool || !m_camera)
-        return;
-
-    auto pos = m_camera->GetPosition();
-    auto dir = CalculateFireDirection();
-    switch (m_currentWeapon.Type)
-    {
-    case WeaponType::PISTOL:
-    case WeaponType::RIFLE:
-        m_projectilePool->FireBullet(pos, dir, 100.0f);
-        break;
-    case WeaponType::ROCKET_LAUNCHER:
-        m_projectilePool->FireRocket(pos, dir, 30.0f);
-        break;
-    case WeaponType::GRENADE_LAUNCHER:
-        m_projectilePool->FireGrenade(pos, dir, 15.0f);
-        break;
-    default: break;
-    }
-
-    --m_currentAmmo;
-    m_fireTimer = 1.0f / m_currentWeapon.FireRate;
-    m_isFiring = true;
-}
-
+// Combat timers
 void Player::UpdateCombat(float dt)
 {
-    if (m_fireTimer > 0.0f)
-    {
-        m_fireTimer -= dt;
-        if (m_fireTimer <= 0.0f) m_isFiring = false;
-    }
+    if (m_fireTimer > 0.0f) { m_fireTimer -= dt; if (m_fireTimer < 0) m_fireTimer = 0; }
     if (m_isReloading)
     {
         m_reloadTimer -= dt;
@@ -181,118 +220,90 @@ void Player::UpdateCombat(float dt)
     }
 }
 
-/* Physics */
-void Player::ApplyGravity(float dt)
-{
-    if (!m_isGrounded)
-        m_velocity.y -= 9.8f * dt;
-}
-
-void Player::CheckGroundCollision()
-{
-    auto p = GetPosition();
-    if (p.y <= 0.0f)
-    {
-        p.y = 0.0f;
-        m_velocity.y = 0.0f;
-        m_isGrounded = true;
-        m_isJumping = false;
-        SetPosition(p);
-    }
-    else m_isGrounded = false;
-}
-
+// Physics & gravity
 void Player::UpdatePhysics(float dt)
 {
-    ApplyGravity(dt);
+    if (!m_isGrounded) ApplyGravity(dt);
     CheckGroundCollision();
-    Translate({ m_velocity.x * dt,
-                m_velocity.y * dt,
-                m_velocity.z * dt });
-    if (m_camera)
-    {
-        XMFLOAT3 eye{ 0,1.7f,0 };
-        if (m_isCrouching) eye.y *= 0.6f;
-        auto pos = GetPosition();
-        pos.x += eye.x; pos.y += eye.y; pos.z += eye.z;
-        m_camera->SetPosition(pos);
-    }
+
+    XMFLOAT3 pos = GetPosition();
+    pos.x += m_velocity.x * dt;
+    pos.y += m_velocity.y * dt;
+    pos.z += m_velocity.z * dt;
+    SetPosition(pos);
+    if (m_camera) m_camera->SetPosition(pos);
+
+    m_velocity.x *= 0.9f;
+    m_velocity.z *= 0.9f;
 }
 
-/* Jump */
-void Player::Jump()
-{
-    if (m_isGrounded && !m_isJumping && m_stamina > 20.0f)
-    {
-        m_velocity.y = m_jumpHeight;
-        m_isJumping = true;
-        m_isGrounded = false;
-        m_stamina -= 20.0f;
-    }
-}
-
-/* Change weapon */
-void Player::ChangeWeapon(WeaponType type)
-{
-    m_currentWeapon = GetWeaponStats(type);
-    m_currentAmmo = m_currentWeapon.MagazineSize;
-    m_isReloading = false;
-    m_fireTimer = 0.0f;
-}
-
-/* Animation */
+// Animation (head bob & footsteps)
 void Player::UpdateAnimation(float dt)
 {
-    bool moving = m_input &&
-        (m_input->IsKeyDown('W') || m_input->IsKeyDown('A') ||
-            m_input->IsKeyDown('S') || m_input->IsKeyDown('D'));
-    if (moving) m_bobTimer += dt * 8.0f;
-    else        m_bobTimer = 0.0f;
+    if (m_input && (m_input->IsKeyDown('W') || m_input->IsKeyDown('A') ||
+        m_input->IsKeyDown('S') || m_input->IsKeyDown('D')))
+    {
+        m_bobTimer += dt * 8.0f;
+        HandleFootsteps(dt);
+    }
 }
 
-/* Collision update */
+// Collision sphere update
 void Player::UpdateCollision()
 {
     m_collisionSphere.Center = GetPosition();
 }
 
-/* Footsteps */
+// Apply gravity
+void Player::ApplyGravity(float dt)
+{
+    m_velocity.y += -20.0f * dt;
+    if (m_velocity.y < -50.0f) m_velocity.y = -50.0f;
+}
+
+// Ground check
+void Player::CheckGroundCollision()
+{
+    XMFLOAT3 pos = GetPosition();
+    if (pos.y <= 0.0f && m_velocity.y <= 0.0f)
+    {
+        pos.y = 0.0f; SetPosition(pos);
+        m_velocity.y = 0.0f;
+        m_isGrounded = true; m_isJumping = false;
+        if (m_camera) m_camera->SetPosition(pos);
+    }
+}
+
+// Footsteps
 void Player::HandleFootsteps(float dt)
 {
-    m_footstepTimer -= dt;
-    if (m_footstepTimer <= 0.0f)
-        m_footstepTimer = m_isRunning ? 0.3f : 0.6f;
-}
-
-/* Weapon stats */
-WeaponStats Player::GetWeaponStats(WeaponType t)
-{
-    switch (t)
+    m_footstepTimer += dt;
+    float interval = m_isRunning ? 0.3f : 0.6f;
+    if (m_footstepTimer >= interval)
     {
-    case WeaponType::PISTOL:          return WeaponStats(20, 3, 12, 1.5f, 50, 0.9f, t);
-    case WeaponType::RIFLE:           return WeaponStats(35, 8, 30, 2.0f, 100, 0.95f, t);
-    case WeaponType::SHOTGUN:         return WeaponStats(60, 1.5f, 8, 3.0f, 25, 0.7f, t);
-    case WeaponType::ROCKET_LAUNCHER: return WeaponStats(150, 0.5f, 1, 4.0f, 200, 0.95f, t);
-    case WeaponType::GRENADE_LAUNCHER:return WeaponStats(100, 1.0f, 6, 3.5f, 80, 0.8f, t);
-    default:                          return WeaponStats();
+        // footstep SFX
+        m_footstepTimer = 0.0f;
     }
 }
 
-/* Calculate firing direction */
+// Weapon defaults lookup
+WeaponStats Player::GetWeaponStats(WeaponType type)
+{
+    return GetDefaultWeaponStats(type);
+}
+
+// Fire direction w/spread
 XMFLOAT3 Player::CalculateFireDirection()
 {
-    XMFLOAT3 dir = m_camera ? m_camera->GetForward()
-        : XMFLOAT3{ 0,0,1 };
-    float spread = 1.0f - m_currentWeapon.Accuracy;
+    if (!m_camera) return XMFLOAT3(0, 0, 1);
+    XMFLOAT3 f = m_camera->GetForward();
+    float spread = (1.0f - m_currentWeapon.Accuracy) * 0.1f;
     if (spread > 0.0f)
     {
-        float a = spread * 0.1f;
-        float rx = MathUtils::RandomFloat(-a, a);
-        float ry = MathUtils::RandomFloat(-a, a);
-        auto v = XMLoadFloat3(&dir);
-        v = XMVector3Transform(v,
-            XMMatrixRotationRollPitchYaw(ry, rx, 0));
-        XMStoreFloat3(&dir, v);
+        f.x += MathUtils::RandomFloat(-spread, spread);
+        f.y += MathUtils::RandomFloat(-spread, spread);
+        XMVECTOR v = XMVector3Normalize(XMLoadFloat3(&f));
+        XMStoreFloat3(&f, v);
     }
-    return dir;
+    return f;
 }

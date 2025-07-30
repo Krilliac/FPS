@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿// Console.h
+#pragma once
+
 #include <d3d11.h>
 #include <Windows.h>
 #include <string>
@@ -6,11 +8,10 @@
 #include <functional>
 #include <algorithm>   // std::max
 #include <sstream>     // std::wistringstream
+#include "Utils/Assert.h"
 
 // -----------------------------------------------------------------------------
-// VERY-SIMPLE TEXT OUTPUT
-// For now we just dump to the Visual Studio Output window.  Replace this with
-// SpriteFont/SpriteBatch or DirectWrite later.
+// VERY-SIMPLE TEXT OUTPUT (no change)
 // -----------------------------------------------------------------------------
 inline void DrawText(const std::wstring& text,
     float /*x*/, float /*y*/, float /*scale*/,

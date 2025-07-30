@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-// Core math types
 #include "..\Core\framework.h"    // XMFLOAT3, XMMATRIX, HRESULT
+#include "Utils/Assert.h"
 #include <memory>
 #include <vector>
 
-// Forward declarations (defined elsewhere)
+// Forward declarations
 class GraphicsEngine;
 class InputManager;
 class SparkEngineCamera;
@@ -13,13 +13,10 @@ class GameObject;
 class Player;
 class ProjectilePool;
 class Shader;
-struct ConstantBuffer;            // your per-object CB
+struct ConstantBuffer;
 
-// Primitives & placeholder helpers
 #include "Primitives.h"
 #include "PlaceholderMesh.h"
-
-// Scene object types
 #include "CubeObject.h"
 #include "PlaneObject.h"
 #include "SphereObject.h"
@@ -30,7 +27,7 @@ public:
     Game();
     ~Game();
 
-    // Engine & scene initialisation / teardown
+    // Engine & scene initialization / teardown
     HRESULT Initialize(GraphicsEngine* graphics, InputManager* input);
     void    Shutdown();
 
@@ -55,10 +52,10 @@ private:
     InputManager* m_input{ nullptr };
 
     // Sub-systems owned by Game
-    std::unique_ptr<SparkEngineCamera>      m_camera;
-    std::unique_ptr<Shader>         m_shader;
-    std::unique_ptr<Player>         m_player;
-    std::unique_ptr<ProjectilePool> m_projectilePool;
+    std::unique_ptr<SparkEngineCamera> m_camera;
+    std::unique_ptr<Shader>            m_shader;
+    std::unique_ptr<Player>            m_player;
+    std::unique_ptr<ProjectilePool>    m_projectilePool;
 
     // Scene objects
     std::vector<std::unique_ptr<GameObject>> m_gameObjects;

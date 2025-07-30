@@ -3,17 +3,18 @@
 
 #include "framework.h"
 #include "SparkEngine.h"
+#include "Utils/Assert.h"             // <-- custom assert
 
 #include <Windows.h>
 #include <memory>
 #include <DirectXMath.h>
-#include <cstdio>              // for swprintf_s
+#include <cstdio>                     // for swprintf_s
 
-#include "..\Graphics\GraphicsEngine.h"
-#include "..\Game\Game.h"
-#include "..\Input\InputManager.h"
-#include "..\Utils\Timer.h"
-#include "..\Game\Console.h"
+#include "../Graphics/GraphicsEngine.h"
+#include "../Game/Game.h"
+#include "../Input/InputManager.h"
+#include "../Utils/Timer.h"
+#include "../Game/Console.h"
 #include "Utils/CrashHandler.h"
 
 // -----------------------------------------------------------------------------
@@ -32,7 +33,7 @@ std::unique_ptr<InputManager>      g_input;
 std::unique_ptr<Timer>             g_timer;
 Console                            g_console;
 
-// Win32 fwd-decl
+// Win32 forward declarations
 ATOM                MyRegisterClass(HINSTANCE);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -46,6 +47,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR,
     _In_ int nCmdShow)
 {
+    ASSERT(hInstance != nullptr);
+
     // 1. Crash handler
     CrashConfig crashCfg{};
     crashCfg.dumpPrefix = L"SparkCrash";
@@ -56,31 +59,35 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     crashCfg.zipBeforeUpload = true;
     InstallCrashHandler(crashCfg);
 
-    // 2. Hard-code our class & window title
+    // 2. Class & window title
+    ASSERT(MAX_LOADSTRING <= _countof(g_szClass) && MAX_LOADSTRING <= _countof(g_szTitle));
     wcscpy_s(g_szClass, MAX_LOADSTRING, L"SparkEngineWindowClass");
     wcscpy_s(g_szTitle, MAX_LOADSTRING, L"Spark Engine");
 
     // 3. Register window class
-    if (MyRegisterClass(hInstance) == 0)
+    ATOM cls = MyRegisterClass(hInstance);
+    ASSERT_MSG(cls != 0, "MyRegisterClass failed");
+    if (cls == 0)
     {
         MessageBoxW(nullptr, L"RegisterClassExW failed", L"Fatal Error", MB_ICONERROR);
         return -1;
     }
 
-    // 4. Create window & initialize everything else
+    // 4. Create window & init subsystems
     if (!InitInstance(hInstance, nCmdShow))
         return -1;
 
-    // 5. Main message loop + subsystem tick
+    // 5. Message loop + tick
     HACCEL accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SparkEngine));
-    MSG     msg = {};
+    MSG msg = {};
     g_timer = std::make_unique<Timer>();
+    ASSERT(g_timer);
 
     while (msg.message != WM_QUIT)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            // Give console first crack at input
+            // Console first
             if (msg.message == WM_CHAR &&
                 g_console.HandleChar(static_cast<wchar_t>(msg.wParam)))
                 continue;
@@ -129,14 +136,17 @@ ATOM MyRegisterClass(HINSTANCE hInst)
     wc.lpszClassName = g_szClass;
     wc.hIconSm = LoadIcon(hInst, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wc);
+    ATOM result = RegisterClassExW(&wc);
+    ASSERT_MSG(result != 0, "RegisterClassExW returned zero");
+    return result;
 }
 
 BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
 {
+    ASSERT(hInst != nullptr);
     g_hInst = hInst;
 
-    // Create the window
+    // Create window
     HWND hWnd = CreateWindowW(
         g_szClass, g_szTitle,
         WS_OVERLAPPEDWINDOW,
@@ -147,7 +157,7 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
     {
         DWORD err = GetLastError();
         wchar_t buf[256];
-        swprintf_s(buf, L"CreateWindowW failed (0x%08X)", err);
+        swprintf_s(buf, L"CreateWindowW failed (0x%08X)", static_cast<unsigned>(err));
         MessageBoxW(nullptr, buf, L"Fatal Error", MB_ICONERROR);
         return FALSE;
     }
@@ -157,6 +167,7 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
 
     // 2. Initialize Graphics
     g_graphics = std::make_unique<GraphicsEngine>();
+    ASSERT(g_graphics);
     if (FAILED(g_graphics->Initialize(hWnd)))
     {
         MessageBoxW(hWnd, L"Graphics init failed", L"Fatal", MB_ICONERROR);
@@ -165,20 +176,18 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
 
     // 3. Initialize Input
     g_input = std::make_unique<InputManager>();
+    ASSERT(g_input);
     g_input->Initialize(hWnd);
 
     // 4. Initialize Game
     g_game = std::make_unique<Game>();
+    ASSERT(g_game);
     {
-        HRESULT hr = g_game->Initialize(
-            g_graphics.get(),
-            g_input.get());
+        HRESULT hr = g_game->Initialize(g_graphics.get(), g_input.get());
+        ASSERT_MSG(SUCCEEDED(hr), "Game::Initialize failed");
         if (FAILED(hr))
         {
-            MessageBoxW(nullptr,
-                L"Game initialization failed",
-                L"Fatal Error",
-                MB_ICONERROR);
+            MessageBoxW(nullptr, L"Game initialization failed", L"Fatal Error", MB_ICONERROR);
             return FALSE;
         }
     }
@@ -222,6 +231,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         return 0;
     }
+
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 

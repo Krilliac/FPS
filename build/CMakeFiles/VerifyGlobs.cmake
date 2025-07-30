@@ -68,6 +68,7 @@ set(OLD_GLOB
   "D:/Game/FPSGame/Spark Engine/Source/Utils/CrashHandler.cpp"
   "D:/Game/FPSGame/Spark Engine/Source/Utils/MathUtils.cpp"
   "D:/Game/FPSGame/Spark Engine/Source/Utils/Timer.cpp"
+  "D:/Game/FPSGame/Spark Engine/Source/Utils/TinyObjImpl.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
@@ -108,6 +109,8 @@ set(OLD_GLOB
   "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Projectile.h"
   "D:/Game/FPSGame/Spark Engine/Source/Projectiles/ProjectilePool.h"
   "D:/Game/FPSGame/Spark Engine/Source/Projectiles/Rocket.h"
+  "D:/Game/FPSGame/Spark Engine/Source/Projectiles/WeaponStats.h"
+  "D:/Game/FPSGame/Spark Engine/Source/Utils/Assert.h"
   "D:/Game/FPSGame/Spark Engine/Source/Utils/CrashHandler.h"
   "D:/Game/FPSGame/Spark Engine/Source/Utils/MathUtils.h"
   "D:/Game/FPSGame/Spark Engine/Source/Utils/ObjectPool.h"

@@ -1,4 +1,8 @@
-﻿#include "InputManager.h"
+﻿// InputManager.cpp
+#include "InputManager.h"
+#include "Utils/Assert.h"
+#include <Windows.h>
+#include <cstring>
 
 InputManager::InputManager()
     : m_mouseX(0), m_mouseY(0)
@@ -14,52 +18,49 @@ InputManager::InputManager()
 InputManager::~InputManager()
 {
     if (m_mouseCaptured)
-    {
         CaptureMouse(false);
-    }
 }
 
 void InputManager::Initialize(HWND hwnd)
 {
+    ASSERT_MSG(hwnd != nullptr, "InputManager::Initialize - hwnd is null");
     m_hwnd = hwnd;
-    
-    // Center mouse in window
+
     RECT rect;
     GetClientRect(hwnd, &rect);
-    POINT center = { rect.right / 2, rect.bottom / 2 };
+    POINT center = { (rect.right - rect.left) / 2, (rect.bottom - rect.top) / 2 };
     ClientToScreen(hwnd, &center);
     SetCursorPos(center.x, center.y);
-    
+
     m_mouseX = m_prevMouseX = center.x;
     m_mouseY = m_prevMouseY = center.y;
 }
 
 void InputManager::Update()
 {
-    // Store previous states
+    ASSERT_MSG(m_hwnd != nullptr, "InputManager::Update - hwnd not initialized");
+
     m_prevKeyStates = m_keyStates;
     memcpy(m_prevMouseButtons, m_mouseButtons, sizeof(m_mouseButtons));
-    
+
     m_prevMouseX = m_mouseX;
     m_prevMouseY = m_mouseY;
-    
-    // Update mouse delta
+
     if (m_mouseCaptured)
     {
         POINT cursor;
         GetCursorPos(&cursor);
         ScreenToClient(m_hwnd, &cursor);
-        
+
         m_mouseDeltaX = cursor.x - m_prevMouseX;
         m_mouseDeltaY = cursor.y - m_prevMouseY;
-        
-        // Re-center mouse for continuous movement
+
         RECT rect;
         GetClientRect(m_hwnd, &rect);
-        POINT center = { rect.right / 2, rect.bottom / 2 };
+        POINT center = { (rect.right - rect.left) / 2, (rect.bottom - rect.top) / 2 };
         ClientToScreen(m_hwnd, &center);
         SetCursorPos(center.x, center.y);
-        
+
         m_mouseX = center.x;
         m_mouseY = center.y;
     }
@@ -75,10 +76,10 @@ void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_KEYDOWN:
-        UpdateKeyState((int)wParam, true);
+        UpdateKeyState(static_cast<int>(wParam), true);
         break;
     case WM_KEYUP:
-        UpdateKeyState((int)wParam, false);
+        UpdateKeyState(static_cast<int>(wParam), false);
         break;
     case WM_LBUTTONDOWN:
         UpdateMouseButton(0, true);
@@ -101,17 +102,18 @@ void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_MOUSEMOVE:
         if (!m_mouseCaptured)
-        {
             UpdateMousePosition(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-        }
+        break;
+    default:
         break;
     }
 }
 
 bool InputManager::IsKeyDown(int key) const
 {
+    ASSERT_MSG(key >= 0, "IsKeyDown - invalid key code");
     auto it = m_keyStates.find(key);
-    return it != m_keyStates.end() ? it->second : false;
+    return it != m_keyStates.end() && it->second;
 }
 
 bool InputManager::IsKeyUp(int key) const
@@ -121,34 +123,35 @@ bool InputManager::IsKeyUp(int key) const
 
 bool InputManager::WasKeyPressed(int key) const
 {
-    bool currentState = IsKeyDown(key);
-    auto it = m_prevKeyStates.find(key);
-    bool prevState = it != m_prevKeyStates.end() ? it->second : false;
-    return currentState && !prevState;
+    ASSERT_MSG(key >= 0, "WasKeyPressed - invalid key code");
+    bool curr = IsKeyDown(key);
+    bool prev = m_prevKeyStates.count(key) ? m_prevKeyStates.at(key) : false;
+    return curr && !prev;
 }
 
 bool InputManager::WasKeyReleased(int key) const
 {
-    bool currentState = IsKeyDown(key);
-    auto it = m_prevKeyStates.find(key);
-    bool prevState = it != m_prevKeyStates.end() ? it->second : false;
-    return !currentState && prevState;
+    ASSERT_MSG(key >= 0, "WasKeyReleased - invalid key code");
+    bool curr = IsKeyDown(key);
+    bool prev = m_prevKeyStates.count(key) ? m_prevKeyStates.at(key) : false;
+    return !curr && prev;
 }
 
 bool InputManager::IsMouseButtonDown(int button) const
 {
-    return button >= 0 && button < 3 ? m_mouseButtons[button] : false;
+    ASSERT_MSG(button >= 0 && button < 3, "IsMouseButtonDown - invalid button");
+    return m_mouseButtons[button];
 }
 
 bool InputManager::WasMouseButtonPressed(int button) const
 {
-    if (button < 0 || button >= 3) return false;
+    ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonPressed - invalid button");
     return m_mouseButtons[button] && !m_prevMouseButtons[button];
 }
 
 bool InputManager::WasMouseButtonReleased(int button) const
 {
-    if (button < 0 || button >= 3) return false;
+    ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonReleased - invalid button");
     return !m_mouseButtons[button] && m_prevMouseButtons[button];
 }
 
@@ -156,7 +159,7 @@ bool InputManager::GetMouseDelta(int& deltaX, int& deltaY) const
 {
     deltaX = m_mouseDeltaX;
     deltaY = m_mouseDeltaY;
-    return m_mouseDeltaX != 0 || m_mouseDeltaY != 0;
+    return (m_mouseDeltaX != 0 || m_mouseDeltaY != 0);
 }
 
 void InputManager::GetMousePosition(int& x, int& y) const
@@ -167,14 +170,16 @@ void InputManager::GetMousePosition(int& x, int& y) const
 
 void InputManager::CaptureMouse(bool capture)
 {
-    if (capture && !m_mouseCaptured)
+    if (capture)
     {
+        ASSERT_MSG(!m_mouseCaptured, "CaptureMouse: already captured");
         SetCapture(m_hwnd);
         ShowCursor(FALSE);
         m_mouseCaptured = true;
     }
-    else if (!capture && m_mouseCaptured)
+    else
     {
+        ASSERT_MSG(m_mouseCaptured, "CaptureMouse: not captured");
         ReleaseCapture();
         ShowCursor(TRUE);
         m_mouseCaptured = false;
@@ -183,21 +188,16 @@ void InputManager::CaptureMouse(bool capture)
 
 void InputManager::UpdateKeyState(int key, bool isDown)
 {
+    ASSERT_MSG(key >= 0, "UpdateKeyState - invalid key code");
     m_keyStates[key] = isDown;
-    
-    // Handle escape key to release mouse
     if (key == VK_ESCAPE && !isDown && m_mouseCaptured)
-    {
         CaptureMouse(false);
-    }
 }
 
 void InputManager::UpdateMouseButton(int button, bool isDown)
 {
-    if (button >= 0 && button < 3)
-    {
-        m_mouseButtons[button] = isDown;
-    }
+    ASSERT_MSG(button >= 0 && button < 3, "UpdateMouseButton - invalid button");
+    m_mouseButtons[button] = isDown;
 }
 
 void InputManager::UpdateMousePosition(int x, int y)
@@ -205,4 +205,3 @@ void InputManager::UpdateMousePosition(int x, int y)
     m_mouseX = x;
     m_mouseY = y;
 }
-

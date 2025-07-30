@@ -1,47 +1,13 @@
 ﻿#pragma once
 
-#include "..\Core\framework.h"
 #include "GameObject.h"
+#include "Utils/Assert.h"
 #include "..\Camera\SparkEngineCamera.h"
 #include "..\Input\InputManager.h"
+#include "..\Projectiles\WeaponStats.h"    // Defines WeaponType and WeaponStats
 #include "..\Projectiles\ProjectilePool.h"
 #include "..\Utils\MathUtils.h"
-#include <algorithm>
 #include <DirectXMath.h>
-
-using DirectX::XMFLOAT3;
-
-// Weapon definitions
-enum class WeaponType
-{
-    PISTOL,
-    RIFLE,
-    SHOTGUN,
-    ROCKET_LAUNCHER,
-    GRENADE_LAUNCHER
-};
-
-struct WeaponStats
-{
-    float      Damage{};
-    float      FireRate{};      // rounds/sec
-    int        MagazineSize{};
-    float      ReloadTime{};
-    float      Range{};
-    float      Accuracy{};      // 0–1
-    WeaponType Type{};
-    WeaponStats() = default;
-    WeaponStats(float dmg, float rate, int mag,
-        float reload, float range, float acc,
-        WeaponType t)
-        : Damage(dmg), FireRate(rate),
-        MagazineSize(mag), ReloadTime(reload),
-        Range(range), Accuracy(acc), Type(t)
-    {
-    }
-};
-
-class BoundingSphere;
 
 class Player : public GameObject
 {
@@ -49,36 +15,46 @@ public:
     Player();
     ~Player() override = default;
 
+    // Note: signature matches GameObject::Initialize
     HRESULT Initialize(ID3D11Device* device,
         ID3D11DeviceContext* context,
         SparkEngineCamera* camera,
         InputManager* input);
 
     void Update(float dt) override;
-    void Render(const DirectX::XMMATRIX&,
-        const DirectX::XMMATRIX&) override;
+    void Render(const DirectX::XMMATRIX& view,
+        const DirectX::XMMATRIX& proj) override;
 
-    void OnHit(GameObject*) override {}
-    void OnHitWorld(const XMFLOAT3&, const XMFLOAT3&) override {}
-
+    // Damage & healing
     void TakeDamage(float dmg);
     void Heal(float amt);
     void AddArmor(float amt);
+
+    // Movement & combat
     void Jump();
     void StartReload();
     void Fire();
-
-    void SetRunning(bool v) { m_isRunning = v; }
-    void SetCrouching(bool v) { m_isCrouching = v; }
     void ChangeWeapon(WeaponType t);
+
+    // Assign external pool
     void SetProjectilePool(ProjectilePool* pool)
     {
+        ASSERT_NOT_NULL(pool);
         m_projectilePool = pool;
     }
 
+    // Status
     float GetHealth()    const { return m_health; }
     float GetMaxHealth() const { return m_maxHealth; }
     bool  IsAlive()      const { return m_health > 0.0f; }
+
+    void SetRunning(bool v) { m_isRunning = v; }
+    void SetCrouching(bool v) { m_isCrouching = v; }
+
+    // Hit callbacks
+    void OnHit(GameObject* target) override;
+    void OnHitWorld(const DirectX::XMFLOAT3& hitPoint,
+        const DirectX::XMFLOAT3& normal) override;
 
 private:
     // Stats
@@ -94,7 +70,7 @@ private:
 
     // Combat
     WeaponStats m_currentWeapon;
-    int         m_currentAmmo{ 30 };
+    int         m_currentAmmo{ 0 };
     float       m_fireTimer{ 0 }, m_reloadTimer{ 0 };
     bool        m_isReloading{ false }, m_isFiring{ false };
 
@@ -118,6 +94,6 @@ private:
     void CheckGroundCollision();
     void HandleFootsteps(float dt);
 
-    WeaponStats GetWeaponStats(WeaponType type);
+    WeaponStats       GetWeaponStats(WeaponType type);
     DirectX::XMFLOAT3 CalculateFireDirection();
 };

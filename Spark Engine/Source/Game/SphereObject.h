@@ -1,11 +1,13 @@
-﻿#pragma once
-#include <Windows.h>
-#include <cstdint>
-#include <DirectXMath.h>
-#include "SphereObject.h"
+﻿// SphereObject.h
+#pragma once
+
 #include "GameObject.h"
 #include "PlaceholderMesh.h"
 #include "Primitives.h"
+#include "Utils/Assert.h"
+#include <DirectXMath.h>
+#include <string>
+
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
 
@@ -22,7 +24,8 @@ public:
 
     void Update(float dt) override { GameObject::Update(dt); }
     void Render(const XMMATRIX& v,
-        const XMMATRIX& p) override {
+        const XMMATRIX& p) override
+    {
         GameObject::Render(v, p);
     }
 
@@ -35,5 +38,5 @@ protected:
 private:
     float         m_radius;
     int           m_slices, m_stacks;
-    std::wstring  m_modelPath = L"Assets/Models/Sphere.fbx";
+    std::wstring  m_modelPath{ L"Assets/Models/Sphere.fbx" };
 };

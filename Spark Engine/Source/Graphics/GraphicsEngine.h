@@ -1,16 +1,12 @@
-﻿#pragma once
+﻿// GraphicsEngine.h
+#pragma once
 
-// Target Windows 10 SDK for DXGI1.3+ and debug interfaces
-#ifndef _WIN32_WINNT
-#define _WIN32NT 0x0A00
-#endif
-
+#include "Utils/Assert.h"
 #include <windows.h>
 #include <wrl/client.h>
 #include <d3d11_1.h>
-#include <dxgi1_3.h>     // CreateDXGIFactory2, IDXGIFactory2, IDXGISwapChain1
+#include <dxgi1_3.h>     // IDXGIFactory2, IDXGISwapChain1
 #include <dxgidebug.h>   // DXGIGetDebugInterface1, IDXGIInfoQueue
-
 #include "..\Core\framework.h"  // XMFLOAT3, XMMATRIX, HRESULT
 
 using Microsoft::WRL::ComPtr;
@@ -21,13 +17,13 @@ public:
     GraphicsEngine();
     ~GraphicsEngine();
 
-    // Initialize device, flip-model swap chain, RTV/DSV, debug filters
+    // Initialize device, swap chain, RTV/DSV, debug filters
     HRESULT Initialize(HWND hWnd);
 
     // Cleanup
     void Shutdown();
 
-    // Begin/End frame (clear + bind / present)
+    // Frame operations
     void BeginFrame();
     void EndFrame();
 

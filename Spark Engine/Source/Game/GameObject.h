@@ -2,6 +2,7 @@
 
 #include "..\Core\framework.h"    // XMFLOAT3, XMMATRIX, HRESULT
 #include "..\Graphics\Mesh.h"
+#include "Utils/Assert.h"
 #include <memory>
 #include <string>
 
@@ -60,7 +61,7 @@ public:
 protected:
     // Internal helpers
     virtual void CreateMesh();
-    void        UpdateWorldMatrix();
+    void UpdateWorldMatrix();
 
     // Transform state
     XMFLOAT3             m_position{};
@@ -79,7 +80,7 @@ protected:
     bool m_visible{ true };
 
     // Identification
-    static UINT   s_nextID;   // declaration only
+    static UINT   s_nextID;
     UINT          m_id{ 0 };
     std::string   m_name;
 

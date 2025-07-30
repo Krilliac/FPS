@@ -1,9 +1,12 @@
-﻿#pragma once
+﻿// Mesh.h
+#pragma once
 
+#include "Utils/Assert.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <vector>
 #include <string>
+#include <cmath>
 
 using DirectX::XMFLOAT2;
 using DirectX::XMFLOAT3;
@@ -16,15 +19,21 @@ struct Vertex
     XMFLOAT2 TexCoord;
 
     Vertex() : Position{ 0,0,0 }, Normal{ 0,1,0 }, TexCoord{ 0,0 } {}
-    Vertex(const XMFLOAT3& p, const XMFLOAT3& n, const XMFLOAT2& t)
-        : Position(p), Normal(n), TexCoord(t) {
+
+    Vertex(const XMFLOAT3& p,
+        const XMFLOAT3& n,
+        const XMFLOAT2& t)
+        : Position(p), Normal(n), TexCoord(t)
+    {
+        ASSERT(std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z));
+        ASSERT(std::isfinite(n.x) && std::isfinite(n.y) && std::isfinite(n.z));
+        ASSERT(std::isfinite(t.x) && std::isfinite(t.y));
     }
 };
 
-// Unified mesh‐data type for both primitives and file loading
 struct MeshData
 {
-    std::vector<Vertex> vertices;
+    std::vector<Vertex>       vertices;
     std::vector<unsigned int> indices;
 };
 
@@ -34,28 +43,24 @@ public:
     Mesh();
     ~Mesh();
 
-    // Setup
     HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
     void    Shutdown();
 
-    // Procedural primitives
     HRESULT CreateCube(float size = 1.0f);
     HRESULT CreatePlane(float width = 10.0f, float depth = 10.0f);
     HRESULT CreateSphere(float radius = 1.0f, int slices = 20, int stacks = 20);
 
-    // From raw CPU arrays
     HRESULT CreateFromVertices(const std::vector<Vertex>& verts,
         const std::vector<unsigned int>& inds);
 
-    // Attempt to load real asset
     bool LoadFromFile(const std::wstring& path);
 
-    // Mark placeholder
     void SetPlaceholder(bool p) { m_placeholder = p; }
     bool IsPlaceholder() const { return m_placeholder; }
 
-    // Draw
-    void Render();
+    void Render(ID3D11DeviceContext* ctx);
+    UINT GetVertexCount() const { return m_vertexCount; }
+    UINT GetIndexCount()  const { return m_indexCount; }
 
 private:
     HRESULT CreateBuffers();

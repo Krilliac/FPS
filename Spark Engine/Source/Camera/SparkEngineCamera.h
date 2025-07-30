@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <DirectXMath.h>
 #include <algorithm>           // std::clamp
+#include "Utils/Assert.h"      // custom assert
 
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
@@ -25,16 +26,18 @@ private:
 
     float m_moveSpeed{ 10.0f };
     float m_rotationSpeed{ 2.0f };
-    float m_defaultFov{ DirectX::XM_PIDIV2 };     // 90°
-    float m_zoomedFov{ DirectX::XM_PIDIV2 / 2 };   // 45°
+    float m_defaultFov{ DirectX::XM_PIDIV2 };
+    float m_zoomedFov{ DirectX::XM_PIDIV2 / 2.0f };
 
 public:
     SparkEngineCamera() = default;
     ~SparkEngineCamera() = default;
 
+    // Must call before movement
     void Initialize(float aspectRatio);
-    void Update(float deltaTime) {}
-    void UpdateViewMatrix();
+
+    // Update per-frame (recomputes view matrix)
+    void Update(float deltaTime);
 
     // Movement
     void MoveForward(float amount);
@@ -44,11 +47,12 @@ public:
     // Rotation
     void Pitch(float angle);
     void Yaw(float angle);
+	void Roll(float angle);
 
-    // Zoom
+    // Zoom toggle
     void SetZoom(bool enabled);
 
-    // Set absolute position
+    // Direct set
     void SetPosition(const XMFLOAT3& pos)
     {
         m_position = pos;
@@ -60,4 +64,7 @@ public:
     const XMMATRIX& GetProjectionMatrix() const { return m_projectionMatrix; }
     const XMFLOAT3& GetPosition()         const { return m_position; }
     const XMFLOAT3& GetForward()          const { return m_forward; }
+
+private:
+    void UpdateViewMatrix();
 };

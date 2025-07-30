@@ -1,18 +1,18 @@
-﻿#include "ProjectilePool.h"
+﻿// ProjectilePool.cpp
+#include "ProjectilePool.h"
+#include "Utils/Assert.h"
 #include "..\Projectiles\Bullet.h"
 #include "..\Projectiles\Rocket.h"
 #include "..\Projectiles\Grenade.h"
-using namespace std;
-#include "..\Projectiles\Bullet.h"
-#include "..\Projectiles\Rocket.h"
-#include "..\Projectiles\Grenade.h"
-using namespace std;
+
+using DirectX::XMFLOAT3;
 
 ProjectilePool::ProjectilePool(size_t poolSize)
     : m_poolSize(poolSize)
     , m_device(nullptr)
     , m_context(nullptr)
 {
+    ASSERT_MSG(poolSize > 0, "ProjectilePool size must be positive");
 }
 
 ProjectilePool::~ProjectilePool()
@@ -22,6 +22,9 @@ ProjectilePool::~ProjectilePool()
 
 HRESULT ProjectilePool::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
+    ASSERT_MSG(device != nullptr, "ProjectilePool::Initialize device is null");
+    ASSERT_MSG(context != nullptr, "ProjectilePool::Initialize context is null");
+
     m_device = device;
     m_context = context;
     CreateProjectiles();
@@ -30,48 +33,41 @@ HRESULT ProjectilePool::Initialize(ID3D11Device* device, ID3D11DeviceContext* co
 
 void ProjectilePool::CreateProjectiles()
 {
+    m_projectiles.clear();
+    while (!m_availableProjectiles.empty())
+        m_availableProjectiles.pop();
+
     m_projectiles.reserve(m_poolSize);
 
     size_t bulletsCount = static_cast<size_t>(m_poolSize * 0.6f);
     size_t rocketsCount = static_cast<size_t>(m_poolSize * 0.3f);
     size_t grenadesCount = m_poolSize - bulletsCount - rocketsCount;
 
-    // Bullets
-    for (size_t i = 0; i < bulletsCount; ++i)
-    {
-        auto p = std::make_unique<Bullet>();
-        if (SUCCEEDED(p->Initialize(m_device, m_context)))
+    // Helper lambda
+    auto makeAndStore = [&](auto TypeFactory, size_t count) {
+        for (size_t i = 0; i < count; ++i)
         {
-            m_availableProjectiles.push(p.get());
-            m_projectiles.push_back(std::move(p));
+            auto p = TypeFactory();
+            ASSERT_MSG(p != nullptr, "Failed to create projectile");
+            if (SUCCEEDED(p->Initialize(m_device, m_context)))
+            {
+                m_availableProjectiles.push(p.get());
+                m_projectiles.push_back(std::move(p));
+            }
         }
-    }
+        };
 
-    // Rockets
-    for (size_t i = 0; i < rocketsCount; ++i)
-    {
-        auto p = std::make_unique<Rocket>();
-        if (SUCCEEDED(p->Initialize(m_device, m_context)))
-        {
-            m_availableProjectiles.push(p.get());
-            m_projectiles.push_back(std::move(p));
-        }
-    }
+    makeAndStore([] { return std::make_unique<Bullet>(); }, bulletsCount);
+    makeAndStore([] { return std::make_unique<Rocket>(); }, rocketsCount);
+    makeAndStore([] { return std::make_unique<Grenade>(); }, grenadesCount);
 
-    // Grenades
-    for (size_t i = 0; i < grenadesCount; ++i)
-    {
-        auto p = std::make_unique<Grenade>();
-        if (SUCCEEDED(p->Initialize(m_device, m_context)))
-        {
-            m_availableProjectiles.push(p.get());
-            m_projectiles.push_back(std::move(p));
-        }
-    }
+    ASSERT_MSG(m_projectiles.size() == m_poolSize, "Some projectiles failed to initialize");
 }
 
 void ProjectilePool::Update(float deltaTime)
 {
+    ASSERT_MSG(deltaTime >= 0.0f && std::isfinite(deltaTime), "Invalid deltaTime in ProjectilePool::Update");
+
     for (auto& up : m_projectiles)
     {
         if (up->IsActive())
@@ -83,7 +79,7 @@ void ProjectilePool::Update(float deltaTime)
     }
 }
 
-void ProjectilePool::Render(const XMMATRIX& view, const XMMATRIX& projection)
+void ProjectilePool::Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection)
 {
     for (auto& up : m_projectiles)
     {
@@ -95,8 +91,8 @@ void ProjectilePool::Render(const XMMATRIX& view, const XMMATRIX& projection)
 void ProjectilePool::Shutdown()
 {
     m_projectiles.clear();
-    while (!m_availableProjectiles.empty())
-        m_availableProjectiles.pop();
+    std::queue<Projectile*> empty;
+    std::swap(m_availableProjectiles, empty);
 }
 
 Projectile* ProjectilePool::GetProjectile()
@@ -110,26 +106,29 @@ Projectile* ProjectilePool::GetProjectile()
 
 void ProjectilePool::ReturnProjectile(Projectile* p)
 {
+    ASSERT_MSG(p != nullptr, "ReturnProjectile null pointer");
     p->Reset();
     m_availableProjectiles.push(p);
 }
 
 void ProjectilePool::FireBullet(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
-    Projectile* p = GetProjectile();
-    if (p) p->Fire(pos, dir, speed);
+    ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireBullet");
+    if (auto p = GetProjectile())
+        p->Fire(pos, dir, speed);
 }
 
 void ProjectilePool::FireRocket(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
-    Projectile* p = GetProjectile();
-    if (p) p->Fire(pos, dir, speed);
+    ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireRocket");
+    if (auto p = GetProjectile())
+        p->Fire(pos, dir, speed);
 }
 
 void ProjectilePool::FireGrenade(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
-    Projectile* p = GetProjectile();
-    if (p)
+    ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireGrenade");
+    if (auto p = GetProjectile())
     {
         p->SetGravity(true, 1.0f);
         p->Fire(pos, dir, speed);
@@ -143,6 +142,8 @@ void ProjectilePool::FireProjectile(ProjectileType type, const XMFLOAT3& pos, co
     case ProjectileType::BULLET:  FireBullet(pos, dir, speed); break;
     case ProjectileType::ROCKET:  FireRocket(pos, dir, speed); break;
     case ProjectileType::GRENADE: FireGrenade(pos, dir, speed); break;
+    default:
+        ASSERT_MSG(false, "Unknown ProjectileType in FireProjectile");
     }
 }
 
@@ -158,4 +159,3 @@ size_t ProjectilePool::GetAvailableCount() const
 {
     return m_availableProjectiles.size();
 }
-

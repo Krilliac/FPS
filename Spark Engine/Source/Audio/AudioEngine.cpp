@@ -1,37 +1,15 @@
-﻿#include "AudioEngine.h"
-#include "SoundEffect.h"
+﻿// AudioEngine.cpp
+#include "AudioEngine.h"
+#include "Utils/Assert.h"
+#include <algorithm>
 
-// AudioSource implementation
-AudioSource::AudioSource()
-    : Voice(nullptr)
-    , Position(0.0f, 0.0f, 0.0f)
-    , Velocity(0.0f, 0.0f, 0.0f)
-    , Volume(1.0f)
-    , Pitch(1.0f)
-    , Is3D(false)
-    , IsLooping(false)
-    , IsPlaying(false)
-    , Sound(nullptr)
-{
-}
-
-AudioSource::~AudioSource()
-{
-    if (Voice)
-    {
-        Voice->DestroyVoice();
-        Voice = nullptr;
-    }
-}
-
-// AudioEngine implementation
 AudioEngine::AudioEngine()
     : m_xAudio2(nullptr)
     , m_masterVoice(nullptr)
     , m_masterVolume(1.0f)
     , m_sfxVolume(0.8f)
     , m_musicVolume(0.6f)
-    , m_maxSources(64)
+    , m_maxSources(0)
 {
 }
 
@@ -42,23 +20,26 @@ AudioEngine::~AudioEngine()
 
 HRESULT AudioEngine::Initialize(size_t maxSources)
 {
+    ASSERT_MSG(maxSources > 0, "AudioEngine maxSources must be positive");
     m_maxSources = maxSources;
-    
-    // Initialize XAudio2
+
     HRESULT hr = XAudio2Create(&m_xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
+    ASSERT_MSG(SUCCEEDED(hr), "XAudio2Create failed");
     if (FAILED(hr)) return hr;
 
-    // Create mastering voice
     hr = m_xAudio2->CreateMasteringVoice(&m_masterVoice);
+    ASSERT_MSG(SUCCEEDED(hr), "CreateMasteringVoice failed");
     if (FAILED(hr)) return hr;
 
-    // Create audio source pool
-    m_audioSources.reserve(maxSources);
-    m_availableSources.reserve(maxSources);
-    
-    for (size_t i = 0; i < maxSources; ++i)
+    m_audioSources.clear();
+    m_availableSources.clear();
+    m_audioSources.reserve(m_maxSources);
+    m_availableSources.reserve(m_maxSources);
+
+    for (size_t i = 0; i < m_maxSources; ++i)
     {
         auto source = std::make_unique<AudioSource>();
+        ASSERT_NOT_NULL(source.get());
         m_availableSources.push_back(source.get());
         m_audioSources.push_back(std::move(source));
     }
@@ -66,7 +47,7 @@ HRESULT AudioEngine::Initialize(size_t maxSources)
     return S_OK;
 }
 
-void AudioEngine::Update(float deltaTime)
+void AudioEngine::Update(float /*deltaTime*/)
 {
     UpdateSources();
 }
@@ -74,17 +55,15 @@ void AudioEngine::Update(float deltaTime)
 void AudioEngine::Shutdown()
 {
     StopAllSounds();
-    
     m_soundEffects.clear();
     m_audioSources.clear();
     m_availableSources.clear();
-    
+
     if (m_masterVoice)
     {
         m_masterVoice->DestroyVoice();
         m_masterVoice = nullptr;
     }
-    
     if (m_xAudio2)
     {
         m_xAudio2->Release();
@@ -94,10 +73,14 @@ void AudioEngine::Shutdown()
 
 HRESULT AudioEngine::LoadSound(const std::string& name, const std::wstring& filename)
 {
+    ASSERT_MSG(!name.empty(), "Sound name must be non-empty");
     auto sound = std::make_unique<SoundEffect>();
+    ASSERT_NOT_NULL(sound.get());
+
     HRESULT hr = sound->LoadFromFile(filename);
+    ASSERT_MSG(SUCCEEDED(hr), "SoundEffect::LoadFromFile failed");
     if (FAILED(hr)) return hr;
-    
+
     m_soundEffects[name] = std::move(sound);
     return S_OK;
 }
@@ -107,15 +90,11 @@ void AudioEngine::UnloadSound(const std::string& name)
     auto it = m_soundEffects.find(name);
     if (it != m_soundEffects.end())
     {
-        // Stop all sources using this sound
-        for (auto& source : m_audioSources)
+        for (auto& s : m_audioSources)
         {
-            if (source->Sound == it->second.get() && source->IsPlaying)
-            {
-                StopSound(source.get());
-            }
+            if (s->Sound == it->second.get() && s->IsPlaying)
+                StopSound(s.get());
         }
-        
         m_soundEffects.erase(it);
     }
 }
@@ -123,74 +102,74 @@ void AudioEngine::UnloadSound(const std::string& name)
 SoundEffect* AudioEngine::GetSound(const std::string& name)
 {
     auto it = m_soundEffects.find(name);
-    return (it != m_soundEffects.end()) ? it->second.get() : nullptr;
+    return it != m_soundEffects.end() ? it->second.get() : nullptr;
 }
 
-AudioSource* AudioEngine::PlaySound(const std::string& name, float volume, float pitch, bool loop)
+AudioSource* AudioEngine::PlaySound(const std::string& name,
+    float volume, float pitch, bool loop)
 {
+    ASSERT_MSG(!name.empty(), "Sound name must be non-empty");
     SoundEffect* sound = GetSound(name);
-    if (!sound) return nullptr;
-    
-    AudioSource* source = GetAvailableSource();
-    if (!source) return nullptr;
-    
-    // Create source voice if needed
-    if (!source->Voice)
+    ASSERT_NOT_NULL(sound);
+
+    AudioSource* src = GetAvailableSource();
+    ASSERT_NOT_NULL(src);
+    if (!src) return nullptr;
+
+    if (!src->Voice)
     {
-        HRESULT hr = CreateSourceVoice(sound->GetFormat(), &source->Voice);
+        HRESULT hr = CreateSourceVoice(sound->GetFormat(), &src->Voice);
+        ASSERT_MSG(SUCCEEDED(hr), "CreateSourceVoice failed");
         if (FAILED(hr)) return nullptr;
     }
-    
-    // Configure source
-    source->Sound = sound;
-    source->Volume = volume * m_sfxVolume * m_masterVolume;
-    source->Pitch = pitch;
-    source->IsLooping = loop;
-    source->Is3D = false;
-    source->IsPlaying = true;
-    
-    // Set volume and pitch
-    source->Voice->SetVolume(source->Volume);
-    source->Voice->SetFrequencyRatio(pitch);
-    
-    // Submit audio buffer
+
+    ASSERT_MSG(volume >= 0.0f && volume <= 1.0f, "Volume out of range");
+    ASSERT_MSG(pitch > 0.0f, "Pitch must be positive");
+
+    src->Sound = sound;
+    src->Volume = volume * m_sfxVolume * m_masterVolume;
+    src->Pitch = pitch;
+    src->IsLooping = loop;
+    src->Is3D = false;
+    src->IsPlaying = true;
+
+    src->Voice->SetVolume(src->Volume);
+    src->Voice->SetFrequencyRatio(src->Pitch);
+
     XAUDIO2_BUFFER buffer = {};
     buffer.AudioBytes = sound->GetDataSize();
+    ASSERT_MSG(buffer.AudioBytes > 0, "Empty audio data");
     buffer.pAudioData = sound->GetData();
     buffer.Flags = XAUDIO2_END_OF_STREAM;
-    if (loop)
-    {
-        buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-    }
-    
-    source->Voice->SubmitSourceBuffer(&buffer);
-    source->Voice->Start();
-    
-    return source;
+    if (loop) buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+
+    HRESULT hr = src->Voice->SubmitSourceBuffer(&buffer);
+    ASSERT_MSG(SUCCEEDED(hr), "SubmitSourceBuffer failed");
+    if (FAILED(hr)) return nullptr;
+
+    src->Voice->Start();
+    return src;
 }
 
-AudioSource* AudioEngine::PlaySound3D(const std::string& name, const XMFLOAT3& position, 
-                                     float volume, float pitch, bool loop)
+AudioSource* AudioEngine::PlaySound3D(const std::string& name,
+    const XMFLOAT3& position, float volume, float pitch, bool loop)
 {
-    AudioSource* source = PlaySound(name, volume, pitch, loop);
-    if (source)
+    AudioSource* src = PlaySound(name, volume, pitch, loop);
+    if (src)
     {
-        source->Is3D = true;
-        source->Position = position;
+        src->Is3D = true;
+        src->Position = position;
     }
-    return source;
+    return src;
 }
 
 void AudioEngine::StopSound(AudioSource* source)
 {
-    if (source && source->IsPlaying)
+    ASSERT_NOT_NULL(source);
+    if (source->IsPlaying && source->Voice)
     {
-        if (source->Voice)
-        {
-            source->Voice->Stop();
-            source->Voice->FlushSourceBuffers();
-        }
-        
+        source->Voice->Stop();
+        source->Voice->FlushSourceBuffers();
         source->IsPlaying = false;
         ReturnSource(source);
     }
@@ -198,112 +177,79 @@ void AudioEngine::StopSound(AudioSource* source)
 
 void AudioEngine::StopAllSounds()
 {
-    for (auto& source : m_audioSources)
-    {
-        if (source->IsPlaying)
-        {
-            StopSound(source.get());
-        }
-    }
+    for (auto& s : m_audioSources)
+        if (s->IsPlaying) StopSound(s.get());
 }
 
 void AudioEngine::PauseAllSounds()
 {
-    for (auto& source : m_audioSources)
-    {
-        if (source->IsPlaying && source->Voice)
-        {
-            source->Voice->Stop();
-        }
-    }
+    for (auto& s : m_audioSources)
+        if (s->IsPlaying && s->Voice) s->Voice->Stop();
 }
 
 void AudioEngine::ResumeAllSounds()
 {
-    for (auto& source : m_audioSources)
-    {
-        if (source->IsPlaying && source->Voice)
-        {
-            source->Voice->Start();
-        }
-    }
+    for (auto& s : m_audioSources)
+        if (s->IsPlaying && s->Voice) s->Voice->Start();
 }
 
 void AudioEngine::SetMasterVolume(float volume)
 {
-    m_masterVolume = std::max(0.0f, std::min(1.0f, volume));
-    if (m_masterVoice)
-    {
-        m_masterVoice->SetVolume(m_masterVolume);
-    }
+    m_masterVolume = std::clamp(volume, 0.0f, 1.0f);
+    if (m_masterVoice) m_masterVoice->SetVolume(m_masterVolume);
 }
 
 void AudioEngine::SetSFXVolume(float volume)
 {
-    m_sfxVolume = std::max(0.0f, std::min(1.0f, volume));
+    m_sfxVolume = std::clamp(volume, 0.0f, 1.0f);
 }
 
 void AudioEngine::SetMusicVolume(float volume)
 {
-    m_musicVolume = std::max(0.0f, std::min(1.0f, volume));
+    m_musicVolume = std::clamp(volume, 0.0f, 1.0f);
 }
 
 size_t AudioEngine::GetActiveSourceCount() const
 {
     size_t count = 0;
-    for (const auto& source : m_audioSources)
-    {
-        if (source->IsPlaying)
-        {
-            count++;
-        }
-    }
+    for (auto& s : m_audioSources)
+        if (s->IsPlaying) ++count;
     return count;
 }
 
 AudioSource* AudioEngine::GetAvailableSource()
 {
     if (m_availableSources.empty())
-    {
         return nullptr;
-    }
-    
-    AudioSource* source = m_availableSources.back();
+    AudioSource* src = m_availableSources.back();
     m_availableSources.pop_back();
-    return source;
+    return src;
 }
 
 void AudioEngine::ReturnSource(AudioSource* source)
 {
-    if (source)
-    {
-        source->IsPlaying = false;
-        source->Sound = nullptr;
-        m_availableSources.push_back(source);
-    }
+    ASSERT_NOT_NULL(source);
+    source->IsPlaying = false;
+    source->Sound = nullptr;
+    m_availableSources.push_back(source);
 }
 
 void AudioEngine::UpdateSources()
 {
-    for (auto& source : m_audioSources)
+    for (auto& s : m_audioSources)
     {
-        if (source->IsPlaying && source->Voice)
+        if (s->IsPlaying && s->Voice)
         {
-            // Check if source is still playing
             XAUDIO2_VOICE_STATE state;
-            source->Voice->GetState(&state);
-            
+            s->Voice->GetState(&state);
             if (state.BuffersQueued == 0)
-            {
-                // Sound finished playing
-                StopSound(source.get());
-            }
+                StopSound(s.get());
         }
     }
 }
 
 HRESULT AudioEngine::CreateSourceVoice(const WAVEFORMATEX& format, IXAudio2SourceVoice** voice)
 {
+    ASSERT_MSG(m_xAudio2 != nullptr, "XAudio2 not initialized");
     return m_xAudio2->CreateSourceVoice(voice, &format);
 }
-
