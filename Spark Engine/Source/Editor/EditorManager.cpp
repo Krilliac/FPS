@@ -1,73 +1,113 @@
-﻿#include "EditorManager.h"
+// EditorManager.cpp
+#include "EditorManager.h"
 #include "../Graphics/RenderThreadManager.h"
 #include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
+#include <algorithm>
 
 namespace SparkEngine {
-    bool EditorManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* context, EntityRegistry* registry) {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGui::StyleColorsDark();
-        ImGui_ImplWin32_Init(hwnd);
-        ImGui_ImplDX11_Init(device, context);
-        m_registry = registry;
-        m_initialized = true;
-        return true;
-    }
 
-    void EditorManager::Shutdown() {
-        ImGui_ImplDX11_Shutdown();
-        ImGui_ImplWin32_Shutdown();
-        ImGui::DestroyContext();
-    }
+bool EditorManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* context, EntityRegistry* registry) {
+    // Setup ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
 
-    void EditorManager::NewFrame() {
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-    }
+    // Platform/Renderer bindings
+    ImGui_ImplWin32_Init(hwnd);
+    ImGui_ImplDX11_Init(device, context);
 
-    void EditorManager::Render() {
-        RenderDockSpace();
-        RenderMainMenuBar();
-        for (auto& w : m_windows) { w->Render(); }
-        if (m_showDemoWindow) ImGui::ShowDemoWindow(&m_showDemoWindow);
-        ImGui::Render();
-    }
+    m_registry = registry;
+    m_device   = device;
+    m_context  = context;
+    m_initialized = true;
 
-    void EditorManager::Present() {
-        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-    }
+    // Register default editor windows
+    AddWindow<DockSpaceWindow>();
+    AddWindow<ToolbarWindow>();
+    AddWindow<SceneHierarchyWindow>(m_registry, [this](Entity e) { SelectEntity(e); });
+    AddWindow<InspectorWindow>(m_registry);
+    AddWindow<AssetBrowserWindow>();
+    AddWindow<ViewportWindow>(m_graphics);
 
-    void EditorManager::SelectEntity(Entity e) {
-        m_selectedEntity = e;
-        for (auto& w : m_windows) { w->OnEntitySelected(e); }
-    }
+    return true;
+}
 
-    void EditorManager::RenderMainMenuBar() {
-        if (ImGui::BeginMainMenuBar()) {
-            if (ImGui::BeginMenu("Editor")) {
-                ImGui::MenuItem("Demo Window", nullptr, &m_showDemoWindow);
-                ImGui::EndMenu();
-            }
-            ImGui::EndMainMenuBar();
+void EditorManager::Shutdown() {
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+    m_windows.clear();
+}
+
+void EditorManager::NewFrame() {
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+}
+
+void EditorManager::Render() {
+    // Render docking space first
+    for (auto& win : m_windows) {
+        if (strcmp(win->GetName(), "DockSpace") == 0) {
+            win->Render();
+            break;
         }
     }
 
-    void EditorManager::RenderDockSpace() {
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    // Render other windows
+    for (auto& win : m_windows) {
+        const char* name = win->GetName();
+        if (strcmp(name, "DockSpace") != 0) {
+            win->Render();
+        }
     }
 
-    void EditorManager::RemoveWindow(const char* name) {
-        m_windows.erase(
-            std::remove_if(m_windows.begin(), m_windows.end(),
-                [&](auto& w){ return strcmp(w->GetName(), name)==0; }
-            ),
-            m_windows.end()
-        );
+    // Show ImGui demo if requested
+    if (m_showDemoWindow) {
+        ImGui::ShowDemoWindow(&m_showDemoWindow);
     }
 
-    EditorWindow* EditorManager::GetWindow(const char* name) {
-        for (auto& w : m_windows) if (strcmp(w->GetName(), name)==0) return w.get();
-        return nullptr;
+    ImGui::Render();
+}
+
+void EditorManager::Present() {
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void EditorManager::SelectEntity(Entity entity) {
+    m_selectedEntity = entity;
+    for (auto& win : m_windows) {
+        win->OnEntitySelected(entity);
     }
 }
+
+void EditorManager::RemoveWindow(const char* name) {
+    m_windows.erase(
+        std::remove_if(m_windows.begin(), m_windows.end(),
+            [&](auto& w) { return strcmp(w->GetName(), name) == 0; }),
+        m_windows.end()
+    );
+}
+
+EditorWindow* EditorManager::GetWindow(const char* name) {
+    for (auto& w : m_windows) {
+        if (strcmp(w->GetName(), name) == 0) {
+            return w.get();
+        }
+    }
+    return nullptr;
+}
+
+bool EditorManager::IsMouseOverEditor() const {
+    ImGuiIO& io = ImGui::GetIO();
+    return io.WantCaptureMouse;
+}
+
+bool EditorManager::WantCaptureKeyboard() const {
+    ImGuiIO& io = ImGui::GetIO();
+    return io.WantCaptureKeyboard;
+}
+
+} // namespace SparkEngine

@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.20)
 project(SparkEngine VERSION 1.0.0 LANGUAGES CXX)
 
 # Set C++ standard
@@ -69,10 +69,7 @@ target_include_directories(stb_image INTERFACE "ThirdParty/stb")
 # ===============================
 
 # Collect all source files
-file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_SOURCE_DIR}/Spark Engine/Source/*.cpp"
-    "${CMAKE_SOURCE_DIR}/Spark Engine/Source/*.h"
-)
+file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS "Spark Engine/Source/**/*.cpp" "Spark Engine/Source/**/*.h")
 
 # Create the main executable
 add_executable(SparkEngine WIN32
@@ -149,3 +146,6 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT S
 message(STATUS "SparkEngine configuration complete")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
+
+# Include new systems"
+add_subdirectory("Spark Engine/Source/Graphics/Systems")

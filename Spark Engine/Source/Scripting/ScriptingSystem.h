@@ -38,12 +38,14 @@ namespace SparkEngine {
                     if (!result.valid()) {
                         sol::error err = result;
                         // Log error
+						// TODO: Implement
                         return false;
                     }
                     return true;
                 }
             } catch (const std::exception& e) {
                 // Log exception
+				// TODO: Implement
                 return false;
             }
 

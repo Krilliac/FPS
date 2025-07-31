@@ -1,4 +1,15 @@
-﻿// GraphicsEngine.cpp
+#include <imgui.h>
+#include "Utils/FileWatcher.h"
+#include "Utils/CrashHandler.h"
+#include "Assets/AssetSystem.h"
+#include "Editor/EditorSystem.h"
+#include "Input/InputSystem.h"
+#include "Audio/AudioSystem.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Physics/PhysicsSystem.h"
+#include "Graphics/Systems/RenderSystem.h"
+#include "Game/SparkEngineGame.h"
+// GraphicsEngine.cpp
 #include "GraphicsEngine.h"
 #include "Utils/Assert.h"
 
@@ -144,8 +155,9 @@ HRESULT GraphicsEngine::CreateDeviceAndSwapChain(HWND hWnd)
     ASSERT_MSG(SUCCEEDED(hr), "Query ID3D11DeviceContext1 failed");
 
 #ifdef _DEBUG
-    // D3D11 info queue filter (optional, omitted for brevity)
-    // DXGI debug filter (optional)
+    // D3D11 info queue filter
+    // DXGI debug filter
+	// TODO: Implement
 #endif
 
     hr = factory->CreateSwapChainForHwnd(

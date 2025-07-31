@@ -1,3 +1,13 @@
+#include <imgui.h>
+#include "Utils/FileWatcher.h"
+#include "Assets/AssetSystem.h"
+#include "Editor/EditorSystem.h"
+#include "Input/InputSystem.h"
+#include "Audio/AudioSystem.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Physics/PhysicsSystem.h"
+#include "Graphics/Systems/RenderSystem.h"
+#include "Game/SparkEngineGame.h"
 // SparkEngine.cpp – unified entry point with Win32 boilerplate + classic subsystems
 // ===================================================================================
 
@@ -64,7 +74,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInst,
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
-        } else {
+        } else
+    if (Shader::ReloadChanged()) Shader::ReloadAll(); {
             auto now = std::chrono::high_resolution_clock::now();
             float dt = std::chrono::duration<float>(now - last).count();
             last = now;

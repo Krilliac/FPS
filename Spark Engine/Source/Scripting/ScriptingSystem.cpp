@@ -1,10 +1,24 @@
+#include <imgui.h>
+#include "Utils/FileWatcher.h"
+#include "Utils/Assert.h"
+#include "Utils/CrashHandler.h"
+#include "Assets/AssetSystem.h"
+#include "Editor/EditorSystem.h"
+#include "Input/InputSystem.h"
+#include "Audio/AudioSystem.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Physics/PhysicsSystem.h"
+#include "Graphics/Systems/RenderSystem.h"
+#include "Game/SparkEngineGame.h"
 #include "ScriptingSystem.h"
 #include "../ECS/Components.h"
 #include <fstream>
 #include <iostream>
 
 namespace SparkEngine {
-    bool ScriptingSystem::Initialize(EntityRegistry* registry) {
+    bool ScriptingSystem::Initialize
+    // bind update hook
+    m_scripts["OnUpdate"] = m_lua.globals()["OnUpdate"];(EntityRegistry* registry) {
         m_registry = registry;
 
         // Initialize Lua state
@@ -77,6 +91,7 @@ namespace SparkEngine {
         if (it != m_scripts.end()) {
             // Find the original path and reload
             // This is simplified - in practice you'd store the path
+			// TODO: Implement
             m_scripts.erase(it);
         }
         return true;
@@ -156,4 +171,3 @@ namespace SparkEngine {
         };
     }
 }
-

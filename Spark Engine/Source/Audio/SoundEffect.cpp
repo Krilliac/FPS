@@ -1,13 +1,24 @@
-﻿#include "SoundEffect.h"
+#include <imgui.h>
+#include "Utils/FileWatcher.h"
+#include "Utils/CrashHandler.h"
+#include "Assets/AssetSystem.h"
+#include "Editor/EditorSystem.h"
+#include "Input/InputSystem.h"
+#include "Audio/AudioSystem.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Physics/PhysicsSystem.h"
+#include "Graphics/Systems/RenderSystem.h"
+#include "Game/SparkEngineGame.h"
+#include "SoundEffect.h"
 #include "Utils/Assert.h"
 #include <fstream>
 #include <cmath>
 #include <random>
 #include <filesystem>
 
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 //  SoundEffect implementation
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 SoundEffect::SoundEffect() : m_audioDataSize(0)
 {
     ZeroMemory(&m_format, sizeof(m_format));
@@ -20,7 +31,7 @@ SoundEffect::~SoundEffect()
 
 HRESULT SoundEffect::LoadFromFile(const std::wstring& filename)
 {
-    ASSERT_ALWAYS_MSG(!filename.empty(), "SoundEffect::LoadFromFile ‒ empty filename");
+    ASSERT_ALWAYS_MSG(!filename.empty(), "SoundEffect::LoadFromFile ? empty filename");
 
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
     if (!file.is_open())
@@ -111,9 +122,9 @@ HRESULT SoundEffect::ReadChunkData(const BYTE* src, DWORD pos, void* dst, DWORD 
     return S_OK;
 }
 
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 //  SoundEffectFactory implementation
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 static constexpr float PI = 3.14159265358979f;
 
 void SoundEffectFactory::GenerateWaveform(std::vector<short>& samples,
@@ -284,7 +295,7 @@ std::unique_ptr<SoundEffect> SoundEffectFactory::CreatePickup()
     {
         float t = static_cast<float>(i) / SR;
         float prog = t / DUR;
-        float freq = 440.f + 440.f * prog;   // glide 440→880
+        float freq = 440.f + 440.f * prog;   // glide 440?880
         float env = 1.f - prog;             // fade out
         float samp = std::sinf(2.f * PI * freq * t) * env;
         s[i] = static_cast<short>(samp * 16383.f);

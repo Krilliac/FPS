@@ -1,4 +1,14 @@
-﻿// CrashHandlerHelpers.cpp
+#include <imgui.h>
+#include "Utils/FileWatcher.h"
+#include "Assets/AssetSystem.h"
+#include "Editor/EditorSystem.h"
+#include "Input/InputSystem.h"
+#include "Audio/AudioSystem.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Physics/PhysicsSystem.h"
+#include "Graphics/Systems/RenderSystem.h"
+#include "Game/SparkEngineGame.h"
+// CrashHandlerHelpers.cpp
 #include "Utils/CrashHandler.h"
 #include "Utils/Assert.h"
 
@@ -24,13 +34,13 @@
 #pragma comment(lib, "dxgi.lib")
 
 //-----------------------------------------------------------------------------
-// OS Version Helpers (Option B: self‐contained, no winternl.h)
+// OS Version Helpers (Option B: self-contained, no winternl.h)
 //-----------------------------------------------------------------------------
 
 // bring in NTSTATUS
 typedef LONG NTSTATUS;
 
-// your private version struct—never collides with SDK headers
+// your private version struct�never collides with SDK headers
 typedef struct _CH_OSVERSIONINFOW {
     ULONG  dwOSVersionInfoSize;
     ULONG  dwMajorVersion;

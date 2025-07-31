@@ -1,4 +1,15 @@
-﻿#include "Model.h"
+#include <imgui.h>
+#include "Utils/FileWatcher.h"
+#include "Utils/CrashHandler.h"
+#include "Assets/AssetSystem.h"
+#include "Editor/EditorSystem.h"
+#include "Input/InputSystem.h"
+#include "Audio/AudioSystem.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Physics/PhysicsSystem.h"
+#include "Graphics/Systems/RenderSystem.h"
+#include "Game/SparkEngineGame.h"
+#include "Model.h"
 #include "ModelVertex.h"
 #include "Utils/Assert.h"
 #include <tiny_obj_loader.h>
@@ -13,8 +24,8 @@ HRESULT Model::LoadObj(const std::wstring& filename, ID3D11Device* device)
     // ------------------------------------------------------------------
     //  Argument validation
     // ------------------------------------------------------------------
-    ASSERT_ALWAYS_MSG(!filename.empty(), "Model::LoadObj ‒ filename is empty");
-    ASSERT_ALWAYS_MSG(device != nullptr, "Model::LoadObj ‒ ID3D11Device is null");
+    ASSERT_ALWAYS_MSG(!filename.empty(), "Model::LoadObj ? filename is empty");
+    ASSERT_ALWAYS_MSG(device != nullptr, "Model::LoadObj ? ID3D11Device is null");
 
     // Convert UTF-16 filename to UTF-8 for tinyobjloader
     std::string fileUtf8(filename.begin(), filename.end());

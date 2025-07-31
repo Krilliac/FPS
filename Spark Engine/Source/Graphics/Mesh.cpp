@@ -1,4 +1,15 @@
-﻿// Mesh.cpp
+#include <imgui.h>
+#include "Utils/FileWatcher.h"
+#include "Utils/CrashHandler.h"
+#include "Assets/AssetSystem.h"
+#include "Editor/EditorSystem.h"
+#include "Input/InputSystem.h"
+#include "Audio/AudioSystem.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Physics/PhysicsSystem.h"
+#include "Graphics/Systems/RenderSystem.h"
+#include "Game/SparkEngineGame.h"
+// Mesh.cpp
 #include "Mesh.h"
 #include "Utils/Assert.h"
 //#include "Utils/Debug.h"
@@ -35,7 +46,7 @@ void Mesh::Shutdown()
 
 bool Mesh::LoadFromFile(const std::wstring& path)
 {
-    ASSERT_ALWAYS_MSG(!path.empty(), "Mesh::LoadFromFile – empty path");
+    ASSERT_ALWAYS_MSG(!path.empty(), "Mesh::LoadFromFile � empty path");
 
     // Convert wide path to UTF-8 for tinyobjloader
     std::string u8Path = std::filesystem::path(path).u8string();
