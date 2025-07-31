@@ -1,4 +1,4 @@
-[submodule "ThirdParty/Utils/miniz"]
+﻿[submodule "ThirdParty/Utils/miniz"]
 	path = ThirdParty/Utils/miniz
 	url = https://github.com/richgel999/miniz.git
 [submodule "ThirdParty/UI/imnodes"]
@@ -40,6 +40,7 @@
 [submodule "ThirdParty/Utils/spdlog"]
 	path = ThirdParty/Utils/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "ThirdParty/Scripting/AngelScript"]
-	path = ThirdParty/Scripting/AngelScript
+[submodule "ThirdParty/Scripting/angelscript-mirror"]
+	path = ThirdParty/Scripting/angelscript-mirror
 	url = https://github.com/codecat/angelscript-mirror.git
+

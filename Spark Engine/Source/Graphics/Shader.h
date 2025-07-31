@@ -1,12 +1,18 @@
-﻿// Shader.h
-#pragma once
+﻿#pragma once
+#include "../Core/framework.h"
 
-#include "Utils/Assert.h"
-#include "..\Core\framework.h"      // ConstantBuffer definition
-#include <d3d11.h>
-#include <string>
+// Light buffer structure
+struct LightBuffer
+{
+    DirectX::XMFLOAT3 LightDirection;
+    float LightIntensity;
+    DirectX::XMFLOAT3 LightColor;
+    float AmbientIntensity;
+    DirectX::XMFLOAT3 CameraPosition;
+    float SpecularPower;
+};
 
-// Constant buffer structure
+// Constant buffer structure  
 struct ConstantBuffer
 {
     DirectX::XMMATRIX World;
@@ -21,26 +27,22 @@ public:
     ~Shader();
 
     HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
-    void    Shutdown();
-
     HRESULT LoadVertexShader(const std::wstring& filename);
     HRESULT LoadPixelShader(const std::wstring& filename);
-
     void SetShaders();
     void UpdateConstantBuffer(const ConstantBuffer& cb);
-
-    static HRESULT CompileShaderFromFile(const std::wstring& filename,
-        const std::string& entryPoint,
-        const std::string& shaderModel,
-        ID3DBlob** blobOut);
+    void UpdateLightBuffer(const LightBuffer& lb);
+    void Shutdown();
 
 private:
     HRESULT CreateConstantBuffer();
+    HRESULT CreateLightBuffer();
 
-    ID3D11Device* m_device{ nullptr };
-    ID3D11DeviceContext* m_context{ nullptr };
-    ID3D11VertexShader* m_vertexShader{ nullptr };
-    ID3D11PixelShader* m_pixelShader{ nullptr };
-    ID3D11InputLayout* m_inputLayout{ nullptr };
-    ID3D11Buffer* m_constantBuffer{ nullptr };
+    ID3D11Device* m_device;
+    ID3D11DeviceContext* m_context;
+    ID3D11VertexShader* m_vertexShader;
+    ID3D11PixelShader* m_pixelShader;
+    ID3D11InputLayout* m_inputLayout;
+    ID3D11Buffer* m_constantBuffer;
+    ID3D11Buffer* m_lightBuffer;
 };

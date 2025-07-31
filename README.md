@@ -1,143 +1,163 @@
 ﻿# Spark Engine
 
-A modular, high-performance C++ game engine for 3D FPS titles and beyond, featuring DirectX 11 rendering, AngelScript scripting, and an integrated editor.
+A modular, high-performance C++ game engine for 3D titles, featuring DirectX 11 rendering, Lua scripting, and an integrated ImGui editor. Built with CMake for Windows, Linux, and macOS.
 
-This Engine is still VERY young, fresh and all the issues are being worked out while slowly providing a fully featured game project/engine. Things may break or not compile/work at all.
+## Key Features
 
-## 🌟 Key Features
+- **DirectX 11 Renderer**: Dynamic lighting, shadows, post-processing, particles  
+- **ECS Architecture**: EnTT-based entity-component system  
+- **Lua Scripting**: Sol2 integration for hot-reloadable gameplay logic  
+- **ImGui Editor**: Scene hierarchy, inspector, asset browser, gizmos  
+- **PBR Materials**: Physically based rendering with full material workflow  
+- **Multi-threaded Rendering**: Deferred contexts and command queues  
+- **Physics (Optional)**: PhysX integration for rigid bodies and colliders  
+- **Asset Pipeline**: Async loading of textures and meshes via `AssetManager`
 
-### 🎨 Rendering & Camera
-- **DirectX 11 Pipeline**: Dynamic lighting, shadows, post-processing, particle effects  
-- **First-Person Camera**: Smooth mouselook, WASD movement, jump, crouch, zoom  
+## Quick Start
 
-### 🎮 Gameplay & Input
-- **ECS Architecture**: Clean separation of rendering, physics, audio, scripting, gameplay  
-- **Input Manager**: Keyboard/mouse capture, customizable bindings, console overlay  
-
-### 🛠 Editor & Scripting
-- **Visual Editor** *(optional)*: ImGui-powered scene hierarchy, inspector, asset browser, gizmos  
-- **AngelScript Integration**: Unity-style hot-reload, full debugging, exposed C++ API  
-
-### 🩹 Stability & Debug
-- **Crash Handler**: Auto minidumps, symbolized stack traces, screenshot capture, ZIP upload  
-- **Console Overlay**: Real-time command input, logging, test crash trigger  
-
-### ⚙️ Utilities
-- **Shader System**: HLSL support with auto-recompilation and constant-buffer fixes  
-- **Mesh Generation**: Procedural cube, plane, and sphere primitives  
-- **Cross-Platform Build**: CMake for Windows, Linux, macOS; auto-discovers sources  
-
-## 📋 Table of Contents
-
-- [Introduction](#spark-engine)  
-- [Quick Start](#quick-start)  
-- [Build & Setup](#build--setup)  
-- [Controls](#controls)  
-- [Architecture Overview](#architecture-overview)  
-- [Directory Layout](#directory-layout)  
-- [Configuration Options](#configuration-options)  
-- [License](#license)  
-
-## 🔥 Quick Start
-
-```bash
-# Clone repo with submodules
-git clone --recurse-submodules https://github.com/YourOrg/SparkEngine.git
+```
+git clone --recurse-submodules https://github.com//SparkEngine.git
 cd SparkEngine
 
-# Generate build files
-# Windows (PowerShell)
-.\generate.bat -g "Visual Studio 17 2022" release
+# Initialize submodules
+git submodule update --init --recursive
 
-# Linux/macOS
-chmod +x generate.sh
-./generate.sh release -g Ninja
+# Generate build files (Windows)
+cmake -B build -S . -G "Visual Studio 17 2022" -A x64
+
+# Generate build files (Linux/macOS)
+cmake -B build -S . -G Ninja
 
 # Build
-# Windows
-.\build.ps1 -config Release -editor -angelscript
-
-# Linux/macOS
-./build.sh release
+cmake --build build --config Release
 
 # Run
 # Windows
-build/Release/SparkEngine.exe
-
+.\build\Release\SparkEngine.exe
 # Linux/macOS
-build/SparkEngine
+./build/SparkEngine
 ```
 
-## 🎮 Controls
+## Build & Setup
 
-| Input         | Action                            |
-|---------------|-----------------------------------|
-| W/A/S/D       | Move                              |
-| Mouse         | Look                              |
-| Space         | Jump / Move Up                    |
-| Ctrl          | Crouch / Move Down                |
-| Esc           | Release Mouse / Toggle Menu       |
-| Left Click    | (Re)Capture Mouse                 |
-| ` (Backtick)  | Toggle Debug Console              |
+Dependencies are included as submodules under `ThirdParty/`. No external installers required.
 
-## 🏗 Architecture Overview
+1. Clone and update submodules:
+   ```
+   git submodule update --init --recursive
+   ```
+2. Generate build files:
+   - Windows:  
+     ```
+     cmake -B build -S . -G "Visual Studio 17 2022" -A x64
+     ```
+   - Linux/macOS:  
+     ```
+     cmake -B build -S . -G Ninja
+     ```
+3. Build:
+   ```
+   cmake --build build --config Release
+   ```
+4. Run:
+   - Windows: `.\build\Release\SparkEngine.exe`  
+   - Linux/macOS: `./build/SparkEngine`
+
+### CMakeLists.txt Snippet
+
+```cmake
+add_subdirectory(ThirdParty/entt)
+add_subdirectory(ThirdParty/imgui)
+add_subdirectory(ThirdParty/sol2)
+add_subdirectory(ThirdParty/PhysX)       # optional
+add_library(stb_image INTERFACE)
+target_include_directories(stb_image INTERFACE ThirdParty/stb)
+
+file(GLOB_RECURSE ENGINE_SOURCES
+    "${CMAKE_SOURCE_DIR}/Spark Engine/Source/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Spark Engine/Source/*.h"
+)
+
+add_executable(SparkEngine WIN32 ${ENGINE_SOURCES} "Spark Engine/SparkEngine.rc")
+target_include_directories(SparkEngine PRIVATE "Spark Engine/Source")
+target_link_libraries(SparkEngine PRIVATE
+    EnTT::EnTT
+    imgui
+    sol2::sol2
+    stb_image
+    d3d11 dxgi d3dcompiler winmm
+)
+
+if(TARGET PhysX)
+    target_link_libraries(SparkEngine PRIVATE PhysX::PhysX)
+    target_compile_definitions(SparkEngine PRIVATE ENABLE_PHYSX)
+endif()
+```
+
+## Controls
+
+| Input       | Action                 |
+|-------------|------------------------|
+| W/A/S/D     | Move                   |
+| Mouse       | Look                   |
+| Space       | Jump                   |
+| Ctrl        | Crouch                 |
+| Esc         | Release mouse/toggle UI|
+| Backtick (`)| Toggle console         |
+
+## Architecture Overview
 
 ```
-┌─────────────────┬─────────────────┬─────────────────┐
-│  Rendering      │  Physics        │  Audio          │
-├─────────────────┼─────────────────┼─────────────────┤
-│ • GraphicsEngine│ • PhysicsSystem │ • AudioSystem   │
-│ • ShaderManager │ • Collision     │ • Mixer         │
-│ • MeshManager   │ • RigidBodies   │ • Effects       │
-└─────────────────┴─────────────────┴─────────────────┘
+Rendering      Physics         Audio
+─────────────  ─────────────   ─────────────
+GraphicsEngine PhysicsSystem   AudioSystem
+ShaderManager  Collision       Mixer
+MeshManager    RigidBodies     Effects
 
-┌─────────────────┬─────────────────┬─────────────────┐
-│  Scripting      │  Input & UI     │  Core & Utils   │
-├─────────────────┼─────────────────┼─────────────────┤
-│ • AngelScript   │ • InputManager  │ • Engine        │
-│ • ScriptEngine  │ • Console       │ • Timer         │
-│ • Bindings      │ • ImGui Editor  │ • FileSystem    │
-└─────────────────┴─────────────────┴─────────────────┘
+Scripting      Input & UI      Core & Utils
+────────────   ─────────────   ─────────────
+Sol2 (Lua)     InputManager    Engine
+ScriptSystem   ConsoleOverlay  Timer
+Bindings       ImGui Editor    FileSystem
 ```
 
-## 📂 Directory Layout
+## Directory Layout
 
 ```
 .
-├── Source/
-│   ├── Core/            # Entry point & framework
-│   ├── Graphics/        # DX11 renderer, shaders
-│   ├── Game/            # Gameplay logic & objects
-│   ├── Camera/          # FPS camera
-│   ├── Input/           # Input handling & console
-│   ├── Utils/           # Timer, logging, file I/O
-│   └── Scripting/       # AngelScript integration
-├── ThirdParty/          # Submodules (EnTT, ImGui, AngelScript…)
+├── Spark Engine/        # Source with space in folder
+│   ├── Core/            # Framework, entry point
+│   ├── ECS/             # EntityRegistry, SystemManager, Components
+│   ├── Graphics/        # Renderer, Shaders, Threading
+│   ├── Physics/         # PhysX integration
+│   ├── Scripting/       # Lua scripting system
+│   ├── Editor/          # ImGui windows
+│   ├── Assets/          # AssetManager, TextureAsset, MeshAsset
+│   └── Game/            # SparkEngineGame example
 ├── Shaders/             # HLSL files
-├── Resources/           # Models, textures, sounds
-├── generate.bat/.sh     # CMake configure-only scripts
-├── build.ps1/.sh        # Full build scripts
-├── CMakeLists.txt       # Cross-platform build config
+├── ThirdParty/          # entt, imgui, sol2, PhysX, stb
+├── SparkEngine.rc       # Windows resource script
+├── generate.bat/.sh     # CMake configure scripts
+├── build.ps1/.sh        # Build scripts
+├── CMakeLists.txt       # Build configuration
 └── README.md            # This file
 ```
 
-## ⚙️ Configuration Options
+## Configuration Options
 
-| Option                 | Default | Description                                    |
-|------------------------|---------|------------------------------------------------|
-| ENABLE_EDITOR          | ON      | Include in-engine editor                       |
-| ENABLE_CONSOLE         | ON      | External debug console overlay                 |
-| ENABLE_ANGELSCRIPT     | ON      | AngelScript hot-reload scripting               |
-| ENABLE_VULKAN          | OFF     | Build Vulkan renderer                          |
-| USE_STATIC_RUNTIME     | ON      | Static CRT on MSVC (/MT)                       |
+| Option            | Default | Description                    |
+|-------------------|---------|--------------------------------|
+| ENABLE_EDITOR     | ON      | ImGui editor                   |
+| ENABLE_LUA        | ON      | Lua scripting                  |
+| ENABLE_PHYSX      | OFF     | PhysX physics (optional)       |
+| ENABLE_VULKAN     | OFF     | Vulkan renderer (future)       |
+| USE_STATIC_RUNTIME| ON      | Static CRT on MSVC (/MT)       |
 
-Pass these to `generate.bat/.sh` or edit `CMakeLists.txt` directly:
-
-```bash
-cmake .. -DENABLE_EDITOR=OFF -DENABLE_ANGELSCRIPT=OFF
+Customize with:
+```
+cmake -B build -S . -DENABLE_PHYSX=ON
 ```
 
-## 📄 License
+## License
 
-MIT License.  
-Commercial support & enterprise add-ons available—visit our website for details.
+MIT License. Commercial support available.

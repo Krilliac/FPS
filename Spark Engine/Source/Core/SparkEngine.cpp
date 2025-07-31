@@ -1,4 +1,4 @@
-﻿// SparkEngine.cpp – unified entry point with Win32 boilerplate + classic subsystems
+// SparkEngine.cpp � unified entry point with Win32 boilerplate + classic subsystems
 // ===================================================================================
 
 #include "framework.h"
@@ -42,81 +42,37 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 // ===================================================================================
 //                                    wWinMain
 // ===================================================================================
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-    _In_opt_ HINSTANCE,
-    _In_ LPWSTR,
-    _In_ int nCmdShow)
+int APIENTRY wWinMain(_In_ HINSTANCE hInst,
+                      _In_opt_ HINSTANCE,
+                      _In_ LPWSTR,
+                      _In_ int nCmdShow)
 {
-    ASSERT(hInstance != nullptr);
-
-    // 1. Crash handler
+    // Initialize crash handler...
     CrashConfig crashCfg{};
-    crashCfg.dumpPrefix = L"SparkCrash";
-    crashCfg.uploadURL = "https://crash.placeholder.com/upload";
-    crashCfg.captureScreenshot = true;
-    crashCfg.captureSystemInfo = true;
-    crashCfg.captureAllThreads = true;
-    crashCfg.zipBeforeUpload = true;
-    crashCfg.triggerCrashOnAssert = false;  // NEW: Don't crash on assertions during development
     InstallCrashHandler(crashCfg);
 
-    // 2. Class & window title
-    ASSERT(MAX_LOADSTRING <= _countof(g_szClass) && MAX_LOADSTRING <= _countof(g_szTitle));
-    wcscpy_s(g_szClass, MAX_LOADSTRING, L"SparkEngineWindowClass");
-    wcscpy_s(g_szTitle, MAX_LOADSTRING, L"Spark Engine");
+    // Register window class & create window...
+    if (!InitInstance(hInst, nCmdShow)) return -1;
 
-    // 3. Register window class
-    ATOM cls = MyRegisterClass(hInstance);
-    ASSERT_MSG(cls != 0, "MyRegisterClass failed");
-    if (cls == 0)
-    {
-        MessageBoxW(nullptr, L"RegisterClassExW failed", L"Fatal Error", MB_ICONERROR);
-        return -1;
-    }
+    // Integrate SparkEngineGame
+    SparkEngine::SparkEngineGame engine;
+    if (!engine.Initialize(g_hInst, 1280, 720)) return -1;
 
-    // 4. Create window & init subsystems
-    if (!InitInstance(hInstance, nCmdShow))
-        return -1;
-
-    // 5. Message loop + tick
-    HACCEL accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SparkEngine));
     MSG msg = {};
-    g_timer = std::make_unique<Timer>();
-    ASSERT(g_timer);
-
-    while (msg.message != WM_QUIT)
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            // Console first
-            if (msg.message == WM_CHAR &&
-                g_console.HandleChar(static_cast<wchar_t>(msg.wParam)))
-                continue;
-            if (msg.message == WM_KEYDOWN &&
-                g_console.HandleKeyDown(msg.wParam))
-                continue;
-
-            if (!TranslateAccelerator(msg.hwnd, accel, &msg))
-            {
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
-            }
-        }
-        else
-        {
-            float dt = g_timer->GetDeltaTime();
-
-            if (g_input)                      g_input->Update();
-            if (g_game && !g_console.IsVisible()) g_game->Update(dt);
-
-            g_graphics->BeginFrame();
-            if (g_game)        g_game->Render();
-            if (g_console.IsVisible())
-                g_console.Render(g_graphics->GetContext());
-            g_graphics->EndFrame();
+    auto last = std::chrono::high_resolution_clock::now();
+    while (msg.message != WM_QUIT && engine.IsRunning()) {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        } else {
+            auto now = std::chrono::high_resolution_clock::now();
+            float dt = std::chrono::duration<float>(now - last).count();
+            last = now;
+            engine.Update(dt);
+            engine.Render();
         }
     }
-
+    engine.Shutdown();
     return static_cast<int>(msg.wParam);
 }
 

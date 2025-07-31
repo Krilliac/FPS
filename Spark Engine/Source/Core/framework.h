@@ -1,32 +1,37 @@
 ﻿#pragma once
 
 #include "targetver.h"
-//#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <windowsx.h>  // For GET_X_LPARAM and GET_Y_LPARAM macros
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
 
-// DirectX includes
-#include <d3d11.h>
-#include <DirectXMath.h>
+// DirectX Headers
+#include <d3d11_1.h>
+#include <dxgi1_2.h>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
+#include <DirectXColors.h>
+#include <wrl/client.h>
 
-// STL includes
+// Standard Library
 #include <memory>
-#include <vector>
 #include <string>
-#include <unordered_map>
-#include <chrono>
+#include <vector>
+#include <array>
 #include <algorithm>
-#include <queue>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
-// Link libraries
+// Link required libraries
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib") 
 #pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "winmm.lib")
 
 using namespace DirectX;
-
+template<class T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
