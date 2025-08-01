@@ -57,3 +57,99 @@
 [submodule "ThirdParty/Scripting/angelscript-mirror"]
     path = ThirdParty/Scripting/angelscript-mirror
     url  = https://github.com/codecat/angelscript-mirror.git
+[submodule "ThirdParty/entt"]
+	path = ThirdParty/entt
+	url = https://github.com/skypjack/entt.git
+	branch = master
+[submodule "ThirdParty/imgui"]
+	path = ThirdParty/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = master
+[submodule "ThirdParty/stb"]
+	path = ThirdParty/stb
+	url = https://github.com/nothings/stb.git
+	branch = master
+[submodule "ThirdParty/lua"]
+	path = ThirdParty/lua
+	url = https://github.com/lua/lua.git
+	branch = master
+[submodule "ThirdParty/AngelScript"]
+	path = ThirdParty/AngelScript
+	url = https://github.com/codecat/angelscript-mirror.git
+	branch = master
+[submodule "ThirdParty/Graphics/assimp"]
+	path = ThirdParty/Graphics/assimp
+	url = https://github.com/assimp/assimp.git
+	branch = master
+[submodule "ThirdParty/Graphics/FreeImage"]
+	path = ThirdParty/Graphics/FreeImage
+	url = https://github.com/WinMerge/freeimage.git
+	branch = master
+[submodule "ThirdParty/Physics/Bullet"]
+	path = ThirdParty/Physics/Bullet
+	url = https://github.com/bulletphysics/bullet3.git
+	branch = master
+[submodule "ThirdParty/Audio/OpenAL"]
+	path = ThirdParty/Audio/OpenAL
+	url = https://github.com/kcat/openal-soft.git
+	branch = master
+[submodule "ThirdParty/Audio/libsndfile"]
+	path = ThirdParty/Audio/libsndfile
+	url = https://github.com/libsndfile/libsndfile.git
+	branch = master
+[submodule "ThirdParty/Networking/ENet"]
+	path = ThirdParty/Networking/ENet
+	url = https://github.com/lsalzman/enet.git
+	branch = master
+[submodule "ThirdParty/Networking/RakNet"]
+	path = ThirdParty/Networking/RakNet
+	url = https://github.com/facebookarchive/RakNet.git
+	branch = master
+[submodule "ThirdParty/Utilities/fmt"]
+	path = ThirdParty/Utilities/fmt
+	url = https://github.com/fmtlib/fmt.git
+	branch = master
+[submodule "ThirdParty/Utilities/spdlog"]
+	path = ThirdParty/Utilities/spdlog
+	url = https://github.com/gabime/spdlog.git
+	branch = master
+[submodule "ThirdParty/Utilities/ThreadPool"]
+	path = ThirdParty/Utilities/ThreadPool
+	url = https://github.com/progschj/ThreadPool.git
+	branch = master
+[submodule "ThirdParty/Utilities/FileWatch"]
+	path = ThirdParty/Utilities/FileWatch
+	url = https://github.com/ThomasMonkman/filewatch.git
+	branch = master
+[submodule "ThirdParty/Math/glm"]
+	path = ThirdParty/Math/glm
+	url = https://github.com/g-truc/glm.git
+	branch = master
+[submodule "ThirdParty/Math/Eigen"]
+	path = ThirdParty/Math/Eigen
+	url = https://gitlab.com/libeigen/eigen.git
+	branch = master
+[submodule "ThirdParty/Serialization/json"]
+	path = ThirdParty/Serialization/json
+	url = https://github.com/nlohmann/json.git
+	branch = master
+[submodule "ThirdParty/Serialization/msgpack"]
+	path = ThirdParty/Serialization/msgpack
+	url = https://github.com/msgpack/msgpack-c.git
+	branch = master
+[submodule "ThirdParty/Serialization/yaml-cpp"]
+	path = ThirdParty/Serialization/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+	branch = master
+[submodule "ThirdParty/Compression/zlib"]
+	path = ThirdParty/Compression/zlib
+	url = https://github.com/madler/zlib.git
+	branch = master
+[submodule "ThirdParty/Graphics/CEGUI"]
+	path = ThirdParty/Graphics/CEGUI
+	url = https://github.com/cegui/cegui.git
+	branch = master
+[submodule "ThirdParty/Database/sqlite"]
+	path = ThirdParty/Database/sqlite
+	url = https://github.com/sqlite/sqlite.git
+	branch = master

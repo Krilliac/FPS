@@ -99,25 +99,6 @@ target_link_libraries(SparkEngine PRIVATE
 if(TARGET PhysX)
     
 # Collaborative Development Framework Libraries
-
-# Advanced Graphics and Engine Systems
-set(ADVANCED_GRAPHICS_SOURCES
-    "Spark Engine/Source/Graphics/ShaderManager.cpp"
-    "Spark Engine/Source/Graphics/MeshManager.cpp"
-    "Spark Engine/Source/Graphics/Lighting/LightingSystem.cpp"
-    "Spark Engine/Source/Graphics/PostProcessing/PostProcessPipeline.cpp"
-    "Spark Engine/Source/Graphics/Terrain/TerrainManager.cpp"
-)
-
-set(ADVANCED_SYSTEMS_SOURCES
-    "Spark Engine/Source/Utils/Profiler.cpp"
-    "Spark Engine/Source/Input/AdvancedInputManager.cpp"
-    "Spark Engine/Source/Assets/AssetManager.cpp"
-)
-
-# Add all advanced sources to engine
-list(APPEND ENGINE_SOURCES ${ADVANCED_GRAPHICS_SOURCES})
-list(APPEND ENGINE_SOURCES ${ADVANCED_SYSTEMS_SOURCES})
 set(COLLABORATIVE_SOURCES
     "Spark Engine/Source/Development/MultiUserFramework.cpp"
     "Spark Engine/Source/Development/CollaborativeDevelopment.cpp"
@@ -190,5 +171,4 @@ message(STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
 
 # Include new systems"
 add_subdirectory("Spark Engine/Source/Graphics/Systems")
-
 
