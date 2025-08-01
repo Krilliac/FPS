@@ -97,7 +97,29 @@ target_link_libraries(SparkEngine PRIVATE
 
 # Link PhysX if available
 if(TARGET PhysX)
-    target_link_libraries(SparkEngine PRIVATE PhysX)
+    
+# Collaborative Development Framework Libraries
+set(COLLABORATIVE_SOURCES
+    "Spark Engine/Source/Development/MultiUserFramework.cpp"
+    "Spark Engine/Source/Development/CollaborativeDevelopment.cpp"
+    "Spark Engine/Source/Content/ContentSynchronizer.cpp"
+    "Spark Engine/Source/Networking/NetworkCore.cpp"
+    "Spark Engine/Source/Assets/DynamicAssetPipeline.cpp"
+    "Spark Engine/Source/Scripting/DistributedScriptManager.cpp"
+    "Spark Engine/Source/Assets/StreamingAssetManager.cpp"
+    "Spark Engine/Source/Graphics/Terrain/TerrainManager.cpp"
+)
+
+# Add collaborative sources to engine sources
+list(APPEND ENGINE_SOURCES ${COLLABORATIVE_SOURCES})
+
+# Networking libraries
+if(WIN32)
+    target_link_libraries(SparkEngine PRIVATE ws2_32 wsock32)
+elseif(UNIX)
+    find_package(Threads REQUIRED)
+    target_link_libraries(SparkEngine PRIVATE Threads::Threads)
+endif()
     target_compile_definitions(SparkEngine PRIVATE SPARKENGINE_PHYSICS_ENABLED)
 endif()
 
@@ -149,3 +171,4 @@ message(STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
 
 # Include new systems"
 add_subdirectory("Spark Engine/Source/Graphics/Systems")
+

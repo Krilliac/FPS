@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../ECS/EntityRegistry.h"
 #include "../ECS/System.h"
@@ -20,7 +20,8 @@ namespace SparkEngine {
         std::unique_ptr<SystemManager> m_systemManager;
         std::unique_ptr<ScriptingSystem> m_scriptingSystem;
         std::unique_ptr<AssetManager> m_assetManager;
-        std::unique_ptr<EditorManager> m_editorManager;
+        
+    std::unique_ptr<CollaborativeDevelopment> m_collaborativeDevelopment;
 
         // Graphics
         ComPtr<ID3D11Device> m_device;

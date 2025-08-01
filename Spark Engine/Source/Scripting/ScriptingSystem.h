@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../ECS/EntityRegistry.h"
 #include <sol/sol.hpp>
@@ -74,3 +74,4 @@ namespace SparkEngine {
             : scriptPath(path), scriptName(name) {}
     };
 }
+

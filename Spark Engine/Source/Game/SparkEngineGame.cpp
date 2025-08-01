@@ -34,7 +34,15 @@ namespace SparkEngine {
         }
 
         // Create example scene
-        CreateExampleScene();
+        
+    // Initialize Collaborative Development Framework
+    m_collaborativeDevelopment = std::make_unique<CollaborativeDevelopment>(
+        m_entityRegistry.get(), m_assetManager.get(), 
+        m_scriptingSystem.get(), m_graphics.get());
+    
+    if (!m_collaborativeDevelopment->Initialize("DefaultDeveloper", false)) {
+        std::cerr << "Failed to initialize collaborative development framework" << std::endl;
+    }
 
         m_initialized = true;
     // Initialize multi-threaded rendering
@@ -48,6 +56,10 @@ namespace SparkEngine {
     }
 
     void SparkEngineGame::Shutdown() {
+        // Shutdown collaborative systems
+        if (m_collaborativeDevelopment) {
+            m_collaborativeDevelopment->Shutdown();
+        }
         if (!m_initialized) {
             return;
         }
@@ -85,6 +97,10 @@ namespace SparkEngine {
     }
 
     void SparkEngineGame::Update(float deltaTime) {
+        // Update collaborative systems
+        if (m_collaborativeDevelopment) {
+            m_collaborativeDevelopment->Update(deltaTime);
+        }
         if (!m_running) {
             return;
         }
@@ -213,6 +229,14 @@ namespace SparkEngine {
     }
 
     bool SparkEngineGame::InitializeSystems() {
+        // Initialize collaborative development framework first
+        m_collaborativeDevelopment = std::make_unique<CollaborativeDevelopment>(
+            m_entityRegistry.get(), m_assetManager.get(), 
+            m_scriptingSystem.get(), m_graphics.get());
+        
+        if (!m_collaborativeDevelopment->Initialize("SparkEngineUser", false)) {
+            std::cerr << "Warning: Failed to initialize collaborative development framework" << std::endl;
+        }
         // Create core systems
         m_entityRegistry = std::make_unique<EntityRegistry>();
         m_systemManager = std::make_unique<SystemManager>();
@@ -287,6 +311,10 @@ namespace SparkEngine {
     }
 
     void SparkEngineGame::UpdateSystems(float deltaTime) {
+        // Update collaborative systems
+        if (m_collaborativeDevelopment) {
+            m_collaborativeDevelopment->Update(deltaTime);
+        }
         // Update all registered systems
         m_systemManager->UpdateSystems(deltaTime);
     }
@@ -301,3 +329,6 @@ namespace SparkEngine {
 		}
     }
 }
+
+
+

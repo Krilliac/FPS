@@ -1,4 +1,4 @@
-﻿// InputManager.h
+// InputManager.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -50,3 +50,4 @@ private:
     void UpdateMouseButton(int button, bool isDown);
     void UpdateMousePosition(int x, int y);
 };
+

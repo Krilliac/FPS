@@ -224,3 +224,4 @@ namespace SparkEngine {
         uint32_t GetVertexStride() const { return m_vertexStride; }
     };
 }
+

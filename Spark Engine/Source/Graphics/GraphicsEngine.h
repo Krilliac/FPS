@@ -1,4 +1,4 @@
-﻿// GraphicsEngine.h
+// GraphicsEngine.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -51,3 +51,4 @@ private:
     UINT m_windowWidth;
     UINT m_windowHeight;
 };
+

@@ -1,5 +1,6 @@
 // EditorManager.cpp
-#include "EditorManager.h"
+#include "EditorManager
+#include "Windows/CollaborationWindow.h".h"
 #include "../Graphics/RenderThreadManager.h"
 #include <imgui.h>
 #include <imgui_impl_win32.h>
@@ -29,6 +30,9 @@ bool EditorManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceCont
     AddWindow<SceneHierarchyWindow>(m_registry, [this](Entity e) { SelectEntity(e); });
     AddWindow<InspectorWindow>(m_registry);
     AddWindow<AssetBrowserWindow>();
+    if (m_collaborativeDevelopment) {
+        AddWindow<CollaborationWindow>(m_collaborativeDevelopment);
+    }
     AddWindow<ViewportWindow>(m_graphics);
 
     return true;
@@ -111,3 +115,4 @@ bool EditorManager::WantCaptureKeyboard() const {
 }
 
 } // namespace SparkEngine
+
