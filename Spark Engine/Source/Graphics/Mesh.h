@@ -1,4 +1,4 @@
-﻿// Mesh.h
+// Mesh.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -8,9 +8,9 @@
 #include <string>
 #include <cmath>
 
-using DirectX::XMFLOAT2;
-using DirectX::XMFLOAT3;
-using DirectX::XMMATRIX;
+using XMFLOAT2;
+using XMFLOAT3;
+using XMMATRIX;
 
 struct Vertex
 {
@@ -25,9 +25,9 @@ struct Vertex
         const XMFLOAT2& t)
         : Position(p), Normal(n), TexCoord(t)
     {
-        ASSERT(std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z));
-        ASSERT(std::isfinite(n.x) && std::isfinite(n.y) && std::isfinite(n.z));
-        ASSERT(std::isfinite(t.x) && std::isfinite(t.y));
+        SPARK_ASSERT(std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z));
+        SPARK_ASSERT(std::isfinite(n.x) && std::isfinite(n.y) && std::isfinite(n.z));
+        SPARK_ASSERT(std::isfinite(t.x) && std::isfinite(t.y));
     }
 };
 
@@ -77,3 +77,4 @@ private:
     unsigned int              m_indexCount{ 0 };
     bool                      m_placeholder{ false };
 };
+

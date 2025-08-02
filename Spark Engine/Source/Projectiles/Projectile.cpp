@@ -30,7 +30,7 @@ Projectile::Projectile()
 {
     // Base GameObject scale
     XMFLOAT3 scale{ 0.1f,0.1f,0.3f };
-    ASSERT_MSG(scale.x > 0 && scale.y > 0 && scale.z > 0, "Scale must be positive");
+    SPARK_ASSERT_MSG(scale.x > 0 && scale.y > 0 && scale.z > 0, "Scale must be positive");
     SetScale(scale);
 }
 
@@ -38,11 +38,11 @@ Projectile::~Projectile() = default;
 
 HRESULT Projectile::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    ASSERT_MSG(device != nullptr, "Device is null");
-    ASSERT_MSG(context != nullptr, "Context is null");
+    SPARK_ASSERT_MSG(device != nullptr, "Device is null");
+    SPARK_ASSERT_MSG(context != nullptr, "Context is null");
 
     HRESULT hr = GameObject::Initialize(device, context);
-    ASSERT_MSG(SUCCEEDED(hr), "GameObject::Initialize failed in Projectile");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "GameObject::Initialize failed in Projectile");
     if (FAILED(hr)) return hr;
 
     UpdateBoundingSphere();
@@ -51,7 +51,7 @@ HRESULT Projectile::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex
 
 void Projectile::Update(float deltaTime)
 {
-    ASSERT_MSG(deltaTime >= 0 && std::isfinite(deltaTime), "Invalid deltaTime");
+    SPARK_ASSERT_MSG(deltaTime >= 0 && std::isfinite(deltaTime), "Invalid deltaTime");
     if (!m_active) return;
 
     // Physics integration
@@ -91,7 +91,7 @@ void Projectile::Fire(const XMFLOAT3& startPosition,
     const XMFLOAT3& direction,
     float speed)
 {
-    ASSERT_MSG(speed >= 0, "Speed must be non-negative");
+    SPARK_ASSERT_MSG(speed >= 0, "Speed must be non-negative");
     SetPosition(startPosition);
     m_speed = speed;
 
@@ -125,7 +125,7 @@ void Projectile::Reset()
 
 void Projectile::OnHit(GameObject* target)
 {
-    ASSERT_MSG(target != nullptr, "OnHit target null");
+    SPARK_ASSERT_MSG(target != nullptr, "OnHit target null");
     Deactivate();
 }
 
@@ -137,7 +137,7 @@ void Projectile::OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal)
 
 void Projectile::SetGravity(bool enabled, float scale)
 {
-    ASSERT_MSG(scale >= 0, "Gravity scale must be non-negative");
+    SPARK_ASSERT_MSG(scale >= 0, "Gravity scale must be non-negative");
     m_hasGravity = enabled;
     m_gravityScale = scale;
 }

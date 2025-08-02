@@ -1,8 +1,9 @@
-﻿#include "TerrainManager.h"
+#include "TerrainManager.h"
 #include "../GraphicsEngine.h"
 #include "../../Utils/Assert.h"
 #include <algorithm>
 #include <iostream>
+#include <Game/Terrain.h>
 
 namespace SparkEngine {
     TerrainManager::TerrainManager(GraphicsEngine* graphics, EntityRegistry* registry)
@@ -14,7 +15,7 @@ namespace SparkEngine {
     }
 
     bool TerrainManager::Initialize() {
-        ASSERT(m_graphics);
+        SPARK_ASSERT(m_graphics);
 
         if (!CreateRenderingResources()) {
             std::cerr << "Failed to create terrain rendering resources" << std::endl;
@@ -64,7 +65,7 @@ namespace SparkEngine {
         }
     }
 
-    void TerrainManager::Render(const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projMatrix) {
+    void TerrainManager::Render(const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix) {
         if (!m_graphics || !m_graphics->GetContext()) return;
 
         auto context = m_graphics->GetContext();
@@ -76,14 +77,14 @@ namespace SparkEngine {
 
         // Set constant buffer
         struct TerrainConstants {
-            DirectX::XMMATRIX world;
-            DirectX::XMMATRIX view;
-            DirectX::XMMATRIX projection;
-            DirectX::XMFLOAT3 observerPos;
+            XMMATRIX world;
+            XMMATRIX view;
+            XMMATRIX projection;
+            XMFLOAT3 observerPos;
             float vertexSpacing;
         } constants;
 
-        constants.world = DirectX::XMMatrixIdentity();
+        constants.world = XMMatrixIdentity();
         constants.view = viewMatrix;
         constants.projection = projMatrix;
         constants.observerPos = m_observerPosition;
@@ -109,16 +110,16 @@ namespace SparkEngine {
         }
     }
 
-    void TerrainManager::ModifyElevation(const DirectX::XMFLOAT3& worldPos, float radius, float strength, bool raise) {
+    void TerrainManager::ModifyElevation(const XMFLOAT3& worldPos, float radius, float strength, bool raise) {
         // Find affected chunks
         std::vector<TerrainChunk*> affectedChunks;
         
-        DirectX::XMFLOAT2 centerChunk = WorldToChunkCoordinate(worldPos);
+        XMFLOAT2 centerChunk = WorldToChunkCoordinate(worldPos);
         int chunkRadius = static_cast<int>(std::ceil(radius / (m_chunkSize * m_vertexSpacing))) + 1;
         
         for (int x = -chunkRadius; x <= chunkRadius; ++x) {
             for (int z = -chunkRadius; z <= chunkRadius; ++z) {
-                DirectX::XMFLOAT2 chunkCoord = {centerChunk.x + x, centerChunk.y + z};
+                XMFLOAT2 chunkCoord = {centerChunk.x + x, centerChunk.y + z};
                 TerrainChunk* chunk = GetChunk(chunkCoord);
                 if (!chunk) {
                     chunk = CreateChunk(chunkCoord);
@@ -135,7 +136,7 @@ namespace SparkEngine {
             
             for (uint32_t z = 0; z < m_chunkSize; ++z) {
                 for (uint32_t x = 0; x < m_chunkSize; ++x) {
-                    DirectX::XMFLOAT3 vertexWorldPos = {
+                    XMFLOAT3 vertexWorldPos = {
                         chunk->worldPosition.x + x * m_vertexSpacing,
                         0.0f,
                         chunk->worldPosition.y + z * m_vertexSpacing
@@ -166,13 +167,13 @@ namespace SparkEngine {
         }
     }
 
-    TerrainChunk* TerrainManager::GetChunk(const DirectX::XMFLOAT2& chunkCoordinate) {
+    TerrainChunk* TerrainManager::GetChunk(const XMFLOAT2& chunkCoordinate) {
         uint64_t key = GetChunkKey(chunkCoordinate);
         auto it = m_chunks.find(key);
         return (it != m_chunks.end()) ? it->second.get() : nullptr;
     }
 
-    TerrainChunk* TerrainManager::CreateChunk(const DirectX::XMFLOAT2& chunkCoordinate) {
+    TerrainChunk* TerrainManager::CreateChunk(const XMFLOAT2& chunkCoordinate) {
         uint64_t key = GetChunkKey(chunkCoordinate);
         
         auto chunk = std::make_unique<TerrainChunk>();
@@ -321,13 +322,13 @@ namespace SparkEngine {
         return true; // Simplified for now
     }
 
-    uint64_t TerrainManager::GetChunkKey(const DirectX::XMFLOAT2& chunkCoordinate) {
+    uint64_t TerrainManager::GetChunkKey(const XMFLOAT2& chunkCoordinate) {
         uint32_t x = static_cast<uint32_t>(chunkCoordinate.x);
         uint32_t z = static_cast<uint32_t>(chunkCoordinate.y);
         return (static_cast<uint64_t>(x) << 32) | z;
     }
 
-    DirectX::XMFLOAT2 TerrainManager::WorldToChunkCoordinate(const DirectX::XMFLOAT3& worldPos) {
+    XMFLOAT2 TerrainManager::WorldToChunkCoordinate(const XMFLOAT3& worldPos) {
         float chunkSize = (m_chunkSize - 1) * m_vertexSpacing;
         return {
             std::floor(worldPos.x / chunkSize),
@@ -335,3 +336,4 @@ namespace SparkEngine {
         };
     }
 }
+

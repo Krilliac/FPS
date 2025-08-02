@@ -1,4 +1,85 @@
 #pragma once
+#include "../Core/ThreadPool.h" // Include the ThreadPool header
+
+class AssetManager {
+private:
+    std::unique_ptr<ThreadPool> m_threadPool; // Declare m_threadPool
+    // Other existing members...
+};
+#pragma once
+#include <vector>
+#include <thread>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <functional>
+#include <atomic>
+
+class ThreadPool {
+public:
+    explicit ThreadPool(size_t threadCount);
+    ~ThreadPool();
+
+    void enqueue(std::function<void()> task);
+    void shutdown();
+
+private:
+    void workerThread();
+
+    std::vector<std::thread> m_threads;
+    std::queue<std::function<void()>> m_taskQueue;
+    std::mutex m_queueMutex;
+    std::condition_variable m_condition;
+    std::atomic<bool> m_running{true};
+};
+#include "ThreadPool.h"
+
+ThreadPool::ThreadPool(size_t threadCount) {
+    for (size_t i = 0; i < threadCount; ++i) {
+        m_threads.emplace_back(&ThreadPool::workerThread, this);
+    }
+}
+
+ThreadPool::~ThreadPool() {
+    shutdown();
+}
+
+void ThreadPool::enqueue(std::function<void()> task) {
+    {
+        std::lock_guard<std::mutex> lock(m_queueMutex);
+        m_taskQueue.push(std::move(task));
+    }
+    m_condition.notify_one();
+}
+
+void ThreadPool::shutdown() {
+    {
+        std::lock_guard<std::mutex> lock(m_queueMutex);
+        m_running = false;
+    }
+    m_condition.notify_all();
+    for (auto& thread : m_threads) {
+        if (thread.joinable()) {
+            thread.join();
+        }
+    }
+}
+
+void ThreadPool::workerThread() {
+    while (true) {
+        std::function<void()> task;
+        {
+            std::unique_lock<std::mutex> lock(m_queueMutex);
+            m_condition.wait(lock, [this]() { return !m_running || !m_taskQueue.empty(); });
+            if (!m_running && m_taskQueue.empty()) {
+                return;
+            }
+            task = std::move(m_taskQueue.front());
+            m_taskQueue.pop();
+        }
+        task();
+    }
+}
 #include "../Core/framework.h"
 #include <unordered_map>
 #include <memory>

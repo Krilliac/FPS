@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../Assets/AssetManager.h"
 #include "../Networking/NetworkCore.h"
@@ -49,7 +49,7 @@ namespace SparkEngine {
 
         // Asset streaming
         void RequestAsset(const std::string& assetId, AssetType type, uint32_t priority = 1);
-        void StreamAssetsInRadius(const DirectX::XMFLOAT3& position);
+        void StreamAssetsInRadius(const XMFLOAT3& position);
         void UnstreamAsset(const std::string& assetId);
         
         // Hot reloading
@@ -66,7 +66,7 @@ namespace SparkEngine {
         void ReloadModifiedAssets();
         
         // Asset discovery
-        std::vector<std::string> DiscoverAssetsInRange(const DirectX::XMFLOAT3& position, float radius);
+        std::vector<std::string> DiscoverAssetsInRange(const XMFLOAT3& position, float radius);
         std::vector<std::string> GetAssetDependencies(const std::string& assetId);
 
         // Pipeline statistics
@@ -77,6 +77,7 @@ namespace SparkEngine {
         void PipelineThreadFunction();
         void ProcessAssetRequest(const AssetRequest& request);
         void HandleAssetResponse(const NetworkPacket& packet);
-        bool ShouldStreamAsset(const std::string& assetId, const DirectX::XMFLOAT3& position);
+        bool ShouldStreamAsset(const std::string& assetId, const XMFLOAT3& position);
     };
 }
+

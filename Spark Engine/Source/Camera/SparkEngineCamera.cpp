@@ -18,7 +18,7 @@ using namespace DirectX;
 
 void SparkEngineCamera::Initialize(float aspectRatio)
 {
-    ASSERT_MSG(aspectRatio > 0.0f, "Aspect ratio must be positive");
+    SPARK_ASSERT_MSG(aspectRatio > 0.0f, "Aspect ratio must be positive");
     m_projectionMatrix = XMMatrixPerspectiveFovLH(
         m_defaultFov, aspectRatio, 0.1f, 1000.0f);
     UpdateViewMatrix();
@@ -46,14 +46,14 @@ void SparkEngineCamera::UpdateViewMatrix()
 
 void SparkEngineCamera::Update(float deltaTime)
 {
-    ASSERT_MSG(deltaTime >= 0.0f && std::isfinite(deltaTime),
+    SPARK_ASSERT_MSG(deltaTime >= 0.0f && std::isfinite(deltaTime),
         "Camera Update deltaTime must be non-negative and finite");
     UpdateViewMatrix();
 }
 
 void SparkEngineCamera::MoveForward(float amount)
 {
-    ASSERT_MSG(std::isfinite(amount), "Move amount must be finite");
+    SPARK_ASSERT_MSG(std::isfinite(amount), "Move amount must be finite");
     XMVECTOR p = XMLoadFloat3(&m_position);
     XMVECTOR f = XMLoadFloat3(&m_forward);
     p = XMVectorAdd(p, XMVectorScale(f, amount * m_moveSpeed));
@@ -63,7 +63,7 @@ void SparkEngineCamera::MoveForward(float amount)
 
 void SparkEngineCamera::MoveRight(float amount)
 {
-    ASSERT_MSG(std::isfinite(amount), "Move amount must be finite");
+    SPARK_ASSERT_MSG(std::isfinite(amount), "Move amount must be finite");
     XMVECTOR p = XMLoadFloat3(&m_position);
     XMVECTOR r = XMLoadFloat3(&m_right);
     p = XMVectorAdd(p, XMVectorScale(r, amount * m_moveSpeed));
@@ -73,7 +73,7 @@ void SparkEngineCamera::MoveRight(float amount)
 
 void SparkEngineCamera::MoveUp(float amount)
 {
-    ASSERT_MSG(std::isfinite(amount), "Move amount must be finite");
+    SPARK_ASSERT_MSG(std::isfinite(amount), "Move amount must be finite");
     XMVECTOR p = XMLoadFloat3(&m_position);
     XMVECTOR u = XMLoadFloat3(&m_up);
     p = XMVectorAdd(p, XMVectorScale(u, amount * m_moveSpeed));
@@ -83,7 +83,7 @@ void SparkEngineCamera::MoveUp(float amount)
 
 void SparkEngineCamera::Pitch(float angle)
 {
-    ASSERT_MSG(std::isfinite(angle), "Angle must be finite");
+    SPARK_ASSERT_MSG(std::isfinite(angle), "Angle must be finite");
     m_pitch = std::clamp(
         m_pitch + angle * m_rotationSpeed,
         -XM_PIDIV2 + 0.01f,
@@ -93,7 +93,7 @@ void SparkEngineCamera::Pitch(float angle)
 
 void SparkEngineCamera::Yaw(float angle)
 {
-    ASSERT_MSG(std::isfinite(angle), "Angle must be finite");
+    SPARK_ASSERT_MSG(std::isfinite(angle), "Angle must be finite");
     m_yaw += angle * m_rotationSpeed;
     if (m_yaw > XM_2PI) m_yaw -= XM_2PI;
     if (m_yaw < 0.0f)   m_yaw += XM_2PI;
@@ -102,7 +102,7 @@ void SparkEngineCamera::Yaw(float angle)
 
 void SparkEngineCamera::Roll(float angle)
 {
-    ASSERT_MSG(std::isfinite(angle), "Roll angle must be finite");
+    SPARK_ASSERT_MSG(std::isfinite(angle), "Roll angle must be finite");
     m_roll += angle * m_rotationSpeed;
     if (m_roll > XM_2PI) m_roll -= XM_2PI;
     if (m_roll < 0.0f)   m_roll += XM_2PI;
@@ -113,13 +113,13 @@ void SparkEngineCamera::SetZoom(bool enabled)
 {
     // Pick FOV
     float fov = enabled ? m_zoomedFov : m_defaultFov;
-    ASSERT_MSG(fov > 0.0f && fov < XM_PI, "Invalid FOV");
+    SPARK_ASSERT_MSG(fov > 0.0f && fov < XM_PI, "Invalid FOV");
 
     // Extract aspect ratio from previous projection
     XMFLOAT4X4 m;
     XMStoreFloat4x4(&m, m_projectionMatrix);
     float aspect = m._11 / m._22;
-    ASSERT_MSG(aspect > 0.0f, "Invalid aspect ratio");
+    SPARK_ASSERT_MSG(aspect > 0.0f, "Invalid aspect ratio");
 
     m_projectionMatrix = XMMatrixPerspectiveFovLH(
         fov, aspect, 0.1f, 1000.0f);

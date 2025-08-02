@@ -1,37 +1,59 @@
-﻿#pragma once
+#pragma once
 
-#include "targetver.h"
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
+#endif
 
-// DirectX Headers
+#include <windows.h>
 #include <d3d11_1.h>
-#include <dxgi1_2.h>
-#include <d3dcompiler.h>
-#include <DirectXMath.h>
-#include <DirectXColors.h>
+#include <dxgi1_6.h>
+#include <dxgidebug.h>
 #include <wrl/client.h>
 
-// Standard Library
+// DirectXMath
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
+
+// STL
 #include <memory>
 #include <string>
 #include <vector>
-#include <array>
-#include <algorithm>
-#include <iostream>
+#include <unordered_map>
+#include <functional>
+#include <mutex>
+#include <future>
 #include <fstream>
-#include <sstream>
+#include <filesystem>
+#include <iostream>
+#include <thread>
+#include <atomic>
+#include <queue>
+#include <condition_variable>
+#include <cassert>
 
-// Link required libraries
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib") 
-#pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "winmm.lib")
+// DirectX namespace and ComPtr<using> namespace DirectX;
+// ComPtr alias removed; defined in framework.h
 
-using namespace DirectX;
-template<class T>
-using ComPtr = Microsoft::WRL::ComPtr<T>;
+// Typedefs
+typedef XMFLOAT2 Float2;
+typedef XMFLOAT3 Float3;
+typedef XMFLOAT4 Float4;
+typedef XMMATRIX Matrix;
+typedef XMVECTOR Vector;
+
+// EnTT forward declare
+#ifdef ENTT_AVAILABLE
+namespace entt { enum class entity : std::uint32_t {}; template<typename E> class basic_registry; }
+#endif
+
+namespace SparkEngine {
+    #ifdef ENTT_AVAILABLE
+    using Entity = entt::entity;
+    #else
+    using Entity = std::uint32_t;
+    #endif
+    class EntityRegistry;
+    class AssetManager;
+    class GraphicsEngine;
+}
+

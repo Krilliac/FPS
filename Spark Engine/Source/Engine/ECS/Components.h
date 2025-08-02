@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <entt/entt.hpp>
 #include <DirectXMath.h>
 #include <string>
@@ -41,12 +41,12 @@ struct NameComponent {
 };
 
 struct Transform {
-    DirectX::XMFLOAT3 position{0,0,0};
-    DirectX::XMFLOAT3 rotation{0,0,0};
-    DirectX::XMFLOAT3 scale{1,1,1};
+    XMFLOAT3 position{0,0,0};
+    XMFLOAT3 rotation{0,0,0};
+    XMFLOAT3 scale{1,1,1};
     EntityID parent = entt::null;
     
-    DirectX::XMMATRIX GetWorldMatrix() const;
+    XMMATRIX GetWorldMatrix() const;
 };
 
 struct MeshRenderer {
@@ -71,4 +71,5 @@ struct Script {
     bool enabled = true;
     bool started = false;
 };
+
 

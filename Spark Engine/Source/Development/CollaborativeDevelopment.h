@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../Development/MultiUserFramework.h"
 #include "../Content/ContentSynchronizer.h"
@@ -47,7 +47,7 @@ namespace SparkEngine {
         // Content development
         void EnableRealTimeContentSync(bool enable);
         void SetContentBrushSettings(float radius, float intensity);
-        void ModifyContent(const DirectX::XMFLOAT3& position, bool elevate = true);
+        void ModifyContent(const XMFLOAT3& position, bool elevate = true);
         
         // Distributed networking
         bool StartNetworkHost(uint16_t port = 7777);
@@ -66,7 +66,7 @@ namespace SparkEngine {
         // Streaming asset control
         void EnableStreamingAssets(bool enable);
         void SetStreamingDistance(float distance);
-        void PreloadArea(const DirectX::XMFLOAT3& center, float radius);
+        void PreloadArea(const XMFLOAT3& center, float radius);
 
         // System accessors
         MultiUserFramework* GetMultiUserFramework() const { return m_multiUserFramework.get(); }
@@ -87,3 +87,4 @@ namespace SparkEngine {
         void HandleDevelopmentEvent(const DevelopmentEvent& event);
     };
 }
+

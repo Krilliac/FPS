@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0A00
@@ -9,8 +9,8 @@
 #include <algorithm>           // std::clamp
 #include "Utils/Assert.h"      // custom assert
 
-using DirectX::XMFLOAT3;
-using DirectX::XMMATRIX;
+using XMFLOAT3;
+using XMMATRIX;
 
 class SparkEngineCamera
 {
@@ -26,8 +26,8 @@ private:
 
     float m_moveSpeed{ 10.0f };
     float m_rotationSpeed{ 2.0f };
-    float m_defaultFov{ DirectX::XM_PIDIV2 };
-    float m_zoomedFov{ DirectX::XM_PIDIV2 / 2.0f };
+    float m_defaultFov{ XM_PIDIV2 };
+    float m_zoomedFov{ XM_PIDIV2 / 2.0f };
 
 public:
     SparkEngineCamera() = default;

@@ -22,11 +22,11 @@ HRESULT Terrain::Initialize(ID3D11Device* device,
     const wchar_t* file,
     UINT w, UINT h, float s)
 {
-    ASSERT(device != nullptr);
-    ASSERT(ctx != nullptr);
-    ASSERT_MSG(file != nullptr, "Heightmap file path null");
-    ASSERT_MSG(w > 1 && h > 1, "Terrain dimensions must be >1");
-    ASSERT_MSG(s > 0, "Cell spacing must be positive");
+    SPARK_ASSERT(device != nullptr);
+    SPARK_ASSERT(ctx != nullptr);
+    SPARK_ASSERT_MSG(file != nullptr, "Heightmap file path null");
+    SPARK_ASSERT_MSG(w > 1 && h > 1, "Terrain dimensions must be >1");
+    SPARK_ASSERT_MSG(s > 0, "Cell spacing must be positive");
 
     // 1) Read raw 8-bit BMP after 54-byte header
     std::vector<uint8_t> data(w * h);
@@ -55,7 +55,7 @@ HRESULT Terrain::Initialize(ID3D11Device* device,
     sd.pSysMem = m_vertices.data();
 
     HRESULT hr = device->CreateBuffer(&bd, &sd, &m_vb);
-    ASSERT_MSG(SUCCEEDED(hr), "Terrain vertex buffer creation failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "Terrain vertex buffer creation failed");
     if (FAILED(hr)) return hr;
 
     // 4) Create IB
@@ -65,7 +65,7 @@ HRESULT Terrain::Initialize(ID3D11Device* device,
     sd.pSysMem = m_indices.data();
 
     hr = device->CreateBuffer(&bd, &sd, &m_ib);
-    ASSERT_MSG(SUCCEEDED(hr), "Terrain index buffer creation failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "Terrain index buffer creation failed");
     m_indexCount = UINT(m_indices.size());
     return hr;
 }
@@ -73,7 +73,7 @@ HRESULT Terrain::Initialize(ID3D11Device* device,
 void Terrain::BuildMesh(const std::vector<uint8_t>& h,
     UINT w, UINT hgt, float s)
 {
-    ASSERT_MSG(h.size() == w * hgt, "Height data size mismatch");
+    SPARK_ASSERT_MSG(h.size() == w * hgt, "Height data size mismatch");
 
     m_vertices.resize(static_cast<std::vector<TerrainVertex, std::allocator<TerrainVertex>>::size_type>(w) * hgt);
     m_indices.clear();
@@ -108,7 +108,7 @@ void Terrain::BuildMesh(const std::vector<uint8_t>& h,
 
 void Terrain::CalculateNormals()
 {
-    ASSERT(!m_vertices.empty() && !m_indices.empty());
+    SPARK_ASSERT(!m_vertices.empty() && !m_indices.empty());
 
     // Zero normals
     for (auto& v : m_vertices)
@@ -143,10 +143,10 @@ void Terrain::CalculateNormals()
 
 void Terrain::Render(ID3D11DeviceContext* ctx)
 {
-    ASSERT(ctx != nullptr);
-    ASSERT(m_vb != nullptr);
-    ASSERT(m_ib != nullptr);
-    ASSERT(m_indexCount > 0);
+    SPARK_ASSERT(ctx != nullptr);
+    SPARK_ASSERT(m_vb != nullptr);
+    SPARK_ASSERT(m_ib != nullptr);
+    SPARK_ASSERT(m_indexCount > 0);
 
     UINT stride = sizeof(TerrainVertex), offset = 0;
     ctx->IASetVertexBuffers(0, 1, &m_vb, &stride, &offset);

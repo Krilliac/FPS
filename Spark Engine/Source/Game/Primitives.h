@@ -1,11 +1,11 @@
-﻿// Primitives.h
+// Primitives.h
 #pragma once
 
 #include "Utils/Assert.h"
 #include "..\Graphics\Mesh.h"    // MeshData
 #include <DirectXMath.h>
-using DirectX::XMFLOAT3;
-using DirectX::XMFLOAT2;
+using XMFLOAT3;
+using XMFLOAT2;
 
 // Procedural primitive mesh generators
 namespace Primitives

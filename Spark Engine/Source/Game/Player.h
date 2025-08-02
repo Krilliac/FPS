@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "GameObject.h"
 #include "Utils/Assert.h"
@@ -22,8 +22,8 @@ public:
         InputManager* input);
 
     void Update(float dt) override;
-    void Render(const DirectX::XMMATRIX& view,
-        const DirectX::XMMATRIX& proj) override;
+    void Render(const XMMATRIX& view,
+        const XMMATRIX& proj) override;
 
     // Damage & healing
     void TakeDamage(float dmg);
@@ -53,8 +53,8 @@ public:
 
     // Hit callbacks
     void OnHit(GameObject* target) override;
-    void OnHitWorld(const DirectX::XMFLOAT3& hitPoint,
-        const DirectX::XMFLOAT3& normal) override;
+    void OnHitWorld(const XMFLOAT3& hitPoint,
+        const XMFLOAT3& normal) override;
 
 private:
     // Stats
@@ -64,7 +64,7 @@ private:
     float m_speed{ 5 }, m_jumpHeight{ 3 };
 
     // Movement
-    DirectX::XMFLOAT3 m_velocity{};
+    XMFLOAT3 m_velocity{};
     bool m_isGrounded{ true }, m_isRunning{ false },
         m_isCrouching{ false }, m_isJumping{ false };
 
@@ -95,5 +95,5 @@ private:
     void HandleFootsteps(float dt);
 
     WeaponStats       GetWeaponStats(WeaponType type);
-    DirectX::XMFLOAT3 CalculateFireDirection();
+    XMFLOAT3 CalculateFireDirection();
 };

@@ -1,4 +1,4 @@
-﻿// Terrain.h
+// Terrain.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -6,8 +6,8 @@
 #include <DirectXMath.h>
 #include <vector>
 
-using DirectX::XMFLOAT3;
-using DirectX::XMFLOAT2;
+using XMFLOAT3;
+using XMFLOAT2;
 
 struct TerrainVertex {
     XMFLOAT3 Position;

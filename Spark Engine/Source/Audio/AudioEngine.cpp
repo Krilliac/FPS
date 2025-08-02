@@ -31,15 +31,15 @@ AudioEngine::~AudioEngine()
 
 HRESULT AudioEngine::Initialize(size_t maxSources)
 {
-    ASSERT_MSG(maxSources > 0, "AudioEngine maxSources must be positive");
+    SPARK_ASSERT_MSG(maxSources > 0, "AudioEngine maxSources must be positive");
     m_maxSources = maxSources;
 
     HRESULT hr = XAudio2Create(&m_xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
-    ASSERT_MSG(SUCCEEDED(hr), "XAudio2Create failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "XAudio2Create failed");
     if (FAILED(hr)) return hr;
 
     hr = m_xAudio2->CreateMasteringVoice(&m_masterVoice);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateMasteringVoice failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateMasteringVoice failed");
     if (FAILED(hr)) return hr;
 
     m_audioSources.clear();
@@ -84,12 +84,12 @@ void AudioEngine::Shutdown()
 
 HRESULT AudioEngine::LoadSound(const std::string& name, const std::wstring& filename)
 {
-    ASSERT_MSG(!name.empty(), "Sound name must be non-empty");
+    SPARK_ASSERT_MSG(!name.empty(), "Sound name must be non-empty");
     auto sound = std::make_unique<SoundEffect>();
     ASSERT_NOT_NULL(sound.get());
 
     HRESULT hr = sound->LoadFromFile(filename);
-    ASSERT_MSG(SUCCEEDED(hr), "SoundEffect::LoadFromFile failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "SoundEffect::LoadFromFile failed");
     if (FAILED(hr)) return hr;
 
     m_soundEffects[name] = std::move(sound);
@@ -119,7 +119,7 @@ SoundEffect* AudioEngine::GetSound(const std::string& name)
 AudioSource* AudioEngine::PlaySound(const std::string& name,
     float volume, float pitch, bool loop)
 {
-    ASSERT_MSG(!name.empty(), "Sound name must be non-empty");
+    SPARK_ASSERT_MSG(!name.empty(), "Sound name must be non-empty");
     SoundEffect* sound = GetSound(name);
     ASSERT_NOT_NULL(sound);
 
@@ -130,12 +130,12 @@ AudioSource* AudioEngine::PlaySound(const std::string& name,
     if (!src->Voice)
     {
         HRESULT hr = CreateSourceVoice(sound->GetFormat(), &src->Voice);
-        ASSERT_MSG(SUCCEEDED(hr), "CreateSourceVoice failed");
+        SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateSourceVoice failed");
         if (FAILED(hr)) return nullptr;
     }
 
-    ASSERT_MSG(volume >= 0.0f && volume <= 1.0f, "Volume out of range");
-    ASSERT_MSG(pitch > 0.0f, "Pitch must be positive");
+    SPARK_ASSERT_MSG(volume >= 0.0f && volume <= 1.0f, "Volume out of range");
+    SPARK_ASSERT_MSG(pitch > 0.0f, "Pitch must be positive");
 
     src->Sound = sound;
     src->Volume = volume * m_sfxVolume * m_masterVolume;
@@ -149,13 +149,13 @@ AudioSource* AudioEngine::PlaySound(const std::string& name,
 
     XAUDIO2_BUFFER buffer = {};
     buffer.AudioBytes = sound->GetDataSize();
-    ASSERT_MSG(buffer.AudioBytes > 0, "Empty audio data");
+    SPARK_ASSERT_MSG(buffer.AudioBytes > 0, "Empty audio data");
     buffer.pAudioData = sound->GetData();
     buffer.Flags = XAUDIO2_END_OF_STREAM;
     if (loop) buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
     HRESULT hr = src->Voice->SubmitSourceBuffer(&buffer);
-    ASSERT_MSG(SUCCEEDED(hr), "SubmitSourceBuffer failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "SubmitSourceBuffer failed");
     if (FAILED(hr)) return nullptr;
 
     src->Voice->Start();
@@ -261,6 +261,6 @@ void AudioEngine::UpdateSources()
 
 HRESULT AudioEngine::CreateSourceVoice(const WAVEFORMATEX& format, IXAudio2SourceVoice** voice)
 {
-    ASSERT_MSG(m_xAudio2 != nullptr, "XAudio2 not initialized");
+    SPARK_ASSERT_MSG(m_xAudio2 != nullptr, "XAudio2 not initialized");
     return m_xAudio2->CreateSourceVoice(voice, &format);
 }

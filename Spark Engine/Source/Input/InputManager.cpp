@@ -34,7 +34,7 @@ InputManager::~InputManager()
 
 void InputManager::Initialize(HWND hwnd)
 {
-    ASSERT_MSG(hwnd != nullptr, "InputManager::Initialize - hwnd is null");
+    SPARK_ASSERT_MSG(hwnd != nullptr, "InputManager::Initialize - hwnd is null");
     m_hwnd = hwnd;
 
     RECT rect;
@@ -49,7 +49,7 @@ void InputManager::Initialize(HWND hwnd)
 
 void InputManager::Update()
 {
-    ASSERT_MSG(m_hwnd != nullptr, "InputManager::Update - hwnd not initialized");
+    SPARK_ASSERT_MSG(m_hwnd != nullptr, "InputManager::Update - hwnd not initialized");
 
     m_prevKeyStates = m_keyStates;
     memcpy(m_prevMouseButtons, m_mouseButtons, sizeof(m_mouseButtons));
@@ -122,7 +122,7 @@ void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
 
 bool InputManager::IsKeyDown(int key) const
 {
-    ASSERT_MSG(key >= 0, "IsKeyDown - invalid key code");
+    SPARK_ASSERT_MSG(key >= 0, "IsKeyDown - invalid key code");
     auto it = m_keyStates.find(key);
     return it != m_keyStates.end() && it->second;
 }
@@ -134,7 +134,7 @@ bool InputManager::IsKeyUp(int key) const
 
 bool InputManager::WasKeyPressed(int key) const
 {
-    ASSERT_MSG(key >= 0, "WasKeyPressed - invalid key code");
+    SPARK_ASSERT_MSG(key >= 0, "WasKeyPressed - invalid key code");
     bool curr = IsKeyDown(key);
     bool prev = m_prevKeyStates.count(key) ? m_prevKeyStates.at(key) : false;
     return curr && !prev;
@@ -142,7 +142,7 @@ bool InputManager::WasKeyPressed(int key) const
 
 bool InputManager::WasKeyReleased(int key) const
 {
-    ASSERT_MSG(key >= 0, "WasKeyReleased - invalid key code");
+    SPARK_ASSERT_MSG(key >= 0, "WasKeyReleased - invalid key code");
     bool curr = IsKeyDown(key);
     bool prev = m_prevKeyStates.count(key) ? m_prevKeyStates.at(key) : false;
     return !curr && prev;
@@ -150,19 +150,19 @@ bool InputManager::WasKeyReleased(int key) const
 
 bool InputManager::IsMouseButtonDown(int button) const
 {
-    ASSERT_MSG(button >= 0 && button < 3, "IsMouseButtonDown - invalid button");
+    SPARK_ASSERT_MSG(button >= 0 && button < 3, "IsMouseButtonDown - invalid button");
     return m_mouseButtons[button];
 }
 
 bool InputManager::WasMouseButtonPressed(int button) const
 {
-    ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonPressed - invalid button");
+    SPARK_ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonPressed - invalid button");
     return m_mouseButtons[button] && !m_prevMouseButtons[button];
 }
 
 bool InputManager::WasMouseButtonReleased(int button) const
 {
-    ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonReleased - invalid button");
+    SPARK_ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonReleased - invalid button");
     return !m_mouseButtons[button] && m_prevMouseButtons[button];
 }
 
@@ -183,14 +183,14 @@ void InputManager::CaptureMouse(bool capture)
 {
     if (capture)
     {
-        ASSERT_MSG(!m_mouseCaptured, "CaptureMouse: already captured");
+        SPARK_ASSERT_MSG(!m_mouseCaptured, "CaptureMouse: already captured");
         SetCapture(m_hwnd);
         ShowCursor(FALSE);
         m_mouseCaptured = true;
     }
     else
     {
-        ASSERT_MSG(m_mouseCaptured, "CaptureMouse: not captured");
+        SPARK_ASSERT_MSG(m_mouseCaptured, "CaptureMouse: not captured");
         ReleaseCapture();
         ShowCursor(TRUE);
         m_mouseCaptured = false;
@@ -199,7 +199,7 @@ void InputManager::CaptureMouse(bool capture)
 
 void InputManager::UpdateKeyState(int key, bool isDown)
 {
-    ASSERT_MSG(key >= 0, "UpdateKeyState - invalid key code");
+    SPARK_ASSERT_MSG(key >= 0, "UpdateKeyState - invalid key code");
     m_keyStates[key] = isDown;
     if (key == VK_ESCAPE && !isDown && m_mouseCaptured)
         CaptureMouse(false);
@@ -207,7 +207,7 @@ void InputManager::UpdateKeyState(int key, bool isDown)
 
 void InputManager::UpdateMouseButton(int button, bool isDown)
 {
-    ASSERT_MSG(button >= 0 && button < 3, "UpdateMouseButton - invalid button");
+    SPARK_ASSERT_MSG(button >= 0 && button < 3, "UpdateMouseButton - invalid button");
     m_mouseButtons[button] = isDown;
 }
 

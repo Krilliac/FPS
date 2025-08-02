@@ -16,14 +16,14 @@
 #include "..\Projectiles\Rocket.h"
 #include "..\Projectiles\Grenade.h"
 
-using DirectX::XMFLOAT3;
+using XMFLOAT3;
 
 ProjectilePool::ProjectilePool(size_t poolSize)
     : m_poolSize(poolSize)
     , m_device(nullptr)
     , m_context(nullptr)
 {
-    ASSERT_MSG(poolSize > 0, "ProjectilePool size must be positive");
+    SPARK_ASSERT_MSG(poolSize > 0, "ProjectilePool size must be positive");
 }
 
 ProjectilePool::~ProjectilePool()
@@ -33,8 +33,8 @@ ProjectilePool::~ProjectilePool()
 
 HRESULT ProjectilePool::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    ASSERT_MSG(device != nullptr, "ProjectilePool::Initialize device is null");
-    ASSERT_MSG(context != nullptr, "ProjectilePool::Initialize context is null");
+    SPARK_ASSERT_MSG(device != nullptr, "ProjectilePool::Initialize device is null");
+    SPARK_ASSERT_MSG(context != nullptr, "ProjectilePool::Initialize context is null");
 
     m_device = device;
     m_context = context;
@@ -59,7 +59,7 @@ void ProjectilePool::CreateProjectiles()
         for (size_t i = 0; i < count; ++i)
         {
             auto p = TypeFactory();
-            ASSERT_MSG(p != nullptr, "Failed to create projectile");
+            SPARK_ASSERT_MSG(p != nullptr, "Failed to create projectile");
             if (SUCCEEDED(p->Initialize(m_device, m_context)))
             {
                 m_availableProjectiles.push(p.get());
@@ -72,12 +72,12 @@ void ProjectilePool::CreateProjectiles()
     makeAndStore([] { return std::make_unique<Rocket>(); }, rocketsCount);
     makeAndStore([] { return std::make_unique<Grenade>(); }, grenadesCount);
 
-    ASSERT_MSG(m_projectiles.size() == m_poolSize, "Some projectiles failed to initialize");
+    SPARK_ASSERT_MSG(m_projectiles.size() == m_poolSize, "Some projectiles failed to initialize");
 }
 
 void ProjectilePool::Update(float deltaTime)
 {
-    ASSERT_MSG(deltaTime >= 0.0f && std::isfinite(deltaTime), "Invalid deltaTime in ProjectilePool::Update");
+    SPARK_ASSERT_MSG(deltaTime >= 0.0f && std::isfinite(deltaTime), "Invalid deltaTime in ProjectilePool::Update");
 
     for (auto& up : m_projectiles)
     {
@@ -90,7 +90,7 @@ void ProjectilePool::Update(float deltaTime)
     }
 }
 
-void ProjectilePool::Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection)
+void ProjectilePool::Render(const XMMATRIX& view, const XMMATRIX& projection)
 {
     for (auto& up : m_projectiles)
     {
@@ -117,28 +117,28 @@ Projectile* ProjectilePool::GetProjectile()
 
 void ProjectilePool::ReturnProjectile(Projectile* p)
 {
-    ASSERT_MSG(p != nullptr, "ReturnProjectile null pointer");
+    SPARK_ASSERT_MSG(p != nullptr, "ReturnProjectile null pointer");
     p->Reset();
     m_availableProjectiles.push(p);
 }
 
 void ProjectilePool::FireBullet(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
-    ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireBullet");
+    SPARK_ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireBullet");
     if (auto p = GetProjectile())
         p->Fire(pos, dir, speed);
 }
 
 void ProjectilePool::FireRocket(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
-    ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireRocket");
+    SPARK_ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireRocket");
     if (auto p = GetProjectile())
         p->Fire(pos, dir, speed);
 }
 
 void ProjectilePool::FireGrenade(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
-    ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireGrenade");
+    SPARK_ASSERT_MSG(speed >= 0.0f, "Speed must be non-negative in FireGrenade");
     if (auto p = GetProjectile())
     {
         p->SetGravity(true, 1.0f);
@@ -154,7 +154,7 @@ void ProjectilePool::FireProjectile(ProjectileType type, const XMFLOAT3& pos, co
     case ProjectileType::ROCKET:  FireRocket(pos, dir, speed); break;
     case ProjectileType::GRENADE: FireGrenade(pos, dir, speed); break;
     default:
-        ASSERT_MSG(false, "Unknown ProjectileType in FireProjectile");
+        SPARK_ASSERT_MSG(false, "Unknown ProjectileType in FireProjectile");
     }
 }
 
@@ -170,3 +170,4 @@ size_t ProjectilePool::GetAvailableCount() const
 {
     return m_availableProjectiles.size();
 }
+

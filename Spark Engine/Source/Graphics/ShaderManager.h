@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <memory>
 
-using Microsoft::WRL::ComPtr;
+// ComPtr<using> declaration removed - defined in framework.h
 
 namespace SparkEngine {
     enum class ShaderType {
@@ -147,3 +147,4 @@ namespace SparkEngine {
         float m_lastHotReloadCheck = 0.0f;
     };
 }
+

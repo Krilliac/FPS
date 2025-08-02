@@ -1,4 +1,4 @@
-﻿// SphereObject.h
+// SphereObject.h
 #pragma once
 
 #include "GameObject.h"
@@ -8,8 +8,8 @@
 #include <DirectXMath.h>
 #include <string>
 
-using DirectX::XMFLOAT3;
-using DirectX::XMMATRIX;
+using XMFLOAT3;
+using XMMATRIX;
 
 class SphereObject : public GameObject
 {

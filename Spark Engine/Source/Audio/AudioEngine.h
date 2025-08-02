@@ -1,4 +1,4 @@
-﻿// AudioEngine.h
+// AudioEngine.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -10,8 +10,8 @@
 #include <vector>
 #include <memory>
 
-using DirectX::XMFLOAT3;
-using DirectX::XMMATRIX;
+using XMFLOAT3;
+using XMMATRIX;
 
 struct AudioSource
 {

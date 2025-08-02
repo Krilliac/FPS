@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include <d3d11_1.h>
 #include <DirectXMath.h>
@@ -7,15 +7,15 @@
 #include <memory>
 #include <unordered_map>
 
-using Microsoft::WRL::ComPtr;
+// ComPtr<using> declaration removed - defined in framework.h
 
 namespace SparkEngine {
     struct Vertex {
-        DirectX::XMFLOAT3 position;
-        DirectX::XMFLOAT3 normal;
-        DirectX::XMFLOAT2 texCoord;
-        DirectX::XMFLOAT3 tangent;
-        DirectX::XMFLOAT3 bitangent;
+        XMFLOAT3 position;
+        XMFLOAT3 normal;
+        XMFLOAT2 texCoord;
+        XMFLOAT3 tangent;
+        XMFLOAT3 bitangent;
     };
 
     struct SubMesh {
@@ -23,8 +23,8 @@ namespace SparkEngine {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         uint32_t materialIndex = 0;
-        DirectX::XMFLOAT3 boundingBoxMin;
-        DirectX::XMFLOAT3 boundingBoxMax;
+        XMFLOAT3 boundingBoxMin;
+        XMFLOAT3 boundingBoxMax;
     };
 
     class Mesh {
@@ -45,8 +45,8 @@ namespace SparkEngine {
         const SubMesh& GetSubMesh(size_t index) const { return m_subMeshes[index]; }
         
         // Bounding box
-        const DirectX::XMFLOAT3& GetBoundingBoxMin() const { return m_boundingBoxMin; }
-        const DirectX::XMFLOAT3& GetBoundingBoxMax() const { return m_boundingBoxMax; }
+        const XMFLOAT3& GetBoundingBoxMin() const { return m_boundingBoxMin; }
+        const XMFLOAT3& GetBoundingBoxMax() const { return m_boundingBoxMax; }
 
         // Statistics
         uint32_t GetVertexCount() const;
@@ -61,13 +61,13 @@ namespace SparkEngine {
         std::vector<ComPtr<ID3D11Buffer>> m_vertexBuffers;
         std::vector<ComPtr<ID3D11Buffer>> m_indexBuffers;
         
-        DirectX::XMFLOAT3 m_boundingBoxMin;
-        DirectX::XMFLOAT3 m_boundingBoxMax;
+        XMFLOAT3 m_boundingBoxMin;
+        XMFLOAT3 m_boundingBoxMax;
     };
 
     struct Material {
         std::string name;
-        DirectX::XMFLOAT4 albedo = {1.0f, 1.0f, 1.0f, 1.0f};
+        XMFLOAT4 albedo = {1.0f, 1.0f, 1.0f, 1.0f};
         float metallic = 0.0f;
         float roughness = 0.5f;
         float emissive = 0.0f;
@@ -105,7 +105,7 @@ namespace SparkEngine {
 
         // Rendering
         void RenderMesh(ID3D11DeviceContext* context, const std::string& meshName, 
-                       const DirectX::XMMATRIX& worldMatrix);
+                       const XMMATRIX& worldMatrix);
 
         // Statistics
         size_t GetMeshCount() const { return m_meshes.size(); }
@@ -137,3 +137,5 @@ namespace SparkEngine {
         static void CalculateTangents(std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
     };
 }
+
+

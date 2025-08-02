@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Utils/Assert.h"
 #include "..\Graphics\Mesh.h"
@@ -18,7 +18,7 @@ inline void LoadOrPlaceholderMesh(
     HRESULT hrInit = mesh.Initialize(device, context);
     std::wcerr << L"[DEBUG] Mesh::Initialize returned HR = 0x"
         << std::hex << hrInit << std::dec << std::endl;
-    ASSERT_MSG(SUCCEEDED(hrInit), "Mesh::Initialize failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hrInit), "Mesh::Initialize failed");
 
     // 2) Attempt to load from file
     bool loaded = false;
@@ -30,7 +30,7 @@ inline void LoadOrPlaceholderMesh(
             << (loaded ? L"SUCCESS" : L"FAILURE") << std::endl;
         if (!loaded)
             OutputDebugStringW((L"[Mesh] Failed to load \"" + path +
-                L"\" – falling back to procedural cube.\n").c_str());
+                L"\" � falling back to procedural cube.\n").c_str());
     }
     else
     {

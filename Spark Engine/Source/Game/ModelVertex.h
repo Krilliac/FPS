@@ -1,4 +1,4 @@
-﻿// ModelVertex.h
+// ModelVertex.h
 #pragma once
 #include "Utils/Assert.h"
 #include <DirectXMath.h>
@@ -6,9 +6,9 @@
 
 struct ModelVertex
 {
-    DirectX::XMFLOAT3 Position;
-    DirectX::XMFLOAT3 Normal;
-    DirectX::XMFLOAT2 TexCoord;
+    XMFLOAT3 Position;
+    XMFLOAT3 Normal;
+    XMFLOAT2 TexCoord;
 
     ModelVertex() noexcept
         : Position(0.f, 0.f, 0.f)
@@ -16,16 +16,17 @@ struct ModelVertex
         , TexCoord(0.f, 0.f) {
     }
 
-    ModelVertex(const DirectX::XMFLOAT3& pos,
-        const DirectX::XMFLOAT3& norm,
-        const DirectX::XMFLOAT2& uv) noexcept
+    ModelVertex(const XMFLOAT3& pos,
+        const XMFLOAT3& norm,
+        const XMFLOAT2& uv) noexcept
         : Position(pos)
         , Normal(norm)
         , TexCoord(uv)
     {
         // Validate incoming data
-        ASSERT(std::isfinite(pos.x) && std::isfinite(pos.y) && std::isfinite(pos.z));
-        ASSERT(std::isfinite(norm.x) && std::isfinite(norm.y) && std::isfinite(norm.z));
-        ASSERT(std::isfinite(uv.x) && std::isfinite(uv.y));
+        SPARK_ASSERT(std::isfinite(pos.x) && std::isfinite(pos.y) && std::isfinite(pos.z));
+        SPARK_ASSERT(std::isfinite(norm.x) && std::isfinite(norm.y) && std::isfinite(norm.z));
+        SPARK_ASSERT(std::isfinite(uv.x) && std::isfinite(uv.y));
     }
 };
+

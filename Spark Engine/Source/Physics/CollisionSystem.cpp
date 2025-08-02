@@ -40,7 +40,7 @@ XMFLOAT3 BoundingBox::GetExtents() const
 
 void BoundingBox::Transform(const XMMATRIX& transform)
 {
-    ASSERT_MSG(std::isfinite(transform.r[0].m128_f32[0]), "Invalid transform matrix");
+    SPARK_ASSERT_MSG(std::isfinite(transform.r[0].m128_f32[0]), "Invalid transform matrix");
 
     XMFLOAT3 corners[8] = {
         {Min.x, Min.y, Min.z},{Max.x, Min.y, Min.z},
@@ -70,7 +70,7 @@ void BoundingBox::Transform(const XMMATRIX& transform)
 // BoundingSphere methods
 void BoundingSphere::Transform(const XMMATRIX& transform)
 {
-    ASSERT_MSG(std::isfinite(transform.r[0].m128_f32[0]), "Invalid transform matrix");
+    SPARK_ASSERT_MSG(std::isfinite(transform.r[0].m128_f32[0]), "Invalid transform matrix");
 
     XMVECTOR c = XMLoadFloat3(&Center);
     c = XMVector3Transform(c, transform);
@@ -80,14 +80,14 @@ void BoundingSphere::Transform(const XMMATRIX& transform)
     float sy = XMVectorGetX(XMVector3Length(transform.r[1]));
     float sz = XMVectorGetX(XMVector3Length(transform.r[2]));
     float scale = std::max({ sx, sy, sz });
-    ASSERT_MSG(scale > 0.0f, "Non-positive scale");
+    SPARK_ASSERT_MSG(scale > 0.0f, "Non-positive scale");
     Radius *= scale;
 }
 
 // Ray methods
 XMFLOAT3 Ray::GetPoint(float t) const
 {
-    ASSERT_MSG(std::isfinite(t), "Invalid ray parameter");
+    SPARK_ASSERT_MSG(std::isfinite(t), "Invalid ray parameter");
     return XMFLOAT3(
         Origin.x + Direction.x * t,
         Origin.y + Direction.y * t,

@@ -1,12 +1,12 @@
-﻿// Rocket.h
+// Rocket.h
 #pragma once
 
 #include "Projectile.h"
 #include "Utils/Assert.h"
 #include <DirectXMath.h>
 
-using DirectX::XMFLOAT3;
-using DirectX::XMMATRIX;
+using XMFLOAT3;
+using XMMATRIX;
 
 class Rocket : public Projectile
 {

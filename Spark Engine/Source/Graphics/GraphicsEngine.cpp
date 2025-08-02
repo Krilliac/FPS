@@ -1,4 +1,4 @@
-﻿#include "GraphicsEngine.h"
+#include "GraphicsEngine.h"
 #include "Utils/Assert.h"
 #include "Terrain/TerrainManager.h"
 #include <iostream>
@@ -15,7 +15,7 @@ namespace SparkEngine {
     }
 
     HRESULT GraphicsEngine::Initialize(HWND hWnd) {
-        ASSERT(hWnd != nullptr);
+        SPARK_ASSERT(hWnd != nullptr);
         m_hWnd = hWnd;
 
         RECT clientRect;
@@ -78,7 +78,7 @@ namespace SparkEngine {
     }
 
     void GraphicsEngine::BeginFrame() {
-        ASSERT(m_context && m_renderTargetView && m_depthStencilView);
+        SPARK_ASSERT(m_context && m_renderTargetView && m_depthStencilView);
 
         // Clear render targets
         const float clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
@@ -104,7 +104,7 @@ namespace SparkEngine {
     }
 
     void GraphicsEngine::Present() {
-        ASSERT(m_swapChain);
+        SPARK_ASSERT(m_swapChain);
         
         UINT syncInterval = m_settings.enableVSync ? 1 : 0;
         UINT flags = 0;
@@ -136,7 +136,7 @@ namespace SparkEngine {
 
         // Resize swap chain
         HRESULT hr = m_swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
-        ASSERT_MSG(SUCCEEDED(hr), "Failed to resize swap chain buffers");
+        SPARK_ASSERT_MSG(SUCCEEDED(hr), "Failed to resize swap chain buffers");
 
         // Recreate resources
         CreateRenderTargetView();

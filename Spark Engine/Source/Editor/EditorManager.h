@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../ECS/EntityRegistry.h"
 #include <imgui.h>

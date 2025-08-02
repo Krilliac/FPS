@@ -13,7 +13,7 @@
 #include "Mesh.h"
 #include "Utils/Assert.h"
 //#include "Utils/Debug.h"
-#include <tiny_obj_loader.h>
+// #include <tiny_obj_loader.h> // Use assimp instead
 #include <DirectXMath.h>
 #include <fstream>
 #include <filesystem>   // C++17 for path handling
@@ -27,7 +27,7 @@ Mesh::~Mesh() { Shutdown(); }
 
 HRESULT Mesh::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    ASSERT(device && context);
+    SPARK_ASSERT(device && context);
     m_device = device;
     m_context = context;
     return S_OK;
@@ -174,7 +174,7 @@ bool Mesh::LoadFromFile(const std::wstring& path)
 HRESULT Mesh::CreateFromVertices(const std::vector<Vertex>& verts,
     const std::vector<unsigned int>& inds)
 {
-    ASSERT(!verts.empty() && !inds.empty());
+    SPARK_ASSERT(!verts.empty() && !inds.empty());
 
     m_vertices = verts;
     m_indices = inds;
@@ -187,7 +187,7 @@ HRESULT Mesh::CreateFromVertices(const std::vector<Vertex>& verts,
 
 HRESULT Mesh::CreateCube(float size)
 {
-    ASSERT(size > 0.0f);
+    SPARK_ASSERT(size > 0.0f);
 
     MeshData md;
     float h = size * 0.5f;
@@ -224,7 +224,7 @@ HRESULT Mesh::CreateCube(float size)
 
 HRESULT Mesh::CreatePlane(float width, float depth)
 {
-    ASSERT(width > 0.0f && depth > 0.0f);
+    SPARK_ASSERT(width > 0.0f && depth > 0.0f);
 
     MeshData md;
     float hw = width * 0.5f, hd = depth * 0.5f;
@@ -246,8 +246,8 @@ HRESULT Mesh::CreatePlane(float width, float depth)
 
 HRESULT Mesh::CreateSphere(float radius, int slices, int stacks)
 {
-    ASSERT(radius > 0.0f);
-    ASSERT(slices >= 3 && stacks >= 2);
+    SPARK_ASSERT(radius > 0.0f);
+    SPARK_ASSERT(slices >= 3 && stacks >= 2);
 
     MeshData md;
     for (int i = 0; i <= stacks; ++i)
@@ -296,7 +296,7 @@ HRESULT Mesh::CreateSphere(float radius, int slices, int stacks)
 
 void Mesh::CalculateNormals()
 {
-    ASSERT(!m_vertices.empty() && !m_indices.empty());
+    SPARK_ASSERT(!m_vertices.empty() && !m_indices.empty());
 
     for (size_t i = 0; i + 2 < m_indices.size(); i += 3)
     {
@@ -316,8 +316,8 @@ void Mesh::CalculateNormals()
 
 HRESULT Mesh::CreateBuffers()
 {
-    ASSERT(m_device);
-    ASSERT(!m_vertices.empty() && !m_indices.empty());
+    SPARK_ASSERT(m_device);
+    SPARK_ASSERT(!m_vertices.empty() && !m_indices.empty());
 
     // Vertex buffer
     D3D11_BUFFER_DESC vbd{};
@@ -327,7 +327,7 @@ HRESULT Mesh::CreateBuffers()
     D3D11_SUBRESOURCE_DATA vsd{ m_vertices.data(), 0, 0 };
 
     HRESULT hr = m_device->CreateBuffer(&vbd, &vsd, &m_vb);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (VB) failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (VB) failed");
     if (FAILED(hr)) return hr;
 
     // Index buffer
@@ -340,7 +340,7 @@ HRESULT Mesh::CreateBuffers()
     isd.pSysMem = m_indices.data();
 
     hr = m_device->CreateBuffer(&ibd, &isd, &m_ib);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (IB) failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (IB) failed");
     if (FAILED(hr)) return hr;
 
     return S_OK;
@@ -348,7 +348,7 @@ HRESULT Mesh::CreateBuffers()
 
 void Mesh::Render(ID3D11DeviceContext* ctx)
 {
-    ASSERT(ctx && m_vb && m_ib && m_indexCount > 0);
+    SPARK_ASSERT(ctx && m_vb && m_ib && m_indexCount > 0);
 
     UINT stride = sizeof(Vertex), offset = 0;
     ctx->IASetVertexBuffers(0, 1, &m_vb, &stride, &offset);

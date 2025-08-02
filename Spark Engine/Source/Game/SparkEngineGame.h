@@ -1,70 +1,103 @@
-#pragma once
+﻿#pragma once
+
 #include "../Core/framework.h"
 #include "../ECS/EntityRegistry.h"
 #include "../ECS/System.h"
 #include "../ECS/Components.h"
-#include "../Scripting/ScriptingSystem.h"
-#include "../Graphics/Materials/PBRMaterial.h"
+#include "../Graphics/GraphicsEngine.h"
+#include "../Graphics/ShaderManager.h"
+#include "../Graphics/MeshManager.h"
+#include "../Graphics/Lighting/LightingSystem.h"
+#include "../Graphics/PostProcessing/PostProcessPipeline.h"
 #include "../Assets/AssetManager.h"
+#include "../Input/AdvancedInputManager.h"
+#include "../Scripting/ScriptingSystem.h"
 #include "../Editor/EditorManager.h"
-
-#ifdef SPARKENGINE_PHYSICS_ENABLED
-#include "../Physics/PhysicsSystem.h"
-#endif
+#include "../Development/CollaborativeDevelopment.h"
+#include <memory>
 
 namespace SparkEngine {
     class SparkEngineGame {
+    public:
+        SparkEngineGame();
+        ~SparkEngineGame();
+
+        // Core lifecycle
+        bool Initialize(HWND hwnd, int width, int height);
+        void Shutdown();
+        void Update(float deltaTime);
+        void Render();
+
+        // State queries
+        bool IsInitialized() const { return m_initialized; }
+        bool IsRunning() const { return m_running; }
+
+        // Window properties
+        int GetWindowWidth() const { return m_windowWidth; }
+        int GetWindowHeight() const { return m_windowHeight; }
+
+        // System accessors
+        GraphicsEngine* GetGraphicsEngine() const { return m_graphics.get(); }
+        EntityRegistry* GetEntityRegistry() const { return m_entityRegistry.get(); }
+        AssetManager* GetAssetManager() const { return m_assetManager.get(); }
+        EditorManager* GetEditorManager() const { return m_editorManager.get(); }
+
     private:
+        // Initialization phases
+        bool InitializeGraphicsSystem();
+        bool InitializeCoreSystemsComplete();
+        bool InitializeAssetSystems();
+        bool InitializeRenderingPipeline();
+        bool InitializeInputPhysicsSystems();
+        bool InitializeAdvancedSystems();
+        bool InitializeEditorSystem();
+
+        // Scene creation
+        void CreateCompleteExampleScene();
+        void CreateDemoObjects();
+
+        // Update and render helpers
+        void UpdateAllSystems(float deltaTime);
+        void RenderCompleteScene();
+        void AnimateDemoObjects(float deltaTime);
+
+        // Utility
+        void PrintSystemsSummary();
+        void ShutdownAllSystems();
+
         // Core systems
+        std::unique_ptr<GraphicsEngine> m_graphics;
         std::unique_ptr<EntityRegistry> m_entityRegistry;
         std::unique_ptr<SystemManager> m_systemManager;
-        std::unique_ptr<ScriptingSystem> m_scriptingSystem;
         std::unique_ptr<AssetManager> m_assetManager;
-        
-    std::unique_ptr<CollaborativeDevelopment> m_collaborativeDevelopment;
+        std::unique_ptr<EditorManager> m_editorManager;
 
-        // Graphics
-        ComPtr<ID3D11Device> m_device;
-        ComPtr<ID3D11DeviceContext> m_context;
-        ComPtr<ID3D11SwapChain> m_swapChain;
-        ComPtr<ID3D11RenderTargetView> m_renderTargetView;
-        ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+        // Advanced graphics systems
+        std::unique_ptr<ShaderManager> m_shaderManager;
+        std::unique_ptr<MeshManager> m_meshManager;
+        std::unique_ptr<LightingSystem> m_lightingSystem;
+        std::unique_ptr<PostProcessPipeline> m_postProcessPipeline;
 
-        // Game state
-        bool m_initialized = false;
-        bool m_running = false;
-        float m_deltaTime = 0.0f;
+        // Input and interaction systems
+        std::unique_ptr<AdvancedInputManager> m_advancedInput;
+        std::unique_ptr<ScriptingSystem> m_scriptingSystem;
 
-        // Example entities
+        // Collaborative development
+        std::unique_ptr<CollaborativeDevelopment> m_collaborativeDevelopment;
+
+        // Window properties
+        HWND m_hwnd = nullptr;
+        int m_windowWidth = 0;
+        int m_windowHeight = 0;
+
+        // Scene entities
         Entity m_cameraEntity = entt::null;
         Entity m_lightEntity = entt::null;
         Entity m_cubeEntity = entt::null;
 
-    public:
-        SparkEngineGame() = default;
-        ~SparkEngineGame() = default;
-
-        bool Initialize(HWND hwnd, int width, int height);
-        void Shutdown();
-
-        void Update(float deltaTime);
-        void Render();
-
-        bool IsRunning() const { return m_running; }
-        void Stop() { m_running = false; }
-
-        // System accessors
-        EntityRegistry* GetEntityRegistry() { return m_entityRegistry.get(); }
-        SystemManager* GetSystemManager() { return m_systemManager.get(); }
-        ScriptingSystem* GetScriptingSystem() { return m_scriptingSystem.get(); }
-        AssetManager* GetAssetManager() { return m_assetManager.get(); }
-        EditorManager* GetEditorManager() { return m_editorManager.get(); }
-
-    private:
-        bool InitializeD3D11(HWND hwnd, int width, int height);
-        bool InitializeSystems();
-        void CreateExampleScene();
-        void UpdateSystems(float deltaTime);
-        void RenderScene();
+        // State
+        bool m_initialized = false;
+        bool m_running = false;
+        float m_deltaTime = 0.0f;
     };
 }

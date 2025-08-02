@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../../Core/framework.h"
 #include <d3d11_1.h>
 #include <DirectXMath.h>
@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 
-using Microsoft::WRL::ComPtr;
+// ComPtr<using> declaration removed - defined in framework.h
 
 namespace SparkEngine {
     struct PostProcessSettings {
@@ -33,7 +33,7 @@ namespace SparkEngine {
         
         // Color grading
         bool enableColorGrading = false;
-        DirectX::XMFLOAT3 colorBalance = {1.0f, 1.0f, 1.0f};
+        XMFLOAT3 colorBalance = {1.0f, 1.0f, 1.0f};
         float contrast = 1.0f;
         float saturation = 1.0f;
         float brightness = 0.0f;
@@ -125,7 +125,7 @@ namespace SparkEngine {
         ComPtr<ID3D11PixelShader> m_blurPS;
         ComPtr<ID3D11Buffer> m_ssaoConstantBuffer;
         
-        std::vector<DirectX::XMFLOAT4> m_ssaoKernel;
+        std::vector<XMFLOAT4> m_ssaoKernel;
         float m_radius = 0.1f;
         float m_intensity = 1.0f;
         uint32_t m_sampleCount = 16;
@@ -207,3 +207,5 @@ namespace SparkEngine {
         ID3D11Device* m_device = nullptr;
     };
 }
+
+

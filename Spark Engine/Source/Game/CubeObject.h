@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "GameObject.h"
 #include "PlaceholderMesh.h"
@@ -7,8 +7,8 @@
 #include <DirectXMath.h>
 #include <string>
 
-using DirectX::XMFLOAT3;
-using DirectX::XMMATRIX;
+using XMFLOAT3;
+using XMMATRIX;
 
 class CubeObject : public GameObject
 {

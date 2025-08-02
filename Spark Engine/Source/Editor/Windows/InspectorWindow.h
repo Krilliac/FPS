@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../EditorManager.h"
 #include "../../ECS/Components.h"
 #include <imgui.h>
@@ -54,20 +54,20 @@ namespace SparkEngine {
                 if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
                     auto& transform = m_registry->GetComponent<TransformComponent>(entity);
 
-                    ImGui::DragFloat3("Position", &transform.position.x, 0.1f);
+                    ImGui::DragFloat3("Position", &transform.position.x.x, 0.1f);
 
-                    DirectX::XMFLOAT3 rotationDegrees = {
-                        DirectX::XMConvertToDegrees(transform.rotation.x),
-                        DirectX::XMConvertToDegrees(transform.rotation.y),
-                        DirectX::XMConvertToDegrees(transform.rotation.z)
+                    XMFLOAT3 rotationDegrees = {
+                        XMConvertToDegrees(transform.rotation.x),
+                        XMConvertToDegrees(transform.rotation.y),
+                        XMConvertToDegrees(transform.rotation.z)
                     };
-                    if (ImGui::DragFloat3("Rotation", &rotationDegrees.x, 1.0f)) {
-                        transform.rotation.x = DirectX::XMConvertToRadians(rotationDegrees.x);
-                        transform.rotation.y = DirectX::XMConvertToRadians(rotationDegrees.y);
-                        transform.rotation.z = DirectX::XMConvertToRadians(rotationDegrees.z);
+                    if (ImGui::DragFloat3("Rotation", &rotationDegrees.x.x, 1.0f)) {
+                        transform.rotation.x = XMConvertToRadians(rotationDegrees.x);
+                        transform.rotation.y = XMConvertToRadians(rotationDegrees.y);
+                        transform.rotation.z = XMConvertToRadians(rotationDegrees.z);
                     }
 
-                    ImGui::DragFloat3("Scale", &transform.scale.x, 0.1f, 0.1f, 10.0f);
+                    ImGui::DragFloat3("Scale", &transform.scale.x.x, 0.1f, 0.1f, 10.0f);
                 }
             }
 
@@ -136,3 +136,5 @@ namespace SparkEngine {
         }
     };
 }
+
+

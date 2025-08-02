@@ -1,4 +1,4 @@
-﻿// GraphicsEngine.h - Enhanced DirectX 11 Implementation
+// GraphicsEngine.h - Enhanced DirectX 11 Implementation
 #pragma once
 
 #include "Utils/Assert.h"
@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include "../Core/framework.h"
 
-using Microsoft::WRL::ComPtr;
+// ComPtr<using> declaration removed - defined in framework.h
 
 namespace SparkEngine {
     struct RenderStats {
@@ -94,8 +94,8 @@ namespace SparkEngine {
         bool SupportsFeatureLevel(D3D_FEATURE_LEVEL level) const;
         bool SupportsFormat(DXGI_FORMAT format, UINT usage) const;
         void EnableCollaborativeVisualization(bool enable) { m_collaborativeVisualization = enable; }
-        void RenderDeveloperCursors(const std::vector<DirectX::XMFLOAT3>& positions, 
-                                   const std::vector<DirectX::XMFLOAT4>& colors);
+        void RenderDeveloperCursors(const std::vector<XMFLOAT3>& positions, 
+                                   const std::vector<XMFLOAT4>& colors);
 
         // Window properties
         UINT GetWindowWidth() const { return m_windowWidth; }
@@ -151,3 +151,5 @@ namespace SparkEngine {
         std::unique_ptr<class TerrainManager> m_terrainManager;
     };
 }
+
+

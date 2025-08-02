@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../ECS/EntityRegistry.h"
 #include "../Graphics/Terrain/TerrainManager.h"
@@ -23,7 +23,7 @@ namespace SparkEngine {
         // Synchronization state
         ModificationBrush m_activeBrush;
         bool m_isModifying = false;
-        DirectX::XMFLOAT3 m_lastModificationPoint;
+        XMFLOAT3 m_lastModificationPoint;
         
         // Streaming system
         std::unordered_map<std::string, Entity> m_streamedRegions;
@@ -38,8 +38,8 @@ namespace SparkEngine {
         void Render();
 
         // Content modification
-        void BeginContentModification(const DirectX::XMFLOAT3& position);
-        void UpdateContentModification(const DirectX::XMFLOAT3& position);
+        void BeginContentModification(const XMFLOAT3& position);
+        void UpdateContentModification(const XMFLOAT3& position);
         void EndContentModification();
         
         // Brush configuration
@@ -48,22 +48,23 @@ namespace SparkEngine {
         void SetBrushIntensity(float intensity) { m_activeBrush.intensity = intensity; }
         
         // Entity operations
-        Entity CreateSynchronizedEntity(const std::string& prefabName, const DirectX::XMFLOAT3& position);
-        bool ModifySynchronizedEntity(Entity entity, const DirectX::XMFLOAT3& newPosition);
+        Entity CreateSynchronizedEntity(const std::string& prefabName, const XMFLOAT3& position);
+        bool ModifySynchronizedEntity(Entity entity, const XMFLOAT3& newPosition);
         bool RemoveSynchronizedEntity(Entity entity);
         
         // Region management
-        void UpdateRegionStreaming(const DirectX::XMFLOAT3& viewerPosition);
+        void UpdateRegionStreaming(const XMFLOAT3& viewerPosition);
         void LoadContentRegion(const std::string& regionId);
         void UnloadContentRegion(const std::string& regionId);
         
         // Developer visualization
         void ShowDeveloperIndicators(bool show);
-        void BroadcastModification(const DirectX::XMFLOAT3& position, const ModificationBrush& brush);
+        void BroadcastModification(const XMFLOAT3& position, const ModificationBrush& brush);
 
     private:
-        void ApplyModificationBrush(const DirectX::XMFLOAT3& position, const ModificationBrush& brush);
+        void ApplyModificationBrush(const XMFLOAT3& position, const ModificationBrush& brush);
         void HandleSynchronizedModification(const DevelopmentEvent& event);
-        std::string GetRegionId(const DirectX::XMFLOAT3& position);
+        std::string GetRegionId(const XMFLOAT3& position);
     };
 }
+

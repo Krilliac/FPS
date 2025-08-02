@@ -1,25 +1,31 @@
-﻿#pragma once
+struct TerrainVertex {
+    XMFLOAT3 position;
+    XMFLOAT3 normal;
+    XMFLOAT2 texCoord;
+    XMFLOAT4 materialWeights;
+};
+#pragma once
 #include "../GraphicsEngine.h"
 #include "../../ECS/EntityRegistry.h"
 #include <DirectXMath.h>
 
 namespace SparkEngine {
     struct TerrainChunk {
-        DirectX::XMFLOAT2 worldPosition;
+        XMFLOAT2 worldPosition;
         ComPtr<ID3D11Buffer> vertexBuffer;
         ComPtr<ID3D11Buffer> indexBuffer;
         uint32_t vertexCount;
         uint32_t indexCount;
         bool requiresUpdate = false;
         std::vector<float> heightData;
-        std::vector<DirectX::XMFLOAT4> materialWeights; // 4 material layers
+        std::vector<XMFLOAT4> materialWeights; // 4 material layers
     };
 
     struct TerrainMaterial {
         std::string diffuseTexture;
         std::string normalTexture;
         float tileScale = 1.0f;
-        DirectX::XMFLOAT4 materialColor = {1,1,1,1};
+        XMFLOAT4 materialColor = {1,1,1,1};
     };
 
     class TerrainManager {
@@ -44,7 +50,7 @@ namespace SparkEngine {
         ComPtr<ID3D11SamplerState> m_samplerState;
         
         // Streaming
-        DirectX::XMFLOAT3 m_observerPosition;
+        XMFLOAT3 m_observerPosition;
         float m_streamingRadius = 500.0f;
 
     public:
@@ -54,22 +60,22 @@ namespace SparkEngine {
         bool Initialize();
         void Shutdown();
         void Update(float deltaTime);
-        void Render(const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projMatrix);
+        void Render(const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix);
 
         // Terrain modification
-        void ModifyElevation(const DirectX::XMFLOAT3& worldPos, float radius, float strength, bool raise = true);
-        void SmoothTerrain(const DirectX::XMFLOAT3& worldPos, float radius, float strength);
-        void PaintMaterial(const DirectX::XMFLOAT3& worldPos, float radius, int materialIndex, float strength);
+        void ModifyElevation(const XMFLOAT3& worldPos, float radius, float strength, bool raise = true);
+        void SmoothTerrain(const XMFLOAT3& worldPos, float radius, float strength);
+        void PaintMaterial(const XMFLOAT3& worldPos, float radius, int materialIndex, float strength);
         
         // Chunk management
-        TerrainChunk* GetChunk(const DirectX::XMFLOAT2& chunkCoordinate);
-        TerrainChunk* CreateChunk(const DirectX::XMFLOAT2& chunkCoordinate);
+        TerrainChunk* GetChunk(const XMFLOAT2& chunkCoordinate);
+        TerrainChunk* CreateChunk(const XMFLOAT2& chunkCoordinate);
         void UpdateChunk(TerrainChunk* chunk);
         void UnloadDistantChunks();
         
         // Height queries
-        float GetElevationAtPosition(const DirectX::XMFLOAT3& worldPos);
-        DirectX::XMFLOAT3 GetNormalAtPosition(const DirectX::XMFLOAT3& worldPos);
+        float GetElevationAtPosition(const XMFLOAT3& worldPos);
+        XMFLOAT3 GetNormalAtPosition(const XMFLOAT3& worldPos);
         
         // Material management
         void AddTerrainMaterial(const TerrainMaterial& material);
@@ -77,14 +83,16 @@ namespace SparkEngine {
         void SetMaterialProperties(size_t index, const TerrainMaterial& material);
         
         // Streaming control
-        void SetObserverPosition(const DirectX::XMFLOAT3& position) { m_observerPosition = position; }
+        void SetObserverPosition(const XMFLOAT3& position) { m_observerPosition = position; }
         void SetStreamingRadius(float radius) { m_streamingRadius = radius; }
 
     private:
-        uint64_t GetChunkKey(const DirectX::XMFLOAT2& chunkCoordinate);
-        DirectX::XMFLOAT2 WorldToChunkCoordinate(const DirectX::XMFLOAT3& worldPos);
+        uint64_t GetChunkKey(const XMFLOAT2& chunkCoordinate);
+        XMFLOAT2 WorldToChunkCoordinate(const XMFLOAT3& worldPos);
         void GenerateChunkGeometry(TerrainChunk* chunk);
         void CreateRenderingResources();
         void LoadTerrainTextures();
     };
 }
+
+

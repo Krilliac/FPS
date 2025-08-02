@@ -27,14 +27,14 @@ Shader::~Shader()
 
 HRESULT Shader::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    ASSERT_MSG(device != nullptr, "Shader::Initialize device is null");
-    ASSERT_MSG(context != nullptr, "Shader::Initialize context is null");
+    SPARK_ASSERT_MSG(device != nullptr, "Shader::Initialize device is null");
+    SPARK_ASSERT_MSG(context != nullptr, "Shader::Initialize context is null");
 
     m_device = device;
     m_context = context;
 
     HRESULT hr = CreateConstantBuffer();
-    ASSERT_MSG(SUCCEEDED(hr), "CreateConstantBuffer failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateConstantBuffer failed");
     return hr;
 }
 
@@ -48,12 +48,12 @@ void Shader::Shutdown()
 
 HRESULT Shader::LoadVertexShader(const std::wstring& filename)
 {
-    ASSERT_MSG(!filename.empty(), "LoadVertexShader: filename empty");
-    ASSERT_MSG(m_device != nullptr, "LoadVertexShader: device is null");
+    SPARK_ASSERT_MSG(!filename.empty(), "LoadVertexShader: filename empty");
+    SPARK_ASSERT_MSG(m_device != nullptr, "LoadVertexShader: device is null");
 
     ID3DBlob* vsBlob = nullptr;
     HRESULT hr = CompileShaderFromFile(filename, "main", "vs_5_0", &vsBlob);
-    ASSERT_MSG(SUCCEEDED(hr), "CompileShaderFromFile (VS) failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CompileShaderFromFile (VS) failed");
     if (FAILED(hr)) return hr;
 
     hr = m_device->CreateVertexShader(
@@ -61,7 +61,7 @@ HRESULT Shader::LoadVertexShader(const std::wstring& filename)
         vsBlob->GetBufferSize(),
         nullptr,
         &m_vertexShader);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateVertexShader failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateVertexShader failed");
     if (FAILED(hr)) { vsBlob->Release(); return hr; }
 
     D3D11_INPUT_ELEMENT_DESC layoutDesc[] = {
@@ -76,7 +76,7 @@ HRESULT Shader::LoadVertexShader(const std::wstring& filename)
         vsBlob->GetBufferPointer(),
         vsBlob->GetBufferSize(),
         &m_inputLayout);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateInputLayout failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateInputLayout failed");
 
     vsBlob->Release();
     return hr;
@@ -84,12 +84,12 @@ HRESULT Shader::LoadVertexShader(const std::wstring& filename)
 
 HRESULT Shader::LoadPixelShader(const std::wstring& filename)
 {
-    ASSERT_MSG(!filename.empty(), "LoadPixelShader: filename empty");
-    ASSERT_MSG(m_device != nullptr, "LoadPixelShader: device is null");
+    SPARK_ASSERT_MSG(!filename.empty(), "LoadPixelShader: filename empty");
+    SPARK_ASSERT_MSG(m_device != nullptr, "LoadPixelShader: device is null");
 
     ID3DBlob* psBlob = nullptr;
     HRESULT hr = CompileShaderFromFile(filename, "main", "ps_5_0", &psBlob);
-    ASSERT_MSG(SUCCEEDED(hr), "CompileShaderFromFile (PS) failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CompileShaderFromFile (PS) failed");
     if (FAILED(hr)) return hr;
 
     hr = m_device->CreatePixelShader(
@@ -97,7 +97,7 @@ HRESULT Shader::LoadPixelShader(const std::wstring& filename)
         psBlob->GetBufferSize(),
         nullptr,
         &m_pixelShader);
-    ASSERT_MSG(SUCCEEDED(hr), "CreatePixelShader failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreatePixelShader failed");
 
     psBlob->Release();
     return hr;
@@ -105,11 +105,11 @@ HRESULT Shader::LoadPixelShader(const std::wstring& filename)
 
 void Shader::SetShaders()
 {
-    ASSERT(m_context != nullptr);
-    ASSERT(m_vertexShader != nullptr);
-    ASSERT(m_pixelShader != nullptr);
-    ASSERT(m_inputLayout != nullptr);
-    ASSERT(m_constantBuffer != nullptr);
+    SPARK_ASSERT(m_context != nullptr);
+    SPARK_ASSERT(m_vertexShader != nullptr);
+    SPARK_ASSERT(m_pixelShader != nullptr);
+    SPARK_ASSERT(m_inputLayout != nullptr);
+    SPARK_ASSERT(m_constantBuffer != nullptr);
 
     m_context->VSSetShader(m_vertexShader, nullptr, 0);
     m_context->PSSetShader(m_pixelShader, nullptr, 0);
@@ -119,8 +119,8 @@ void Shader::SetShaders()
 
 void Shader::UpdateConstantBuffer(const ConstantBuffer& cb)
 {
-    ASSERT(m_context != nullptr);
-    ASSERT(m_constantBuffer != nullptr);
+    SPARK_ASSERT(m_context != nullptr);
+    SPARK_ASSERT(m_constantBuffer != nullptr);
 
     D3D11_MAPPED_SUBRESOURCE mapped;
     HRESULT hr = m_context->Map(
@@ -129,7 +129,7 @@ void Shader::UpdateConstantBuffer(const ConstantBuffer& cb)
         D3D11_MAP_WRITE_DISCARD,
         0,
         &mapped);
-    ASSERT_MSG(SUCCEEDED(hr), "VS Map constant buffer failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "VS Map constant buffer failed");
     if (FAILED(hr)) return;
 
     auto dataPtr = reinterpret_cast<ConstantBuffer*>(mapped.pData);
@@ -145,8 +145,8 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
     const std::string& shaderModel,
     ID3DBlob** blobOut)
 {
-    ASSERT_MSG(!filename.empty(), "CompileShaderFromFile: filename empty");
-    ASSERT(blobOut != nullptr);
+    SPARK_ASSERT_MSG(!filename.empty(), "CompileShaderFromFile: filename empty");
+    SPARK_ASSERT(blobOut != nullptr);
 
     // Check if file exists first
     if (!std::filesystem::exists(filename)) {
@@ -196,13 +196,13 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
 
     if (errorBlob) errorBlob->Release();
 
-    ASSERT_MSG(SUCCEEDED(hr), "D3DCompileFromFile failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "D3DCompileFromFile failed");
     return hr;
 }
 
 HRESULT Shader::CreateConstantBuffer()
 {
-    ASSERT_MSG(m_device != nullptr, "CreateConstantBuffer: device is null");
+    SPARK_ASSERT_MSG(m_device != nullptr, "CreateConstantBuffer: device is null");
 
     D3D11_BUFFER_DESC bd{};
     bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -211,6 +211,6 @@ HRESULT Shader::CreateConstantBuffer()
     bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
     HRESULT hr = m_device->CreateBuffer(&bd, nullptr, &m_constantBuffer);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (constant) failed");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (constant) failed");
     return hr;
 }

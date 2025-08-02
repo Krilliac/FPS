@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include <unordered_map>
 #include <vector>
@@ -71,8 +71,8 @@ namespace SparkEngine {
         bool IsMouseButtonDown(uint32_t button) const;
         bool IsMouseButtonPressed(uint32_t button) const;
         bool IsMouseButtonReleased(uint32_t button) const;
-        DirectX::XMFLOAT2 GetMousePosition() const { return m_mousePosition; }
-        DirectX::XMFLOAT2 GetMouseDelta() const { return m_mouseDelta; }
+        XMFLOAT2 GetMousePosition() const { return m_mousePosition; }
+        XMFLOAT2 GetMouseDelta() const { return m_mouseDelta; }
         float GetMouseWheelDelta() const { return m_mouseWheelDelta; }
 
         // Gamepad support
@@ -97,7 +97,7 @@ namespace SparkEngine {
 
         // Collaborative input features
         void EnableCollaborativeMode(bool enable) { m_collaborativeMode = enable; }
-        void SetCollaborativeCursorCallback(std::function<void(const DirectX::XMFLOAT3&)> callback) {
+        void SetCollaborativeCursorCallback(std::function<void(const XMFLOAT3&)> callback) {
             m_collaborativeCursorCallback = callback;
         }
 
@@ -136,8 +136,8 @@ namespace SparkEngine {
         
         // Mouse state
         std::unordered_map<uint32_t, KeyState> m_mouseButtonStates;
-        DirectX::XMFLOAT2 m_mousePosition = {0.0f, 0.0f};
-        DirectX::XMFLOAT2 m_mouseDelta = {0.0f, 0.0f};
+        XMFLOAT2 m_mousePosition = {0.0f, 0.0f};
+        XMFLOAT2 m_mouseDelta = {0.0f, 0.0f};
         float m_mouseWheelDelta = 0.0f;
         
         // Gamepad state
@@ -155,7 +155,7 @@ namespace SparkEngine {
         
         // Collaborative features
         bool m_collaborativeMode = false;
-        std::function<void(const DirectX::XMFLOAT3&)> m_collaborativeCursorCallback;
+        std::function<void(const XMFLOAT3&)> m_collaborativeCursorCallback;
         
         // Recording and playback
         bool m_recording = false;
@@ -181,3 +181,4 @@ namespace SparkEngine {
         class EntityRegistry* m_registry = nullptr;
     };
 }
+

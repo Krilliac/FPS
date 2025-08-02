@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../ECS/System.h"
 #include "../ECS/Components.h"
@@ -11,8 +11,8 @@ namespace SparkEngine {
         physx::PxRigidActor* actor = nullptr;
         bool isDynamic = true;
         float mass = 1.0f;
-        DirectX::XMFLOAT3 velocity = {0.0f, 0.0f, 0.0f};
-        DirectX::XMFLOAT3 angularVelocity = {0.0f, 0.0f, 0.0f};
+        XMFLOAT3 velocity = {0.0f, 0.0f, 0.0f};
+        XMFLOAT3 angularVelocity = {0.0f, 0.0f, 0.0f};
         bool kinematic = false;
         float linearDamping = 0.1f;
         float angularDamping = 0.1f;
@@ -30,7 +30,7 @@ namespace SparkEngine {
         Type type = Box;
 
         // Box collider data
-        DirectX::XMFLOAT3 boxHalfExtents = {0.5f, 0.5f, 0.5f};
+        XMFLOAT3 boxHalfExtents = {0.5f, 0.5f, 0.5f};
 
         // Sphere collider data
         float sphereRadius = 0.5f;
@@ -80,12 +80,12 @@ namespace SparkEngine {
         // Rigidbody management
         void CreateRigidBody(Entity entity, bool isDynamic = true, float mass = 1.0f);
         void UpdateRigidBodyTransform(Entity entity);
-        void SetRigidBodyVelocity(Entity entity, const DirectX::XMFLOAT3& velocity);
-        void AddForce(Entity entity, const DirectX::XMFLOAT3& force, bool impulse = false);
-        void AddTorque(Entity entity, const DirectX::XMFLOAT3& torque, bool impulse = false);
+        void SetRigidBodyVelocity(Entity entity, const XMFLOAT3& velocity);
+        void AddForce(Entity entity, const XMFLOAT3& force, bool impulse = false);
+        void AddTorque(Entity entity, const XMFLOAT3& torque, bool impulse = false);
 
         // Collider management
-        void CreateBoxCollider(Entity entity, const DirectX::XMFLOAT3& halfExtents);
+        void CreateBoxCollider(Entity entity, const XMFLOAT3& halfExtents);
         void CreateSphereCollider(Entity entity, float radius);
         void CreateCapsuleCollider(Entity entity, float radius, float height);
 
@@ -94,22 +94,22 @@ namespace SparkEngine {
         physx::PxMaterial* GetDefaultMaterial() { return m_defaultMaterial; }
 
         // Scene queries
-        bool Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMFLOAT3& direction, 
+        bool Raycast(const XMFLOAT3& origin, const XMFLOAT3& direction, 
                     float maxDistance, physx::PxRaycastHit& hit);
-        bool SphereCast(const DirectX::XMFLOAT3& origin, float radius, 
-                       const DirectX::XMFLOAT3& direction, float maxDistance, 
+        bool SphereCast(const XMFLOAT3& origin, float radius, 
+                       const XMFLOAT3& direction, float maxDistance, 
                        physx::PxSweepHit& hit);
 
         // Settings
-        void SetGravity(const DirectX::XMFLOAT3& gravity);
-        DirectX::XMFLOAT3 GetGravity() const;
+        void SetGravity(const XMFLOAT3& gravity);
+        XMFLOAT3 GetGravity() const;
 
         physx::PxScene* GetScene() { return m_scene; }
 
     private:
         void SyncTransforms();
         void UpdatePhysicsTransforms();
-        physx::PxTransform XMFLOATToPxTransform(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot);
-        void PxTransformToXMFLOAT(const physx::PxTransform& pxTransform, DirectX::XMFLOAT3& pos, DirectX::XMFLOAT3& rot);
+        physx::PxTransform XMFLOATToPxTransform(const XMFLOAT3& pos, const XMFLOAT3& rot);
+        void PxTransformToXMFLOAT(const physx::PxTransform& pxTransform, XMFLOAT3& pos, XMFLOAT3& rot);
     };
 }

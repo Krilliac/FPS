@@ -1,23 +1,23 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 
 // Light buffer structure
 struct LightBuffer
 {
-    DirectX::XMFLOAT3 LightDirection;
+    XMFLOAT3 LightDirection;
     float LightIntensity;
-    DirectX::XMFLOAT3 LightColor;
+    XMFLOAT3 LightColor;
     float AmbientIntensity;
-    DirectX::XMFLOAT3 CameraPosition;
+    XMFLOAT3 CameraPosition;
     float SpecularPower;
 };
 
 // Constant buffer structure  
 struct ConstantBuffer
 {
-    DirectX::XMMATRIX World;
-    DirectX::XMMATRIX View;
-    DirectX::XMMATRIX Projection;
+    XMMATRIX World;
+    XMMATRIX View;
+    XMMATRIX Projection;
 };
 
 class Shader

@@ -7,35 +7,35 @@
 #include <vector>
 #include <memory>
 
-using Microsoft::WRL::ComPtr;
+// ComPtr<using> declaration removed - defined in framework.h
 
 namespace SparkEngine {
     struct DirectionalLightData {
-        DirectX::XMFLOAT3 direction;
+        XMFLOAT3 direction;
         float intensity;
-        DirectX::XMFLOAT3 color;
+        XMFLOAT3 color;
         float padding;
-        DirectX::XMMATRIX lightViewMatrix;
-        DirectX::XMMATRIX lightProjectionMatrix;
+        XMMATRIX lightViewMatrix;
+        XMMATRIX lightProjectionMatrix;
     };
 
     struct PointLightData {
-        DirectX::XMFLOAT3 position;
+        XMFLOAT3 position;
         float range;
-        DirectX::XMFLOAT3 color;
+        XMFLOAT3 color;
         float intensity;
-        DirectX::XMFLOAT3 attenuation; // constant, linear, quadratic
+        XMFLOAT3 attenuation; // constant, linear, quadratic
         float padding;
     };
 
     struct SpotLightData {
-        DirectX::XMFLOAT3 position;
+        XMFLOAT3 position;
         float range;
-        DirectX::XMFLOAT3 direction;
+        XMFLOAT3 direction;
         float spotAngle;
-        DirectX::XMFLOAT3 color;
+        XMFLOAT3 color;
         float intensity;
-        DirectX::XMFLOAT3 attenuation;
+        XMFLOAT3 attenuation;
         float padding;
     };
 
@@ -43,7 +43,7 @@ namespace SparkEngine {
         DirectionalLightData directionalLight;
         PointLightData pointLights[32];
         SpotLightData spotLights[16];
-        DirectX::XMFLOAT3 ambientColor;
+        XMFLOAT3 ambientColor;
         float ambientIntensity;
         uint32_t numPointLights;
         uint32_t numSpotLights;
@@ -91,7 +91,7 @@ namespace SparkEngine {
         void SetupLightingForRender(ID3D11DeviceContext* context);
 
         // Light management
-        void SetAmbientLight(const DirectX::XMFLOAT3& color, float intensity);
+        void SetAmbientLight(const XMFLOAT3& color, float intensity);
         void EnableShadows(bool enable) { m_shadowsEnabled = enable; }
         bool AreShadowsEnabled() const { return m_shadowsEnabled; }
 
@@ -105,8 +105,8 @@ namespace SparkEngine {
 
     private:
         void UpdateLightingConstants(EntityRegistry* registry);
-        DirectX::XMMATRIX CalculateLightViewMatrix(const DirectX::XMFLOAT3& lightDirection);
-        DirectX::XMMATRIX CalculateLightProjectionMatrix();
+        XMMATRIX CalculateLightViewMatrix(const XMFLOAT3& lightDirection);
+        XMMATRIX CalculateLightProjectionMatrix();
 
         // Shadow map for directional light
         std::unique_ptr<ShadowMap> m_directionalShadowMap;

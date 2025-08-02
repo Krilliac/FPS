@@ -1,12 +1,12 @@
-﻿// Grenade.h
+// Grenade.h
 #pragma once
 
 #include "Projectile.h"
 #include "Utils/Assert.h"
 #include <DirectXMath.h>
 
-using DirectX::XMMATRIX;
-using DirectX::XMFLOAT3;
+using XMMATRIX;
+using XMFLOAT3;
 
 class Grenade : public Projectile
 {

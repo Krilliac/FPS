@@ -16,7 +16,7 @@
 // -----------------------------------------------------------------------------
 void Console::Initialize(int screenW, int screenH)
 {
-    ASSERT(screenW > 0 && screenH > 0);
+    SPARK_ASSERT(screenW > 0 && screenH > 0);
     width = screenW;
     height = screenH;
 
@@ -34,7 +34,7 @@ bool Console::HandleChar(wchar_t c)
 {
     if (!visible) return false;
 
-    ASSERT_MSG(c >= 0, "Invalid character code");
+    SPARK_ASSERT_MSG(c >= 0, "Invalid character code");
     if (c >= L' ' && c <= L'~')      // printable ASCII
         inputLine.push_back(c);
 
@@ -53,7 +53,7 @@ bool Console::HandleKeyDown(WPARAM key)
         return true;
 
     case VK_RETURN:
-        ASSERT_MSG(!inputLine.empty(), "Executing empty command");
+        SPARK_ASSERT_MSG(!inputLine.empty(), "Executing empty command");
         ExecuteCommand(inputLine);
         inputLine.clear();
         return true;
@@ -70,7 +70,7 @@ bool Console::HandleKeyDown(WPARAM key)
 // -----------------------------------------------------------------------------
 void Console::Log(const std::wstring& msg)
 {
-    ASSERT_MSG(!msg.empty(), "Logging empty message");
+    SPARK_ASSERT_MSG(!msg.empty(), "Logging empty message");
     buffer.push_back(msg);
     if (buffer.size() > 100)         // cap log size
         buffer.erase(buffer.begin());
@@ -106,7 +106,7 @@ void Console::ExecuteCommand(const std::wstring& line)
 void Console::Render(ID3D11DeviceContext* ctx)
 {
     if (!visible) return;
-    ASSERT(ctx != nullptr);
+    SPARK_ASSERT(ctx != nullptr);
 
     constexpr float lineH = 18.0f;
     constexpr float scale = 1.0f;

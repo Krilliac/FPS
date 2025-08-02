@@ -1,77 +1,68 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
+
+#ifdef ENTT_AVAILABLE
 #include <entt/entt.hpp>
-#include <functional>
-#include <unordered_map>
-#include <memory>
-#include <typeindex>
+#endif
 
 namespace SparkEngine {
-    using Entity = entt::entity;
-
     class EntityRegistry {
-    private:
-        entt::registry m_registry;
-        std::unordered_map<std::string, std::function<void(Entity)>> m_componentFactories;
-        uint32_t m_entityCounter = 0;
-
     public:
-        EntityRegistry() = default;
-        ~EntityRegistry() = default;
-
-        // Entity management
+        EntityRegistry()=default; ~EntityRegistry()=default;
         Entity CreateEntity() {
-            Entity entity = m_registry.create();
-            m_entityCounter++;
-            return entity;
+#ifdef ENTT_AVAILABLE
+            return m_registry.create();
+#else
+            return m_next++;
+#endif
         }
-
-        void DestroyEntity(Entity entity) {
-            if (m_registry.valid(entity)) {
-                m_registry.destroy(entity);
-            }
+        void DestroyEntity(Entity e) {
+#ifdef ENTT_AVAILABLE
+            m_registry.destroy(e);
+#endif
         }
-
-        bool IsValid(Entity entity) const {
-            return m_registry.valid(entity);
+        bool IsValid(Entity e) const {
+#ifdef ENTT_AVAILABLE
+            return m_registry.valid(e);
+#else
+            return e!=0;
+#endif
         }
-
-        // Component management
-        template<typename Component, typename... Args>
-        Component& AddComponent(Entity entity, Args&&... args) {
-            return m_registry.emplace<Component>(entity, std::forward<Args>(args)...);
+        template<typename C,typename... A>
+        decltype(auto) AddComponent(Entity e,A&&... a){
+#ifdef ENTT_AVAILABLE
+            return m_registry.emplace<C>(e,std::forward<A>(a)...);
+#else
+            static C d; return d;
+#endif
         }
-
-        template<typename Component>
-        Component& GetComponent(Entity entity) {
-            return m_registry.get<Component>(entity);
+        template<typename C>
+        C& GetComponent(Entity e){
+#ifdef ENTT_AVAILABLE
+            return m_registry.get<C>(e);
+#else
+            static C d; return d;
+#endif
         }
-
-        template<typename Component>
-        bool HasComponent(Entity entity) const {
-            return m_registry.all_of<Component>(entity);
+        template<typename C>
+        bool HasComponent(Entity e) const {
+#ifdef ENTT_AVAILABLE
+            return m_registry.all_of<C>(e);
+#else
+            return false;
+#endif
         }
-
-        template<typename Component>
-        void RemoveComponent(Entity entity) {
-            m_registry.remove<Component>(entity);
+        template<typename C>
+        void RemoveComponent(Entity e){
+#ifdef ENTT_AVAILABLE
+            m_registry.remove<C>(e);
+#endif
         }
-
-        // Views for system iteration
-        template<typename... Components>
-        auto View() {
-            return m_registry.view<Components...>();
-        }
-
-        template<typename... Components>
-        auto View() const {
-            return m_registry.view<Components...>();
-        }
-
-        // Registry access for advanced operations
-        entt::registry& GetRegistry() { return m_registry; }
-        const entt::registry& GetRegistry() const { return m_registry; }
-
-        uint32_t GetEntityCount() const { return m_entityCounter; }
+    private:
+#ifdef ENTT_AVAILABLE
+        entt::registry m_registry;
+#else
+        Entity m_next{1};
+#endif
     };
 }

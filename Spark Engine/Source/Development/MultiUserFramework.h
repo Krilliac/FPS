@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../Networking/NetworkCore.h"
 #include <unordered_map>
@@ -19,8 +19,8 @@ namespace SparkEngine {
     struct DeveloperSession {
         std::string developerId;
         std::string displayName;
-        DirectX::XMFLOAT4 cursorColor;
-        DirectX::XMFLOAT3 viewPosition;
+        XMFLOAT4 cursorColor;
+        XMFLOAT3 viewPosition;
         bool isActive = true;
         uint64_t lastActivity = 0;
     };
@@ -64,7 +64,7 @@ namespace SparkEngine {
         // Developer management
         std::vector<DeveloperSession> GetActiveDevelopers() const;
         bool IsDeveloperActive(const std::string& developerId) const;
-        void UpdateDeveloperPosition(const DirectX::XMFLOAT3& position);
+        void UpdateDeveloperPosition(const XMFLOAT3& position);
 
         // Event handling
         std::function<void(const DevelopmentEvent&)> OnEventReceived;
@@ -77,3 +77,4 @@ namespace SparkEngine {
         void HandleNetworkMessage(const std::vector<uint8_t>& message);
     };
 }
+

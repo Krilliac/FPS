@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../../Core/framework.h"
 #include "../Texture.h"
 #include <memory>
@@ -6,11 +6,11 @@
 
 namespace SparkEngine {
     struct PBRMaterialData {
-        DirectX::XMFLOAT3 albedo = {1.0f, 1.0f, 1.0f};
+        XMFLOAT3 albedo = {1.0f, 1.0f, 1.0f};
         float metallic = 0.0f;
         float roughness = 0.5f;
         float ao = 1.0f;
-        DirectX::XMFLOAT3 emissive = {0.0f, 0.0f, 0.0f};
+        XMFLOAT3 emissive = {0.0f, 0.0f, 0.0f};
         float normalStrength = 1.0f;
         float alphaCutoff = 0.5f;
         float padding[3] = {0.0f, 0.0f, 0.0f};  // Align to 16 bytes
@@ -64,11 +64,11 @@ namespace SparkEngine {
         PBRMaterialData& GetMaterialData() { m_isDirty = true; return m_materialData; }
 
         // Material property setters
-        void SetAlbedo(const DirectX::XMFLOAT3& albedo) { m_materialData.albedo = albedo; m_isDirty = true; }
+        void SetAlbedo(const XMFLOAT3& albedo) { m_materialData.albedo = albedo; m_isDirty = true; }
         void SetMetallic(float metallic) { m_materialData.metallic = metallic; m_isDirty = true; }
         void SetRoughness(float roughness) { m_materialData.roughness = roughness; m_isDirty = true; }
         void SetAO(float ao) { m_materialData.ao = ao; m_isDirty = true; }
-        void SetEmissive(const DirectX::XMFLOAT3& emissive) { m_materialData.emissive = emissive; m_isDirty = true; }
+        void SetEmissive(const XMFLOAT3& emissive) { m_materialData.emissive = emissive; m_isDirty = true; }
         void SetNormalStrength(float strength) { m_materialData.normalStrength = strength; m_isDirty = true; }
 
         // Material operations

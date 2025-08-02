@@ -31,7 +31,7 @@ Player::Player()
 {
     SetName("Player");
     m_currentAmmo = m_currentWeapon.MagazineSize;
-    ASSERT_MSG(m_currentAmmo > 0, "Initial ammo must be positive");
+    SPARK_ASSERT_MSG(m_currentAmmo > 0, "Initial ammo must be positive");
 }
 
 // Initialization
@@ -54,7 +54,7 @@ HRESULT Player::Initialize(ID3D11Device* device,
         m_projectilePool = new ProjectilePool(50);
         ASSERT_NOT_NULL(m_projectilePool);
         HRESULT hr = m_projectilePool->Initialize(device, context);
-        ASSERT_MSG(SUCCEEDED(hr), "ProjectilePool::Initialize failed");
+        SPARK_ASSERT_MSG(SUCCEEDED(hr), "ProjectilePool::Initialize failed");
         if (FAILED(hr)) return hr;
     }
 
@@ -64,7 +64,7 @@ HRESULT Player::Initialize(ID3D11Device* device,
 // Per-frame update
 void Player::Update(float dt)
 {
-    ASSERT_MSG(dt >= 0.0f && std::isfinite(dt), "Delta time must be non-negative and finite");
+    SPARK_ASSERT_MSG(dt >= 0.0f && std::isfinite(dt), "Delta time must be non-negative and finite");
     if (!IsAlive()) return;
 
     HandleInput(dt);
@@ -85,7 +85,7 @@ void Player::Render(const XMMATRIX&, const XMMATRIX&)
 // Damage & healing
 void Player::TakeDamage(float dmg)
 {
-    ASSERT_MSG(dmg >= 0.0f, "Damage must be non-negative");
+    SPARK_ASSERT_MSG(dmg >= 0.0f, "Damage must be non-negative");
     if (!IsAlive()) return;
 
     float absorbed = std::min(dmg * 0.5f, m_armor);
@@ -96,13 +96,13 @@ void Player::TakeDamage(float dmg)
 
 void Player::Heal(float amt)
 {
-    ASSERT_MSG(amt >= 0.0f, "Heal amount must be non-negative");
+    SPARK_ASSERT_MSG(amt >= 0.0f, "Heal amount must be non-negative");
     m_health = std::min(m_maxHealth, m_health + amt);
 }
 
 void Player::AddArmor(float amt)
 {
-    ASSERT_MSG(amt >= 0.0f, "Armor amount must be non-negative");
+    SPARK_ASSERT_MSG(amt >= 0.0f, "Armor amount must be non-negative");
     m_armor = std::min(m_maxArmor, m_armor + amt);
 }
 
@@ -167,7 +167,7 @@ void Player::OnHit(GameObject* target)
 
 void Player::OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal)
 {
-    ASSERT_MSG(std::isfinite(hitPoint.x) && std::isfinite(hitPoint.y) && std::isfinite(hitPoint.z),
+    SPARK_ASSERT_MSG(std::isfinite(hitPoint.x) && std::isfinite(hitPoint.y) && std::isfinite(hitPoint.z),
         "Invalid hitPoint");
     TakeDamage(m_currentWeapon.Damage);
 }

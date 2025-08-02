@@ -20,7 +20,7 @@ using namespace DirectX;
 
 MeshData Primitives::CreateCube(float size)
 {
-    ASSERT_MSG(size > 0.0f, "Cube size must be positive");
+    SPARK_ASSERT_MSG(size > 0.0f, "Cube size must be positive");
 
     MeshData m;
     float h = size * 0.5f;
@@ -56,7 +56,7 @@ MeshData Primitives::CreateCube(float size)
 
 MeshData Primitives::CreatePlane(float width, float depth)
 {
-    ASSERT_MSG(width > 0.0f && depth > 0.0f, "Plane dimensions must be positive");
+    SPARK_ASSERT_MSG(width > 0.0f && depth > 0.0f, "Plane dimensions must be positive");
 
     MeshData m;
     float hw = width * 0.5f, hd = depth * 0.5f;
@@ -77,8 +77,8 @@ MeshData Primitives::CreatePlane(float width, float depth)
 
 MeshData Primitives::CreateSphere(float radius, int slices, int stacks)
 {
-    ASSERT_MSG(radius > 0.0f, "Sphere radius must be positive");
-    ASSERT_MSG(slices >= 3 && stacks >= 2, "Sphere slices/stacks must be >=3/2");
+    SPARK_ASSERT_MSG(radius > 0.0f, "Sphere radius must be positive");
+    SPARK_ASSERT_MSG(slices >= 3 && stacks >= 2, "Sphere slices/stacks must be >=3/2");
 
     MeshData m;
     for (int i = 0; i <= stacks; ++i)

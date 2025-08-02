@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../Core/framework.h"
 #include "../Assets/AssetManager.h"
 #include "../Networking/NetworkCore.h"
@@ -8,7 +8,7 @@
 
 namespace SparkEngine {
     struct StreamingRegion {
-        DirectX::XMFLOAT3 center;
+        XMFLOAT3 center;
         float radius;
         uint32_t priority;
         std::unordered_set<std::string> requiredAssets;
@@ -59,9 +59,9 @@ namespace SparkEngine {
         void Update();
 
         // Region-based streaming
-        void AddStreamingRegion(const DirectX::XMFLOAT3& center, float radius, uint32_t priority = 1);
-        void RemoveStreamingRegion(const DirectX::XMFLOAT3& center);
-        void UpdateStreamingRegions(const DirectX::XMFLOAT3& viewerPosition);
+        void AddStreamingRegion(const XMFLOAT3& center, float radius, uint32_t priority = 1);
+        void RemoveStreamingRegion(const XMFLOAT3& center);
+        void UpdateStreamingRegions(const XMFLOAT3& viewerPosition);
         
         // Asset streaming control
         void RequestAssetStream(const std::string& assetId, float priority = 1.0f);
@@ -80,8 +80,8 @@ namespace SparkEngine {
         std::vector<uint8_t> DecompressAssetData(const std::vector<uint8_t>& compressedData);
         
         // Predictive streaming
-        void PredictRequiredAssets(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& velocity);
-        void PreloadAssetsForArea(const DirectX::XMFLOAT3& center, float radius);
+        void PredictRequiredAssets(const XMFLOAT3& position, const XMFLOAT3& velocity);
+        void PreloadAssetsForArea(const XMFLOAT3& center, float radius);
         
         // Statistics and monitoring
         float GetStreamingProgress() const;
@@ -93,7 +93,8 @@ namespace SparkEngine {
         void ProcessDownloadQueue();
         bool DownloadAsset(const std::string& assetId);
         void HandleAssetReceived(const NetworkPacket& packet);
-        float CalculateAssetPriority(const std::string& assetId, const DirectX::XMFLOAT3& viewerPos);
+        float CalculateAssetPriority(const std::string& assetId, const XMFLOAT3& viewerPos);
         bool ShouldEvictAsset(const AssetStreamInfo& assetInfo) const;
     };
 }
+

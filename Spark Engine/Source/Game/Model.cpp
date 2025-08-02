@@ -12,7 +12,7 @@
 #include "Model.h"
 #include "ModelVertex.h"
 #include "Utils/Assert.h"
-#include <tiny_obj_loader.h>
+// #include <tiny_obj_loader.h> // Use assimp instead
 #include <vector>
 #include <string>
 #include <DirectXMath.h>
@@ -104,7 +104,7 @@ HRESULT Model::LoadObj(const std::wstring& filename, ID3D11Device* device)
     sd.pSysMem = verts.data();
 
     HRESULT hr = device->CreateBuffer(&bd, &sd, &m_vb);
-    ASSERT_MSG(SUCCEEDED(hr), "Failed to create vertex buffer");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "Failed to create vertex buffer");
     if (FAILED(hr)) return hr;
 
     // Index buffer
@@ -113,16 +113,16 @@ HRESULT Model::LoadObj(const std::wstring& filename, ID3D11Device* device)
     sd.pSysMem = idxs.data();
 
     hr = device->CreateBuffer(&bd, &sd, &m_ib);
-    ASSERT_MSG(SUCCEEDED(hr), "Failed to create index buffer");
+    SPARK_ASSERT_MSG(SUCCEEDED(hr), "Failed to create index buffer");
     return hr;
 }
 
 void Model::Render(ID3D11DeviceContext* ctx)
 {
-    ASSERT(ctx != nullptr);
-    ASSERT(m_vb != nullptr);
-    ASSERT(m_ib != nullptr);
-    ASSERT(m_indexCount > 0);
+    SPARK_ASSERT(ctx != nullptr);
+    SPARK_ASSERT(m_vb != nullptr);
+    SPARK_ASSERT(m_ib != nullptr);
+    SPARK_ASSERT(m_indexCount > 0);
 
     UINT stride = sizeof(ModelVertex);
     UINT offset = 0;

@@ -1,4 +1,4 @@
-﻿// ProjectilePool.h
+// ProjectilePool.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -24,16 +24,16 @@ public:
 
     HRESULT Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
     void    Update(float deltaTime);
-    void    Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& proj);
+    void    Render(const XMMATRIX& view, const XMMATRIX& proj);
     void    Shutdown();
 
     Projectile* GetProjectile();
     void        ReturnProjectile(Projectile* p);
 
-    void FireBullet(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& dir, float speed);
-    void FireRocket(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& dir, float speed);
-    void FireGrenade(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& dir, float speed);
-    void FireProjectile(ProjectileType type, const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& dir, float speed);
+    void FireBullet(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed);
+    void FireRocket(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed);
+    void FireGrenade(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed);
+    void FireProjectile(ProjectileType type, const XMFLOAT3& pos, const XMFLOAT3& dir, float speed);
 
     size_t GetActiveCount()    const;
     size_t GetAvailableCount() const;

@@ -97,7 +97,7 @@ HRESULT SoundEffect::ParseWAVFile(const BYTE* data, DWORD size)
 HRESULT SoundEffect::FindChunk(const BYTE* data, DWORD dataSize,
     DWORD fourCC, DWORD& outSize, DWORD& outPos)
 {
-    ASSERT(dataSize > 12);          // RIFF header size
+    SPARK_ASSERT(dataSize > 12);          // RIFF header size
     DWORD offset = 12;              // skip RIFF + WAVE ids
 
     while (offset + 8 <= dataSize)

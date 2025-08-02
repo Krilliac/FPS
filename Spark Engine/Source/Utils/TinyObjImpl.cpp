@@ -3,7 +3,7 @@
 // This file compiles the full tinyobjloader implementation exactly once.
 // Placing the implementation in a single .cpp prevents multiple-definition
 // linker errors that would occur if the implementation were included in
-// multiple translation units via a header. All other files (#include <tiny_obj_loader.h>)
+// #include <tiny_obj_loader.h> // Use assimp instead
 // see only declarations, while this file emits the actual function bodies.
 //
 // Do NOT move this define into a header or include it elsewhere—doing so
@@ -11,4 +11,4 @@
 // of every tinyobjloader symbol, resulting in linker failures.
 // ---------------------------------------------------------------------------------
 #define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
+// #include <tiny_obj_loader.h> // Use assimp instead

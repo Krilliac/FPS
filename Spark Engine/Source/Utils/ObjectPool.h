@@ -1,4 +1,4 @@
-﻿// ObjectPool.h
+// ObjectPool.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -20,7 +20,7 @@ public:
     explicit ObjectPool(size_t maxSize = 100)
         : m_maxSize(maxSize)
     {
-        ASSERT_MSG(maxSize > 0, "ObjectPool maxSize must be positive");
+        SPARK_ASSERT_MSG(maxSize > 0, "ObjectPool maxSize must be positive");
         m_objects.reserve(maxSize);
     }
 
@@ -28,15 +28,15 @@ public:
         : m_maxSize(maxSize)
         , m_factory(factory)
     {
-        ASSERT_MSG(maxSize > 0, "ObjectPool maxSize must be positive");
-        ASSERT_MSG(factory != nullptr, "ObjectPool factory must not be null");
+        SPARK_ASSERT_MSG(maxSize > 0, "ObjectPool maxSize must be positive");
+        SPARK_ASSERT_MSG(factory != nullptr, "ObjectPool factory must not be null");
         m_objects.reserve(maxSize);
 
         // Pre-allocate objects
         for (size_t i = 0; i < maxSize; ++i)
         {
             auto obj = m_factory();
-            ASSERT_MSG(obj != nullptr, "Factory returned null object");
+            SPARK_ASSERT_MSG(obj != nullptr, "Factory returned null object");
             m_available.push(obj.get());
             m_objects.push_back(std::move(obj));
         }
@@ -52,7 +52,7 @@ public:
             if (m_objects.size() < m_maxSize && m_factory)
             {
                 auto obj = m_factory();
-                ASSERT_MSG(obj != nullptr, "Factory returned null object");
+                SPARK_ASSERT_MSG(obj != nullptr, "Factory returned null object");
                 T* ptr = obj.get();
                 m_objects.push_back(std::move(obj));
                 return ptr;
@@ -95,13 +95,13 @@ public:
     // Pre-allocate with factory
     void PreAllocate(size_t count, std::function<std::unique_ptr<T>()> factory)
     {
-        ASSERT_MSG(factory != nullptr, "PreAllocate factory must not be null");
+        SPARK_ASSERT_MSG(factory != nullptr, "PreAllocate factory must not be null");
         m_factory = factory;
 
         for (size_t i = 0; i < count && m_objects.size() < m_maxSize; ++i)
         {
             auto obj = m_factory();
-            ASSERT_MSG(obj != nullptr, "Factory returned null object");
+            SPARK_ASSERT_MSG(obj != nullptr, "Factory returned null object");
             m_available.push(obj.get());
             m_objects.push_back(std::move(obj));
         }

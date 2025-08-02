@@ -1,4 +1,4 @@
-﻿// CollisionSystem.h
+// CollisionSystem.h
 #pragma once
 
 #include "Utils/Assert.h"
@@ -8,8 +8,8 @@
 #include <cfloat>
 #include <cmath>
 
-using DirectX::XMFLOAT3;
-using DirectX::XMMATRIX;
+using XMFLOAT3;
+using XMMATRIX;
 
 // Bounding box
 struct BoundingBox

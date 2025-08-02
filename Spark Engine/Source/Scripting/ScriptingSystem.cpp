@@ -99,11 +99,11 @@ namespace SparkEngine {
 
     void ScriptingSystem::RegisterEngineAPI() {
         // Register basic math types
-        m_lua.new_usertype<DirectX::XMFLOAT3>("Vector3",
-            "x", &DirectX::XMFLOAT3::x,
-            "y", &DirectX::XMFLOAT3::y,
-            "z", &DirectX::XMFLOAT3::z,
-            sol::constructors<DirectX::XMFLOAT3(), DirectX::XMFLOAT3(float, float, float)>()
+        m_lua.new_usertype<XMFLOAT3>("Vector3",
+            "x", &XMFLOAT3::x,
+            "y", &XMFLOAT3::y,
+            "z", &XMFLOAT3::z,
+            sol::constructors<XMFLOAT3(), XMFLOAT3(float, float, float)>()
         );
 
         // Register utility functions
@@ -171,3 +171,4 @@ namespace SparkEngine {
         };
     }
 }
+
