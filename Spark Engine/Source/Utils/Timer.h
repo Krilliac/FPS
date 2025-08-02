@@ -1,30 +1,20 @@
-﻿// Timer.h
 #pragma once
+#include "framework.h"
 
-#include "..\Core\framework.h"
-#include "Utils/Assert.h"
-#include <chrono>
-
-class Timer
-{
-private:
-    std::chrono::high_resolution_clock::time_point m_lastTime;
-    float                                          m_deltaTime;
-    float                                          m_totalTime;
-    bool                                           m_paused;
-
-public:
-    Timer();
-    ~Timer();
-
-    void  Start();
-    void  Stop();
-    void  Reset();
-    float GetDeltaTime();
-    float GetTotalTime() const { return m_totalTime; }
-
-    bool IsPaused() const { return m_paused; }
-
-private:
-    void UpdateTime();
-};
+namespace SparkEngine {
+    class Timer {
+    public:
+        Timer();
+        
+        void Reset();
+        float GetDeltaTime();
+        float GetTotalTime() const;
+        
+        static float GetSystemTime();
+        
+    private:
+        std::chrono::high_resolution_clock::time_point m_startTime;
+        std::chrono::high_resolution_clock::time_point m_lastTime;
+        float m_totalTime;
+    };
+}

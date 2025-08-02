@@ -1,67 +1,55 @@
-#include <imgui.h>
-#include "Utils/FileWatcher.h"
-#include "Utils/Assert.h"
-#include "Utils/CrashHandler.h"
-#include "Assets/AssetSystem.h"
-#include "Editor/EditorSystem.h"
-#include "Input/InputSystem.h"
-#include "Audio/AudioSystem.h"
-#include "Scripting/ScriptingSystem.h"
-#include "Physics/PhysicsSystem.h"
-#include "Graphics/Systems/RenderSystem.h"
-#include "Game/SparkEngineGame.h"
 #include "PhysicsSystem.h"
-#include <iostream>
+#include "../Utils/Logger.h"
 
+#ifdef PHYSX_AVAILABLE
 namespace SparkEngine {
+    PhysicsSystem::PhysicsSystem() {}
     PhysicsSystem::~PhysicsSystem() { Shutdown(); }
 
-    bool PhysicsSystem::Initialize(EntityRegistry* registry) {
-        m_registry = registry;
+    bool PhysicsSystem::Initialize() {
+        Logger::Info("Initializing PhysX...");
         m_foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_allocator, m_errorCallback);
-        m_physics   = PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation, physx::PxTolerancesScale(), true, m_pvd);
-        #ifdef _DEBUG
-        m_pvd = physx::PxCreatePvd(*m_foundation);
-        physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
-        m_pvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
-        #endif
-        if (!m_physics) return false;
-        physx::PxSceneDesc desc(m_physics->getTolerancesScale());
-        desc.gravity       = physx::PxVec3(0.0f, -9.81f, 0.0f);
-        m_dispatcher       = physx::PxDefaultCpuDispatcherCreate(2);
-        desc.cpuDispatcher = m_dispatcher;
-        desc.filterShader  = physx::PxDefaultSimulationFilterShader;
-        m_scene            = m_physics->createScene(desc);
-        m_defaultMaterial  = m_physics->createMaterial(0.5f,0.5f,0.1f);
-        m_initialized = true;
+        if (!m_foundation) { Logger::Error("PxCreateFoundation failed"); return false; }
+        m_pvd = PxCreatePvd(*m_foundation);
+        PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+        m_pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+
+        m_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation, PxTolerancesScale(), true, m_pvd);
+        if (!m_physics) { Logger::Error("PxCreatePhysics failed"); return false; }
+
+        PxSceneDesc sceneDesc(m_physics->getTolerancesScale());
+        sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+        m_scene = m_physics->createScene(sceneDesc);
+        if (!m_scene) { Logger::Error("createScene failed"); return false; }
+
+        Logger::Info("PhysX initialized");
         return true;
     }
 
-    void PhysicsSystem::Update(float dt) {
-        if (!m_initialized) return;
-        m_timeAccumulator += dt;
-        while (m_timeAccumulator >= m_stepSize) {
-            m_scene->simulate(m_stepSize);
-            m_scene->fetchResults(true);
-            SyncTransforms();
-            m_timeAccumulator -= m_stepSize;
-        }
-    }
-
     void PhysicsSystem::Shutdown() {
-        if (m_scene)       { m_scene->release();       m_scene=null; }
-        if (m_dispatcher) { m_dispatcher->release(); m_dispatcher=null; }
-        if (m_physics)    { m_physics->release();    m_physics=null; }
-        if (m_foundation) { m_foundation->release(); m_foundation=null; }
-        m_initialized = false;
+        Logger::Info("Shutting down PhysX...");
+        if (m_scene) { m_scene->release(); m_scene = nullptr; }
+        if (m_physics) { m_physics->release(); m_physics = nullptr; }
+        if (m_pvd) { m_pvd->release(); m_pvd = nullptr; }
+        if (m_foundation) { m_foundation->release(); m_foundation = nullptr; }
+        Logger::Info("PhysX shutdown complete");
     }
 
-    void PhysicsSystem::SyncTransforms() {
-        auto view = m_registry->View<RigidBodyComponent, TransformComponent>();
-        for (auto e : view) {
-            auto& rb = view.get<RigidBodyComponent>(e);
-            physx::PxTransform t = rb.actor->getGlobalPose();
-            view.get<TransformComponent>(e).position = {t.p.x, t.p.y, t.p.z};
-        }
+    void PhysicsSystem::Update(float deltaTime) {
+        Simulate(deltaTime);
+    }
+
+    void PhysicsSystem::Simulate(float deltaTime) {
+        if (!m_scene) return;
+        m_scene->simulate(deltaTime);
+        m_scene->fetchResults(true);
+    }
+
+    PxRigidDynamic* PhysicsSystem::CreateRigidDynamic(const PxTransform& transform) {
+        if (!m_physics || !m_scene) return nullptr;
+        PxRigidDynamic* actor = m_physics->createRigidDynamic(transform);
+        m_scene->addActor(*actor);
+        return actor;
     }
 }
+#endif

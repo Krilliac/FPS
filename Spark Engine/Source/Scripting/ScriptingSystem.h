@@ -1,15 +1,25 @@
 #pragma once
 #include "../Core/framework.h"
+#ifdef SOL2_AVAILABLE
+#include <sol/sol.hpp>
+#endif
 
 namespace SparkEngine {
+#ifdef SOL2_AVAILABLE
     class ScriptingSystem {
     public:
-        ScriptingSystem()=default; ~ScriptingSystem()=default;
-        bool Initialize() { return true; }
-        void Shutdown() {}
-        void Update(float deltaTime) {}
+        ScriptingSystem();
+        ~ScriptingSystem();
+
+        bool Initialize();
+        void Shutdown();
+        void Update(float deltaTime);
+
+        bool ExecuteFile(const std::string& filepath);
+        bool ExecuteString(const std::string& code);
+
     private:
-        bool m_initialized = false;
-        std::unordered_map<std::string, std::string> m_scripts;
+        std::unique_ptr<sol::state> m_lua;
     };
+#endif
 }

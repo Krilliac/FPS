@@ -1,115 +1,33 @@
 #pragma once
 #include "../Core/framework.h"
-#include "../ECS/System.h"
-#include "../ECS/Components.h"
+
+#ifdef PHYSX_AVAILABLE
 #include <PxPhysicsAPI.h>
-#include <memory>
+#endif
 
 namespace SparkEngine {
-    // Physics Components
-    struct RigidBodyComponent {
-        physx::PxRigidActor* actor = nullptr;
-        bool isDynamic = true;
-        float mass = 1.0f;
-        XMFLOAT3 velocity = {0.0f, 0.0f, 0.0f};
-        XMFLOAT3 angularVelocity = {0.0f, 0.0f, 0.0f};
-        bool kinematic = false;
-        float linearDamping = 0.1f;
-        float angularDamping = 0.1f;
-
-        RigidBodyComponent() = default;
-        ~RigidBodyComponent() = default;
-    };
-
-    struct ColliderComponent {
-        physx::PxShape* shape = nullptr;
-        physx::PxGeometry* geometry = nullptr;
-        physx::PxMaterial* material = nullptr;
-
-        enum Type { Box, Sphere, Capsule, Mesh };
-        Type type = Box;
-
-        // Box collider data
-        XMFLOAT3 boxHalfExtents = {0.5f, 0.5f, 0.5f};
-
-        // Sphere collider data
-        float sphereRadius = 0.5f;
-
-        // Capsule collider data
-        float capsuleRadius = 0.5f;
-        float capsuleHeight = 2.0f;
-
-        // Material properties
-        float staticFriction = 0.5f;
-        float dynamicFriction = 0.5f;
-        float restitution = 0.1f;
-
-        bool isTrigger = false;
-
-        ColliderComponent() = default;
-        ~ColliderComponent() = default;
-    };
-
-    class PhysicsSystem : public System {
-    private:
-        physx::PxDefaultAllocator m_allocator;
-        physx::PxDefaultErrorCallback m_errorCallback;
-        physx::PxFoundation* m_foundation = nullptr;
-        physx::PxPhysics* m_physics = nullptr;
-        physx::PxScene* m_scene = nullptr;
-        physx::PxDefaultCpuDispatcher* m_dispatcher = nullptr;
-        physx::PxPvd* m_pvd = nullptr;
-
-        // Default materials
-        physx::PxMaterial* m_defaultMaterial = nullptr;
-
-        float m_timeAccumulator = 0.0f;
-        float m_stepSize = 1.0f / 60.0f;  // 60 FPS physics
-
-        bool m_initialized = false;
-
+#ifdef PHYSX_AVAILABLE
+    using namespace physx;
+    class PhysicsSystem {
     public:
-        PhysicsSystem() = default;
-        ~PhysicsSystem() override;
+        PhysicsSystem();
+        ~PhysicsSystem();
 
-        bool Initialize(EntityRegistry* registry) override;
-        void Update(float deltaTime) override;
-        void Shutdown() override;
-        const char* GetName() const override { return "PhysicsSystem"; }
+        bool Initialize();
+        void Shutdown();
+        void Update(float deltaTime);
 
-        // Rigidbody management
-        void CreateRigidBody(Entity entity, bool isDynamic = true, float mass = 1.0f);
-        void UpdateRigidBodyTransform(Entity entity);
-        void SetRigidBodyVelocity(Entity entity, const XMFLOAT3& velocity);
-        void AddForce(Entity entity, const XMFLOAT3& force, bool impulse = false);
-        void AddTorque(Entity entity, const XMFLOAT3& torque, bool impulse = false);
-
-        // Collider management
-        void CreateBoxCollider(Entity entity, const XMFLOAT3& halfExtents);
-        void CreateSphereCollider(Entity entity, float radius);
-        void CreateCapsuleCollider(Entity entity, float radius, float height);
-
-        // Material management
-        physx::PxMaterial* CreateMaterial(float staticFriction, float dynamicFriction, float restitution);
-        physx::PxMaterial* GetDefaultMaterial() { return m_defaultMaterial; }
-
-        // Scene queries
-        bool Raycast(const XMFLOAT3& origin, const XMFLOAT3& direction, 
-                    float maxDistance, physx::PxRaycastHit& hit);
-        bool SphereCast(const XMFLOAT3& origin, float radius, 
-                       const XMFLOAT3& direction, float maxDistance, 
-                       physx::PxSweepHit& hit);
-
-        // Settings
-        void SetGravity(const XMFLOAT3& gravity);
-        XMFLOAT3 GetGravity() const;
-
-        physx::PxScene* GetScene() { return m_scene; }
+        PxRigidDynamic* CreateRigidDynamic(const PxTransform& transform);
+        void Simulate(float deltaTime);
 
     private:
-        void SyncTransforms();
-        void UpdatePhysicsTransforms();
-        physx::PxTransform XMFLOATToPxTransform(const XMFLOAT3& pos, const XMFLOAT3& rot);
-        void PxTransformToXMFLOAT(const physx::PxTransform& pxTransform, XMFLOAT3& pos, XMFLOAT3& rot);
+        PxDefaultAllocator      m_allocator;
+        PxDefaultErrorCallback  m_errorCallback;
+        PxFoundation*           m_foundation = nullptr;
+        PxPhysics*              m_physics = nullptr;
+        PxScene*                m_scene = nullptr;
+        PxControllerManager*    m_controllerManager = nullptr;
+        PxPvd*                  m_pvd = nullptr;
     };
+#endif
 }
