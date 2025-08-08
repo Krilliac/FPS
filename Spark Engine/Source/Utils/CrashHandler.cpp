@@ -348,7 +348,7 @@ static void SaveScreenshot(const std::wstring& file) {
     D3D11_MAPPED_SUBRESOURCE m{};
     if (FAILED(ctx->Map(cpu.Get(), 0, D3D11_MAP_READ, 0, &m))) return;
 
-    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    HRESULT hrCom = CoInitializeEx(NULL, COINIT_MULTITHREADED); (void)hrCom;
     IWICImagingFactory* wic = nullptr;
     IWICStream* stm = nullptr;
     IWICBitmapEncoder* enc = nullptr;

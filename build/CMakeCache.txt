@@ -14,19 +14,23 @@
 # EXTERNAL cache entries
 ########################
 
-ANGELSCRIPT_LIBRARY_NAME:STRING=angelscript
-
-//Disable installation of AngelScript
-AS_DISABLE_INSTALL:BOOL=OFF
-
-//Disable exception handling in script context
-AS_NO_EXCEPTIONS:BOOL=OFF
+//Amalgamate sources into miniz.h/c
+AMALGAMATE_SOURCES:BOOL=OFF
 
 //Build curl executable
 BUILD_CURL_EXE:BOOL=OFF
 
-//Build libcurl examples
-BUILD_EXAMPLES:BOOL=ON
+//Disable docs
+BUILD_DOCS:BOOL=OFF
+
+//Build examples
+BUILD_EXAMPLES:BOOL=OFF
+
+//Build fuzz targets
+BUILD_FUZZERS:BOOL=OFF
+
+//Build a header-only version
+BUILD_HEADER_ONLY:BOOL=OFF
 
 //Build libcurl man pages
 BUILD_LIBCURL_DOCS:BOOL=ON
@@ -34,7 +38,13 @@ BUILD_LIBCURL_DOCS:BOOL=ON
 //Build misc man pages (e.g. curl-config and mk-ca-bundle)
 BUILD_MISC_DOCS:BOOL=ON
 
-//Build shared library
+//OFF
+BUILD_NO_STDIO" Build a without stdio version":BOOL=OFF
+
+//Disable all samples
+BUILD_SAMPLES:BOOL=OFF
+
+//Build shared library instead of static
 BUILD_SHARED_LIBS:BOOL=OFF
 
 //Build curl executable with static libcurl
@@ -46,26 +56,14 @@ BUILD_STATIC_LIBS:BOOL=OFF
 //Build tests
 BUILD_TESTING:BOOL=OFF
 
+//Build tests
+BUILD_TESTS:BOOL=OFF
+
+//Disable all tools
+BUILD_TOOLS:BOOL=OFF
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
-
-//ASM_MASM compiler
-CMAKE_ASM_MASM_COMPILER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/ml64.exe
-
-//Flags used by the ASM_MASM compiler during all build types.
-CMAKE_ASM_MASM_FLAGS:STRING=
-
-//Flags used by the ASM_MASM compiler during DEBUG builds.
-CMAKE_ASM_MASM_FLAGS_DEBUG:STRING=
-
-//Flags used by the ASM_MASM compiler during MINSIZEREL builds.
-CMAKE_ASM_MASM_FLAGS_MINSIZEREL:STRING=
-
-//Flags used by the ASM_MASM compiler during RELEASE builds.
-CMAKE_ASM_MASM_FLAGS_RELEASE:STRING=
-
-//Flags used by the ASM_MASM compiler during RELWITHDEBINFO builds.
-CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO:STRING=
 
 //No help, variable specified on the command line.
 CMAKE_BUILD_TYPE:UNINITIALIZED=Debug
@@ -76,7 +74,7 @@ CMAKE_BUILD_TYPE:UNINITIALIZED=Debug
 CMAKE_CONFIGURATION_TYPES:STRING=Debug;Release;MinSizeRel;RelWithDebInfo
 
 //Flags used by the CXX compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /EHsc
+CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /GR /EHsc
 
 //Flags used by the CXX compiler during DEBUG builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=/Zi /Ob0 /Od /RTC1
@@ -110,8 +108,6 @@ CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=/Zi /O2 /Ob1 /DNDEBUG
 
 //Libraries linked by default with all C applications.
 CMAKE_C_STANDARD_LIBRARIES:STRING=kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-
-CMAKE_DEBUG_POSTFIX:STRING=
 
 //Flags used by the linker during all build types.
 CMAKE_EXE_LINKER_FLAGS:STRING=/machine:x64
@@ -168,7 +164,7 @@ CMAKE_INSTALL_MANDIR:PATH=
 CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/SparkEngine
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files/SparkEngine
 
 //Run-time variable data (LOCALSTATEDIR/run)
 CMAKE_INSTALL_RUNSTATEDIR:PATH=
@@ -297,6 +293,10 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 // during RELWITHDEBINFO builds.
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
+CMAKE_USE_LIBSSH2:BOOL=OFF
+
+CMAKE_USE_OPENSSL:BOOL=OFF
+
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
 // during the make.  This is useful for debugging only. With Visual
@@ -310,9 +310,13 @@ CPACK_SOURCE_7Z:BOOL=ON
 CPACK_SOURCE_ZIP:BOOL=ON
 
 //Value Computed by CMake
-CURL_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/curl
+CURL_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/ThirdParty/Networking/curl
 
 CURL_BROTLI:BOOL=OFF
+
+CURL_CA_BUNDLE:BOOL=OFF
+
+CURL_CA_PATH:BOOL=OFF
 
 //Enable safe CA bundle search (within the curl tool directory)
 // on Windows
@@ -326,6 +330,9 @@ CURL_COMPLETION_FISH:BOOL=OFF
 
 //Install zsh completions
 CURL_COMPLETION_ZSH:BOOL=OFF
+
+//The directory containing a CMake configuration file for CURL.
+CURL_DIR:PATH=CURL_DIR-NOTFOUND
 
 //Disable alt-svc support
 CURL_DISABLE_ALTSVC:BOOL=OFF
@@ -349,7 +356,7 @@ CURL_DISABLE_CA_SEARCH:BOOL=OFF
 CURL_DISABLE_COOKIES:BOOL=OFF
 
 //Disable DICT
-CURL_DISABLE_DICT:BOOL=OFF
+CURL_DISABLE_DICT:BOOL=ON
 
 //Disable Digest authentication
 CURL_DISABLE_DIGEST_AUTH:BOOL=OFF
@@ -370,7 +377,7 @@ CURL_DISABLE_FTP:BOOL=OFF
 CURL_DISABLE_GETOPTIONS:BOOL=OFF
 
 //Disable Gopher
-CURL_DISABLE_GOPHER:BOOL=OFF
+CURL_DISABLE_GOPHER:BOOL=ON
 
 //Disable headers-api support
 CURL_DISABLE_HEADERS_API:BOOL=OFF
@@ -385,7 +392,7 @@ CURL_DISABLE_HTTP:BOOL=OFF
 CURL_DISABLE_HTTP_AUTH:BOOL=OFF
 
 //Disable IMAP
-CURL_DISABLE_IMAP:BOOL=OFF
+CURL_DISABLE_IMAP:BOOL=ON
 
 //Disable installation targets
 CURL_DISABLE_INSTALL:BOOL=OFF
@@ -427,7 +434,7 @@ CURL_DISABLE_OPENSSL_AUTO_LOAD_CONFIG:BOOL=OFF
 CURL_DISABLE_PARSEDATE:BOOL=OFF
 
 //Disable POP3
-CURL_DISABLE_POP3:BOOL=OFF
+CURL_DISABLE_POP3:BOOL=ON
 
 //Disable built-in progress meter
 CURL_DISABLE_PROGRESS_METER:BOOL=OFF
@@ -436,7 +443,7 @@ CURL_DISABLE_PROGRESS_METER:BOOL=OFF
 CURL_DISABLE_PROXY:BOOL=OFF
 
 //Disable RTSP
-CURL_DISABLE_RTSP:BOOL=OFF
+CURL_DISABLE_RTSP:BOOL=ON
 
 //Disable SHA-512/256 hash algorithm
 CURL_DISABLE_SHA512_256:BOOL=OFF
@@ -448,7 +455,7 @@ CURL_DISABLE_SHUFFLE_DNS:BOOL=OFF
 CURL_DISABLE_SMB:BOOL=OFF
 
 //Disable SMTP
-CURL_DISABLE_SMTP:BOOL=OFF
+CURL_DISABLE_SMTP:BOOL=ON
 
 //Disable use of socketpair for curl_multi_poll
 CURL_DISABLE_SOCKETPAIR:BOOL=OFF
@@ -457,7 +464,7 @@ CURL_DISABLE_SOCKETPAIR:BOOL=OFF
 CURL_DISABLE_SRP:BOOL=OFF
 
 //Disable Telnet
-CURL_DISABLE_TELNET:BOOL=OFF
+CURL_DISABLE_TELNET:BOOL=ON
 
 //Disable TFTP
 CURL_DISABLE_TFTP:BOOL=OFF
@@ -478,16 +485,25 @@ CURL_ENABLE_SSL:BOOL=ON
 // officially external)
 CURL_HIDDEN_SYMBOLS:BOOL=ON
 
-CURL_HTTP2:BOOL=OFF
+//Path to a file.
+CURL_INCLUDE_DIR:PATH=CURL_INCLUDE_DIR-NOTFOUND
 
 //Value Computed by CMake
 CURL_IS_TOP_LEVEL:STATIC=OFF
+
+//Path to a library.
+CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
+
+//Path to a library.
+CURL_LIBRARY_RELEASE:FILEPATH=CURL_LIBRARY_RELEASE-NOTFOUND
 
 //Enable compiler Link Time Optimizations
 CURL_LTO:BOOL=OFF
 
 //Value Computed by CMake
 CURL_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl
+
+CURL_STATICLIB:BOOL=ON
 
 //Build libcurl with static CRT with MSVC (/MT)
 CURL_STATIC_CRT:BOOL=OFF
@@ -503,8 +519,6 @@ CURL_USE_GSASL:BOOL=OFF
 
 //Use GSSAPI implementation
 CURL_USE_GSSAPI:BOOL=OFF
-
-CURL_USE_LIBIDN2:BOOL=OFF
 
 //Use libpsl
 CURL_USE_LIBPSL:BOOL=OFF
@@ -543,23 +557,27 @@ CURL_USE_WOLFSSL:BOOL=OFF
 CURL_WERROR:BOOL=OFF
 
 //Enable SSPI on Windows
-CURL_WINDOWS_SSPI:BOOL=ON
+CURL_WINDOWS_SSPI:BOOL=OFF
 
-CURL_ZLIB:BOOL=OFF
+//Build curl with ZLIB support (AUTO, ON or OFF)
+CURL_ZLIB:STRING=AUTO
 
 CURL_ZSTD:BOOL=OFF
 
 //Path to a program.
 CYGWIN_BAT:FILEPATH=CYGWIN_BAT-NOTFOUND
 
-//Embed AngelScript scripting
-ENABLE_ANGELSCRIPT:BOOL=ON
+//Enable advanced input features
+ENABLE_ADVANCED_INPUT:BOOL=ON
 
 //Enable c-ares support
 ENABLE_ARES:BOOL=OFF
 
-//External debug console overlay
-ENABLE_CONSOLE:BOOL=ON
+//Enable asset streaming
+ENABLE_ASSET_STREAMING:BOOL=ON
+
+//Enable collaborative features
+ENABLE_COLLABORATIVE:BOOL=ON
 
 //Enable TrackMemory debug feature
 ENABLE_CURLDEBUG:BOOL=OFF
@@ -570,11 +588,40 @@ ENABLE_CURL_MANUAL:BOOL=ON
 //Enable curl debug features (for developing curl itself)
 ENABLE_DEBUG:BOOL=OFF
 
-//Build with in-engine editor UI
+//Enable editor features
 ENABLE_EDITOR:BOOL=ON
+
+//Enable graphics engine
+ENABLE_GRAPHICS:BOOL=ON
+
+//Enable hot reload functionality
+ENABLE_HOT_RELOAD:BOOL=ON
 
 //Enable IPv6 support
 ENABLE_IPV6:BOOL=ON
+
+//Enable advanced lighting
+ENABLE_LIGHTING_SYSTEM:BOOL=ON
+
+//Enable Lua scripting support
+ENABLE_LUA:BOOL=ON
+
+ENABLE_MANUAL:BOOL=OFF
+
+//Enable networking features
+ENABLE_NETWORKING:BOOL=OFF
+
+//Enable PhysX physics engine
+ENABLE_PHYSX:BOOL=ON
+
+//Enable post-processing effects
+ENABLE_POST_PROCESSING:BOOL=ON
+
+//Enable profiling tools
+ENABLE_PROFILING:BOOL=ON
+
+//Enable terrain system
+ENABLE_TERRAIN_SYSTEM:BOOL=ON
 
 //Enable threaded DNS lookup
 ENABLE_THREADED_RESOLVER:BOOL=ON
@@ -587,7 +634,10 @@ ENABLE_UNIX_SOCKETS:BOOL=ON
 
 //Disable all protocols except HTTP (This overrides all CURL_DISABLE_*
 // options)
-HTTP_ONLY:BOOL=OFF
+HTTP_ONLY:BOOL=ON
+
+//Install project
+INSTALL_PROJECT:BOOL=OFF
 
 //Basename of the curl library
 LIBCURL_OUTPUT_NAME:STRING=libcurl
@@ -604,9 +654,6 @@ LIBSSH2_INCLUDE_DIR:PATH=LIBSSH2_INCLUDE_DIR-NOTFOUND
 //Path to a library.
 LIBSSH2_LIBRARY:FILEPATH=LIBSSH2_LIBRARY-NOTFOUND
 
-//Compiler flags to use with MSVC
-MSVC_COMPILE_FLAGS:STRING=/MP
-
 //Path to a program.
 MSYS_CMD:FILEPATH=MSYS_CMD-NOTFOUND
 
@@ -621,6 +668,12 @@ PERL_EXECUTABLE:FILEPATH=PERL_EXECUTABLE-NOTFOUND
 
 //Enable picky compiler options
 PICKY_COMPILER:BOOL=ON
+
+//Arguments to supply to pkg-config
+PKG_CONFIG_ARGN:STRING=
+
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=PKG_CONFIG_EXECUTABLE-NOTFOUND
 
 //Value Computed by CMake
 SparkEngine_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build
@@ -661,20 +714,26 @@ USE_SSLS_EXPORT:BOOL=OFF
 //Use WinIDN for IDN support
 USE_WIN32_IDN:BOOL=OFF
 
-//Print extra CMake diagnostics
-VERBOSE_DIAGNOSTICS:BOOL=OFF
+//Path to a file.
+ZLIB_INCLUDE_DIR:PATH=ZLIB_INCLUDE_DIR-NOTFOUND
+
+//Path to a library.
+ZLIB_LIBRARY_DEBUG:FILEPATH=ZLIB_LIBRARY_DEBUG-NOTFOUND
+
+//Path to a library.
+ZLIB_LIBRARY_RELEASE:FILEPATH=ZLIB_LIBRARY_RELEASE-NOTFOUND
 
 //Fast-track known feature detection results (Windows, some Apple)
 _CURL_PREFILL:BOOL=ON
 
 //Value Computed by CMake
-angelscript_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/angelscript
+miniz_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/ThirdParty/Utils/miniz
 
 //Value Computed by CMake
-angelscript_IS_TOP_LEVEL:STATIC=OFF
+miniz_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-angelscript_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake
+miniz_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/ThirdParty/Utils/miniz
 
 
 ########################
@@ -683,19 +742,6 @@ angelscript_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/ThirdParty/Scripting/a
 
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_ASM_MASM_COMPILER
-CMAKE_ASM_MASM_COMPILER-ADVANCED:INTERNAL=1
-CMAKE_ASM_MASM_COMPILER_WORKS:INTERNAL=1
-//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS
-CMAKE_ASM_MASM_FLAGS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_DEBUG
-CMAKE_ASM_MASM_FLAGS_DEBUG-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_MINSIZEREL
-CMAKE_ASM_MASM_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_RELEASE
-CMAKE_ASM_MASM_FLAGS_RELEASE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO
-CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=d:/Spark Engine/SparkEngine/build
 //Major version of cmake used to create the current loaded cache
@@ -753,15 +799,9 @@ CMAKE_GENERATOR:INTERNAL=Visual Studio 17 2022
 //Generator instance identifier.
 CMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools
 //Name of generator platform.
-CMAKE_GENERATOR_PLATFORM:INTERNAL=
+CMAKE_GENERATOR_PLATFORM:INTERNAL=x64
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
-//Test CMAKE_HAVE_LIBC_PTHREAD
-CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=
-//Have library pthreads
-CMAKE_HAVE_PTHREADS_CREATE:INTERNAL=
-//Have library pthread
-CMAKE_HAVE_PTHREAD_CREATE:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=D:/Spark Engine/SparkEngine
@@ -812,7 +852,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -858,12 +898,18 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Test COMPILER_HAS_DEPRECATED
+COMPILER_HAS_DEPRECATED:INTERNAL=1
+//Test COMPILER_HAS_DEPRECATED_ATTR
+COMPILER_HAS_DEPRECATED_ATTR:INTERNAL=
 //ADVANCED property for variable: CPACK_SOURCE_7Z
 CPACK_SOURCE_7Z-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CPACK_SOURCE_ZIP
 CPACK_SOURCE_ZIP-ADVANCED:INTERNAL=1
 //STRINGS property for variable: CURL_BROTLI
 CURL_BROTLI-STRINGS:INTERNAL=AUTO;ON;OFF
+//ADVANCED property for variable: CURL_DIR
+CURL_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_DISABLE_ALTSVC
 CURL_DISABLE_ALTSVC-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_DISABLE_AWS
@@ -956,6 +1002,12 @@ CURL_DISABLE_WEBSOCKETS-ADVANCED:INTERNAL=1
 CURL_ENABLE_EXPORT_TARGET-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_HIDDEN_SYMBOLS
 CURL_HIDDEN_SYMBOLS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CURL_INCLUDE_DIR
+CURL_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CURL_LIBRARY_DEBUG
+CURL_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CURL_LIBRARY_RELEASE
+CURL_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_USE_GSASL
 CURL_USE_GSASL-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_USE_GSSAPI
@@ -976,8 +1028,6 @@ CURL_ZSTD-STRINGS:INTERNAL=AUTO;ON;OFF
 CYGWIN_BAT-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ENABLE_IPV6
 ENABLE_IPV6-ADVANCED:INTERNAL=1
-//Details about finding Threads
-FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Result of TRY_COMPILE
 HAVE_SIZEOF_CURL_SOCKET_T:INTERNAL=TRUE
 //Result of TRY_COMPILE
@@ -1002,12 +1052,22 @@ NGHTTP2_INCLUDE_DIR-ADVANCED:INTERNAL=1
 NGHTTP2_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PERL_EXECUTABLE
 PERL_EXECUTABLE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_ARGN
+PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
 //CHECK_TYPE_SIZE: sizeof(curl_socket_t)
 SIZEOF_CURL_SOCKET_T:INTERNAL=8
 //CHECK_TYPE_SIZE: sizeof(size_t)
 SIZEOF_SIZE_T:INTERNAL=8
 //CHECK_TYPE_SIZE: sizeof(time_t)
 SIZEOF_TIME_T:INTERNAL=8
+//ADVANCED property for variable: ZLIB_INCLUDE_DIR
+ZLIB_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: ZLIB_LIBRARY_DEBUG
+ZLIB_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: ZLIB_LIBRARY_RELEASE
+ZLIB_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
-_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/SparkEngine
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files/SparkEngine
 

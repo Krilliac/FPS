@@ -18,7 +18,7 @@ set(CPACK_DEFAULT_PACKAGE_DESCRIPTION_FILE "C:/Program Files (x86)/CMake/share/c
 set(CPACK_DEFAULT_PACKAGE_DESCRIPTION_SUMMARY "SparkEngine built using CMake")
 set(CPACK_GENERATOR "TGZ")
 set(CPACK_INSTALL_CMAKE_PROJECTS "D:/Spark Engine/SparkEngine/build;SparkEngine;ALL;/")
-set(CPACK_INSTALL_PREFIX "C:/Program Files (x86)/SparkEngine")
+set(CPACK_INSTALL_PREFIX "C:/Program Files/SparkEngine")
 set(CPACK_MODULE_PATH "D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl/CMake")
 set(CPACK_NSIS_DISPLAY_NAME "SparkEngine 0.1.0-DEV")
 set(CPACK_NSIS_INSTALLER_ICON_CODE "")

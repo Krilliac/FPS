@@ -1,240 +1,251 @@
-cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
-project(SparkEngine LANGUAGES C CXX)
+cmake_minimum_required(VERSION 3.16)
 
 # -------------------------------------------------------------
-# 1) Global compiler settings
+# 1) Disable all third-party tests/examples globally
 # -------------------------------------------------------------
-set(CMAKE_CXX_STANDARD        17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-if(MSVC)
-  add_compile_options(/permissive- /Zc:__cplusplus)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  set(CMAKE_DEBUG_POSTFIX "" CACHE STRING "" FORCE)
-endif()
+set(BUILD_TESTING OFF   CACHE BOOL "Disable all testing"   FORCE)
+set(BUILD_EXAMPLES OFF  CACHE BOOL "Disable all examples"  FORCE)
+set(BUILD_SAMPLES OFF   CACHE BOOL "Disable all samples"   FORCE)
+set(BUILD_TOOLS OFF     CACHE BOOL "Disable all tools"     FORCE)
+set(BUILD_DOCS OFF      CACHE BOOL "Disable docs"          FORCE)
 
 # -------------------------------------------------------------
-# 2) Build options + verbosity toggle
-# -------------------------------------------------------------
-option(ENABLE_EDITOR        "Build with in-engine editor UI"      ON)
-option(ENABLE_CONSOLE       "External debug console overlay"      ON)
-option(ENABLE_ANGELSCRIPT   "Embed AngelScript scripting"         ON)
-option(VERBOSE_DIAGNOSTICS  "Print extra CMake diagnostics"       OFF)
-
-# Helper for conditional diagnostic messages
-function(msg_diag)
-  if(VERBOSE_DIAGNOSTICS)
-    message(STATUS "[diag] ${ARGN}")
-  endif()
-endfunction()
-
-message(STATUS "Editor:      ${ENABLE_EDITOR}")
-message(STATUS "Console:     ${ENABLE_CONSOLE}")
-message(STATUS "AngelScript: ${ENABLE_ANGELSCRIPT}")
-msg_diag("VERBOSE_DIAGNOSTICS = ${VERBOSE_DIAGNOSTICS}")
-
-# -------------------------------------------------------------
-# 3) Glob engine .cpp / .h (exclude ThirdParty)
-# -------------------------------------------------------------
-file(GLOB_RECURSE ENGINE_SRCS CONFIGURE_DEPENDS
-  "${CMAKE_SOURCE_DIR}/Source/*.cpp"
-  "${CMAKE_SOURCE_DIR}/Spark Engine/Source/*.cpp"
-  "${CMAKE_SOURCE_DIR}/Engine/Core/*.cpp"
-)
-file(GLOB_RECURSE ENGINE_HDRS CONFIGURE_DEPENDS
-  "${CMAKE_SOURCE_DIR}/Source/*.h"
-  "${CMAKE_SOURCE_DIR}/Spark Engine/Source/*.h"
-  "${CMAKE_SOURCE_DIR}/Engine/Core/*.h"
-)
-
-# -------------------------------------------------------------
-# 4) Force-include Engine.cpp / Engine.h if glob missed them
-# -------------------------------------------------------------
-set(ENGINE_CPP_FILE "${CMAKE_SOURCE_DIR}/Engine/Core/Engine.cpp")
-if(EXISTS "${ENGINE_CPP_FILE}")
-  list(FIND ENGINE_SRCS "${ENGINE_CPP_FILE}" _cpp_found)
-  if(_cpp_found EQUAL -1)
-    message(WARNING "Appending missing: ${ENGINE_CPP_FILE}")
-    list(APPEND ENGINE_SRCS "${ENGINE_CPP_FILE}")
-  endif()
-endif()
-
-set(ENGINE_HDR_FILE "${CMAKE_SOURCE_DIR}/Engine/Core/Engine.h")
-if(EXISTS "${ENGINE_HDR_FILE}")
-  list(FIND ENGINE_HDRS "${ENGINE_HDR_FILE}" _hdr_found)
-  if(_hdr_found EQUAL -1)
-    message(WARNING "Appending missing: ${ENGINE_HDR_FILE}")
-    list(APPEND ENGINE_HDRS "${ENGINE_HDR_FILE}")
-  endif()
-endif()
-
-# -------------------------------------------------------------
-# 5) Debug-print the globs
-# -------------------------------------------------------------
-message(STATUS "---- Found engine .cpp files: ----")
-foreach(src IN LISTS ENGINE_SRCS)
-  msg_diag("${src}")
-endforeach()
-list(LENGTH ENGINE_SRCS SRCS_COUNT)
-message(STATUS "Total .cpp count: ${SRCS_COUNT}")
-
-message(STATUS "---- Found engine .h files: ----")
-foreach(hdr IN LISTS ENGINE_HDRS)
-  msg_diag("${hdr}")
-endforeach()
-list(LENGTH ENGINE_HDRS HDRS_COUNT)
-message(STATUS "Total .h count: ${HDRS_COUNT}")
-
-if(SRCS_COUNT EQUAL 0)
-  message(FATAL_ERROR "No engine .cpp files found! Check your paths.")
-endif()
-
-# -------------------------------------------------------------
-# 6) Create the executable (WIN32 subsystem uses WinMain)
-# -------------------------------------------------------------
-add_executable(SparkEngine WIN32
-  ${ENGINE_SRCS}
-)
-target_sources(SparkEngine PRIVATE ${ENGINE_HDRS})
-
-# Ensure the Shaders folder exists next to the exe in the build tree:
-set(SHADERS_SRC_DIR "${CMAKE_SOURCE_DIR}/Spark Engine/Shaders/HLSL")
-set(SHADERS_DST_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Shaders/HLSL")
-
-# Recursively copy HLSL shaders into the runtime output dir
-file(GLOB_RECURSE SHADER_FILES
-     "${SHADERS_SRC_DIR}/*.hlsl"
-)
-
-# Create destination directory
-file(MAKE_DIRECTORY "${SHADERS_DST_DIR}")
-
-# Copy each file preserving its filename
-foreach(_shader ${SHADER_FILES})
-    get_filename_component(_fname ${_shader} NAME)
-    configure_file(
-        "${_shader}"
-        "${SHADERS_DST_DIR}/${_fname}"
-        COPYONLY
-    )
-endforeach()
-
-# -------------------------------------------------------------
-# 7) Engine include directories
-# -------------------------------------------------------------
-target_include_directories(SparkEngine PRIVATE
-  "${CMAKE_SOURCE_DIR}/Source"
-  "${CMAKE_SOURCE_DIR}/Spark Engine/Source"
-  "${CMAKE_SOURCE_DIR}/Engine/Core"
-)
-
-# -------------------------------------------------------------
-# 8) ThirdParty: miniz
-# -------------------------------------------------------------
-add_library(miniz STATIC
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz/miniz.c"
-)
-target_include_directories(miniz PUBLIC
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz"
-)
-target_link_libraries(SparkEngine PRIVATE miniz)
-
-# -------------------------------------------------------------
-# 9) ThirdParty: tinyobjloader (compile implementation once)
-# -------------------------------------------------------------
-set(TINYOBJ_IMPL_PATH
-  "${CMAKE_SOURCE_DIR}/Spark Engine/Source/Utils/TinyObjImpl.cpp"
-)
-msg_diag("Expecting TinyObjImpl at: ${TINYOBJ_IMPL_PATH}")
-if(NOT EXISTS "${TINYOBJ_IMPL_PATH}")
-  message(FATAL_ERROR "TinyObjImpl.cpp NOT found at: ${TINYOBJ_IMPL_PATH}")
-endif()
-
-add_library(tinyobjloader STATIC
-  "${TINYOBJ_IMPL_PATH}"
-)
-target_include_directories(tinyobjloader PUBLIC
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include"
-)
-target_link_libraries(SparkEngine PRIVATE tinyobjloader)
-
-# -------------------------------------------------------------
-# 10) ThirdParty: libcurl (static via submodule)
-# -------------------------------------------------------------
-set(BUILD_SHARED_LIBS    OFF CACHE BOOL "" FORCE)
-set(BUILD_CURL_EXE       OFF CACHE BOOL "" FORCE)
-set(BUILD_TESTING        OFF CACHE BOOL "" FORCE)
-set(CURL_USE_SCHANNEL    ON  CACHE BOOL "" FORCE)
-set(CURL_DISABLE_LDAP    ON  CACHE BOOL "" FORCE)
-set(CURL_ZLIB            OFF CACHE BOOL "" FORCE)
-set(CURL_BROTLI          OFF CACHE BOOL "" FORCE)
-set(CURL_ZSTD            OFF CACHE BOOL "" FORCE)
-set(CURL_HTTP2           OFF CACHE BOOL "" FORCE)
-set(CURL_USE_LIBPSL      OFF CACHE BOOL "" FORCE)
-set(CURL_USE_LIBIDN2     OFF CACHE BOOL "" FORCE)
-
-add_subdirectory(
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl"
-  "${CMAKE_BINARY_DIR}/curl"
-)
-
-if(TARGET libcurl_static)
-  set(_CURL_TGT libcurl_static)
-elseif(TARGET CURL::libcurl)
-  set(_CURL_TGT CURL::libcurl)
-else()
-  message(FATAL_ERROR "Could not locate curl target")
-endif()
-
-target_link_directories(SparkEngine PRIVATE
-  $<TARGET_FILE_DIR:${_CURL_TGT}>
-)
-target_link_libraries(SparkEngine PRIVATE ${_CURL_TGT})
-target_compile_definitions(SparkEngine PRIVATE CURL_STATICLIB)
-target_include_directories(SparkEngine PRIVATE
-  "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl/include"
-)
-
-# -------------------------------------------------------------
-# 11) ThirdParty: AngelScript (optional)
-# -------------------------------------------------------------
-if(ENABLE_ANGELSCRIPT)
-  set(AS_DIR
-    "${CMAKE_SOURCE_DIR}/ThirdParty/Scripting/angelscript-mirror/sdk/angelscript/projects/cmake"
-  )
-  if(EXISTS "${AS_DIR}/CMakeLists.txt")
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-    add_subdirectory("${AS_DIR}" "${CMAKE_BINARY_DIR}/angelscript")
-    target_link_libraries(SparkEngine PRIVATE angelscript)
-    target_compile_definitions(SparkEngine PRIVATE WITH_ANGELSCRIPT=1)
-  endif()
-endif()
-
-# -------------------------------------------------------------
-# 12) Windows system libraries & defines
+# 2) Global generator and project settings
 # -------------------------------------------------------------
 if(WIN32)
-  target_link_libraries(SparkEngine PRIVATE
-    d3d11 dxgi dxguid
-    Shlwapi user32 gdi32 winmm
-    dbghelp windowscodecs
-  )
-  target_compile_definitions(SparkEngine PRIVATE
-    NOMINMAX
-    _CRT_SECURE_NO_WARNINGS
-    WIN32_LEAN_AND_MEAN
-  )
+    set(CMAKE_GENERATOR_TOOLSET "v143")
+    set(CMAKE_GENERATOR_PLATFORM "x64")
+endif()
+
+project(SparkEngine)
+
+# -------------------------------------------------------------
+# 3) Custom build options
+# -------------------------------------------------------------
+option(ENABLE_PHYSX           "Enable PhysX physics engine"   ON)
+option(ENABLE_EDITOR          "Enable editor features"        ON)
+option(ENABLE_LUA             "Enable Lua scripting support"  ON)
+option(ENABLE_COLLABORATIVE   "Enable collaborative features" ON)
+option(ENABLE_GRAPHICS        "Enable graphics engine"        ON)
+option(ENABLE_PROFILING       "Enable profiling tools"        ON)
+option(ENABLE_NETWORKING      "Enable networking features"    ON)
+option(ENABLE_ASSET_STREAMING "Enable asset streaming"        ON)
+option(ENABLE_HOT_RELOAD      "Enable hot reload functionality" ON)
+option(ENABLE_TERRAIN_SYSTEM  "Enable terrain system"          ON)
+option(ENABLE_POST_PROCESSING "Enable post-processing effects" ON)
+option(ENABLE_LIGHTING_SYSTEM "Enable advanced lighting"       ON)
+option(ENABLE_ADVANCED_INPUT  "Enable advanced input features" ON)
+
+# -------------------------------------------------------------
+# 4) C++ standard and in-source build guard
+# -------------------------------------------------------------
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+    message(FATAL_ERROR "In-source builds are not allowed. Create a separate build directory.")
 endif()
 
 # -------------------------------------------------------------
-# 13) IDE grouping: show .cpp & .h under “Source”
+# 5) Output directories
 # -------------------------------------------------------------
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-source_group(
-  TREE "${CMAKE_SOURCE_DIR}"
-  PREFIX "Source"
-  FILES
-    ${ENGINE_SRCS}
-    ${ENGINE_HDRS}
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+# -------------------------------------------------------------
+# 6) MSVC-specific compiler options
+# -------------------------------------------------------------
+if(MSVC)
+    add_compile_options(
+        /W3 /MP /bigobj
+        /wd4005  # Macro redefinition
+        /wd4996  # Deprecated functions
+        /wd4244  # Conversion warnings
+        /wd4267  # size_t conversion warnings
+    )
+    add_compile_definitions(WIN32_LEAN_AND_MEAN NOMINMAX _CRT_SECURE_NO_WARNINGS)
+endif()
+
+# -------------------------------------------------------------
+# 7) CURL BUILD - SIMPLE AND BRUTAL
+# -------------------------------------------------------------
+set(CURL_ROOT "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl")
+
+# Minimal curl settings
+set(BUILD_CURL_EXE          OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS       OFF CACHE BOOL "" FORCE)
+set(CURL_STATICLIB          ON  CACHE BOOL "" FORCE)
+set(HTTP_ONLY               ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_LDAP       ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_DICT       ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_TELNET     ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_RTSP       ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_POP3       ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_IMAP       ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_SMTP       ON  CACHE BOOL "" FORCE)
+set(CURL_DISABLE_GOPHER     ON  CACHE BOOL "" FORCE)
+set(CURL_USE_LIBPSL         OFF CACHE BOOL "" FORCE)
+set(CURL_ZSTD               OFF CACHE BOOL "" FORCE)
+set(CURL_BROTLI             OFF CACHE BOOL "" FORCE)
+set(CURL_USE_SCHANNEL       ON  CACHE BOOL "" FORCE)
+
+# Build it
+add_subdirectory("${CURL_ROOT}" EXCLUDE_FROM_ALL)
+
+# -------------------------------------------------------------
+# 8) SparkEngine source files
+# -------------------------------------------------------------
+file(GLOB_RECURSE SPARK_ENGINE_SOURCES
+    CONFIGURE_DEPENDS
+    "Spark Engine/Source/*.cpp"
+    "Spark Engine/Source/*.h"
+    "Spark Engine/Source/*.hpp"
 )
+list(FILTER SPARK_ENGINE_SOURCES EXCLUDE REGEX ".*[Tt]est.*")
+list(FILTER SPARK_ENGINE_SOURCES EXCLUDE REGEX ".*[Ee]xample.*")
+
+add_executable(SparkEngine WIN32 ${SPARK_ENGINE_SOURCES})
+
+# -------------------------------------------------------------
+# 9) Include directories
+# -------------------------------------------------------------
+target_include_directories(SparkEngine PRIVATE 
+    "Spark Engine/Source"
+    "${CURL_ROOT}/include"
+    "${CMAKE_BINARY_DIR}/ThirdParty/Networking/curl/include"
+)
+
+# -------------------------------------------------------------
+# 10) LINK THE ACTUAL FUCKING TARGET THAT EXISTS
+# -------------------------------------------------------------
+target_link_libraries(SparkEngine PRIVATE libcurl_static)  # THE ACTUAL TARGET NAME
+target_compile_definitions(SparkEngine PRIVATE NETWORKING_ENABLED CURL_STATICLIB)
+
+# -------------------------------------------------------------
+# 11) System libraries
+# -------------------------------------------------------------
+target_link_libraries(SparkEngine PRIVATE
+    d3d11 dxgi d3dcompiler dxguid
+    winmm ws2_32 wsock32
+    ole32 oleaut32 uuid
+    kernel32 user32 gdi32 winspool
+    shell32 comdlg32 advapi32
+    crypt32 wldap32 normaliz
+)
+
+# -------------------------------------------------------------
+# 12) Other third-party libraries
+# -------------------------------------------------------------
+set(MINIZ_FOUND FALSE)
+foreach(PATH IN ITEMS
+    "ThirdParty/Utils/miniz"
+    "ThirdParty/Compression/miniz"
+    "ThirdParty/miniz"
+)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}/CMakeLists.txt")
+        add_subdirectory(${PATH} EXCLUDE_FROM_ALL)
+        target_link_libraries(SparkEngine PRIVATE miniz)
+        set(MINIZ_FOUND TRUE)
+        message(STATUS "Found miniz at: ${PATH}")
+        break()
+    endif()
+endforeach()
+
+set(TINYOBJ_FOUND FALSE)
+foreach(PATH IN ITEMS
+    "ThirdParty/Utils/tinyobjloader"
+    "ThirdParty/FileFormats/tinyobjloader"
+    "ThirdParty/Graphics/tinyobjloader"
+    "ThirdParty/tinyobjloader"
+)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}/tiny_obj_loader.h")
+        add_library(tinyobjloader INTERFACE)
+        target_include_directories(tinyobjloader INTERFACE "${CMAKE_SOURCE_DIR}/${PATH}")
+        target_link_libraries(SparkEngine PRIVATE tinyobjloader)
+        set(TINYOBJ_FOUND TRUE)
+        message(STATUS "Found tinyobjloader at: ${PATH}")
+        break()
+    elseif(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}/include/tiny_obj_loader.h")
+        add_library(tinyobjloader INTERFACE)
+        target_include_directories(tinyobjloader INTERFACE "${CMAKE_SOURCE_DIR}/${PATH}/include")
+        target_link_libraries(SparkEngine PRIVATE tinyobjloader)
+        set(TINYOBJ_FOUND TRUE)
+        message(STATUS "Found tinyobjloader at: ${PATH}/include")
+        break()
+    endif()
+endforeach()
+
+# -------------------------------------------------------------
+# 13) Lua
+# -------------------------------------------------------------
+if(ENABLE_LUA)
+    foreach(PATH IN ITEMS
+        "ThirdParty/Scripting/lua"
+        "ThirdParty/Scripting/sol2/single/include"
+        "ThirdParty/sol2/single/include"
+    )
+        if(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}")
+            if(PATH MATCHES "sol2")
+                add_library(sol2 INTERFACE)
+                target_include_directories(sol2 INTERFACE "${CMAKE_SOURCE_DIR}/${PATH}")
+                target_link_libraries(SparkEngine PRIVATE sol2)
+                target_compile_definitions(SparkEngine PRIVATE LUA_SCRIPTING_ENABLED)
+                message(STATUS "Found Sol2 at: ${PATH}")
+            else()
+                target_include_directories(SparkEngine PRIVATE "${CMAKE_SOURCE_DIR}/${PATH}")
+                message(STATUS "Found Lua headers at: ${PATH}")
+            endif()
+        endif()
+    endforeach()
+endif()
+
+# -------------------------------------------------------------
+# 14) PhysX
+# -------------------------------------------------------------
+if(ENABLE_PHYSX)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/ThirdParty/Physics/PhysX/include")
+        target_include_directories(SparkEngine PRIVATE "ThirdParty/Physics/PhysX/include")
+        target_compile_definitions(SparkEngine PRIVATE PHYSX_AVAILABLE)
+        message(STATUS "PhysX headers found")
+    else()
+        message(WARNING "PhysX not found")
+    endif()
+endif()
+
+# -------------------------------------------------------------
+# 15) Feature definitions
+# -------------------------------------------------------------
+target_compile_definitions(SparkEngine PRIVATE 
+    EDITOR_ENABLED
+    GRAPHICS_ENABLED
+    COLLABORATIVE_ENABLED
+    PROFILING_ENABLED
+    ASSET_STREAMING_ENABLED
+    HOT_RELOAD_ENABLED
+    TERRAIN_SYSTEM_ENABLED
+    POST_PROCESSING_ENABLED
+    LIGHTING_SYSTEM_ENABLED
+    ADVANCED_INPUT_ENABLED
+)
+
+# -------------------------------------------------------------
+# 16) Visual Studio settings
+# -------------------------------------------------------------
+foreach(src ${SPARK_ENGINE_SOURCES})
+    get_filename_component(dir "${src}" DIRECTORY)
+    file(RELATIVE_PATH grp "${CMAKE_SOURCE_DIR}/Spark Engine/Source" "${dir}")
+    string(REPLACE "/" "\\" grp "${grp}")
+    if(grp STREQUAL "")
+        source_group("Source Files" FILES "${src}")
+    else()
+        source_group("Source Files\\${grp}" FILES "${src}")
+    endif()
+endforeach()
+
+if(MSVC)
+    set_property(TARGET SparkEngine PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT SparkEngine)
+endif()
+
+message(STATUS "DONE - SHOULD FUCKING WORK NOW")

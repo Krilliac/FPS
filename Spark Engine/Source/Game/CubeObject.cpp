@@ -1,5 +1,6 @@
 ﻿#include "CubeObject.h"
 #include "Utils/Assert.h"          // custom assert
+#include "PlaceholderMesh.h"       // Add this include for LoadOrPlaceholderMesh
 #include <DirectXMath.h>
 #include <string>
 
@@ -26,8 +27,13 @@ void CubeObject::CreateMesh()
     auto md = Primitives::CreateCube(m_size);
     ASSERT_MSG(!md.vertices.empty() && !md.indices.empty(), "Primitive cube mesh is empty");
 
-    // Load model from file or placeholder if missing
-    LoadOrPlaceholderMesh(*m_mesh, m_modelPath);
+    // Create the mesh if it doesn't exist
+    if (!m_mesh) {
+        m_mesh = std::make_unique<Mesh>();
+    }
+
+    // Use the device/context and dereference the unique_ptr
+    LoadOrPlaceholderMesh(*m_mesh, m_device, m_context, L"Assets/Models/cube.obj");
 
     // Ensure mesh was assigned
     ASSERT(m_mesh != nullptr);

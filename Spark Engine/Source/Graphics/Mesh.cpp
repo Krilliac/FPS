@@ -38,14 +38,20 @@ bool Mesh::LoadFromFile(const std::wstring& path)
     ASSERT_ALWAYS_MSG(!path.empty(), "Mesh::LoadFromFile – empty path");
 
     // Convert wide path to UTF-8 for tinyobjloader
-    std::string u8Path = std::filesystem::path(path).u8string();
+    auto u8path_u8 = std::filesystem::path(path).u8string();                                    // basic_string<char8_t>
+    std::string u8Path(u8path_u8.begin(), u8path_u8.end());                                     // convert to std::string
 
     // Debug: report attempt
     std::wcerr << L"[DEBUG] Attempting to load mesh from: " << path << std::endl;
 
+    // Reader config
     tinyobj::ObjReader reader;
     tinyobj::ObjReaderConfig cfg;
-    cfg.mtl_search_path = std::filesystem::path(path).parent_path().u8string();
+    {
+        auto parent_u8 = std::filesystem::path(path).parent_path().u8string();
+        std::string mtlSearch(parent_u8.begin(), parent_u8.end());
+        cfg.mtl_search_path = mtlSearch;                                                         // now a std::string
+    }
 
     if (!reader.ParseFromFile(u8Path, cfg))
     {

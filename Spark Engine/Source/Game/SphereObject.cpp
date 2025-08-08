@@ -25,6 +25,12 @@ void SphereObject::CreateMesh()
     auto md = Primitives::CreateSphere(m_radius, m_slices, m_stacks);
     ASSERT_ALWAYS_MSG(!md.vertices.empty() && !md.indices.empty(),
         "CreateSphere produced empty mesh");
-    LoadOrPlaceholderMesh(*m_mesh, m_modelPath);
+
+    // Create the mesh if it doesn't exist
+    if (!m_mesh) {
+        m_mesh = std::make_unique<Mesh>();
+    }
+
+    LoadOrPlaceholderMesh(*m_mesh, m_device, m_context, m_modelPath);
     ASSERT(m_mesh);
 }

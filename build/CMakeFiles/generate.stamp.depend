@@ -18,19 +18,6 @@ C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/Platform/Windows-MSVC.cmak
 C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/Platform/Windows.cmake
 C:/Program Files (x86)/CMake/share/cmake-3.25/Modules/Platform/WindowsPaths.cmake
 D:/Spark Engine/SparkEngine/CMakeLists.txt
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/BasicPS.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/BasicVS.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/BloomExtract.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/DebugUtils.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/DebugVisualize.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/EnvReflection.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/GaussianBlur.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/PBRSurface.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/Phong.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/Rim.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/SSAO.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/Utils.hlsl
-D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/Water.hlsl
 D:/Spark Engine/SparkEngine/build/CMakeFiles/3.25.2/CMakeCCompiler.cmake
 D:/Spark Engine/SparkEngine/build/CMakeFiles/3.25.2/CMakeCXXCompiler.cmake
 D:/Spark Engine/SparkEngine/build/CMakeFiles/3.25.2/CMakeRCCompiler.cmake

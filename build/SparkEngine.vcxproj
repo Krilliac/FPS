@@ -52,7 +52,6 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -60,60 +59,62 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Spark Engine\SparkEngine\build\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Spark Engine\SparkEngine\build\bin\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SparkEngine.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SparkEngine</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Spark Engine\SparkEngine\build\Release\</OutDir>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Spark Engine/SparkEngine</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Spark Engine\SparkEngine\build\bin\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SparkEngine.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SparkEngine</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Spark Engine\SparkEngine\build\MinSizeRel\</OutDir>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Spark Engine/SparkEngine</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Spark Engine\SparkEngine\build\bin\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">SparkEngine.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">SparkEngine</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Spark Engine\SparkEngine\build\RelWithDebInfo\</OutDir>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Spark Engine/SparkEngine</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Spark Engine\SparkEngine\build\bin\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">SparkEngine.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">SparkEngine</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Spark Engine/SparkEngine</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4005;4996;4244;4267</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
-    <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
-      <IncludePaths>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-    </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -121,13 +122,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Debug\miniz.lib;Debug\tinyobjloader.lib;curl\lib\Debug\libcurl.lib;angelscript\Debug\angelscriptd.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Spark Engine/SparkEngine/build/curl/lib/Debug;D:/Spark Engine/SparkEngine/build/curl/lib/Debug/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\Debug\libcurl-d.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;ws2_32.lib;wsock32.lib;ole32.lib;oleaut32.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;comdlg32.lib;advapi32.lib;crypt32.lib;wldap32.lib;normaliz.lib;lib\Debug\miniz.lib;bcrypt.lib;secur32.lib;iphlpapi.lib;ws2_32.lib;advapi32.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Spark Engine/SparkEngine/build/Debug/SparkEngine.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/Debug/SparkEngine.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/lib/Debug/SparkEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/bin/Debug/SparkEngine.pdb</ProgramDataBaseFile>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
@@ -136,33 +137,31 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4005;4996;4244;4267</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
-    <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
-      <IncludePaths>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-    </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -170,13 +169,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Release\miniz.lib;Release\tinyobjloader.lib;curl\lib\Release\libcurl.lib;angelscript\Release\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Spark Engine/SparkEngine/build/curl/lib/Release;D:/Spark Engine/SparkEngine/build/curl/lib/Release/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\Release\libcurl.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;ws2_32.lib;wsock32.lib;ole32.lib;oleaut32.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;comdlg32.lib;advapi32.lib;crypt32.lib;wldap32.lib;normaliz.lib;lib\Release\miniz.lib;bcrypt.lib;secur32.lib;iphlpapi.lib;ws2_32.lib;advapi32.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Spark Engine/SparkEngine/build/Release/SparkEngine.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/Release/SparkEngine.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/lib/Release/SparkEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/bin/Release/SparkEngine.pdb</ProgramDataBaseFile>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
@@ -185,33 +184,31 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4005;4996;4244;4267</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
-    <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
-      <IncludePaths>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-    </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -219,13 +216,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>MinSizeRel\miniz.lib;MinSizeRel\tinyobjloader.lib;curl\lib\MinSizeRel\libcurl.lib;angelscript\MinSizeRel\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Spark Engine/SparkEngine/build/curl/lib/MinSizeRel;D:/Spark Engine/SparkEngine/build/curl/lib/MinSizeRel/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\MinSizeRel\libcurl.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;ws2_32.lib;wsock32.lib;ole32.lib;oleaut32.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;comdlg32.lib;advapi32.lib;crypt32.lib;wldap32.lib;normaliz.lib;lib\MinSizeRel\miniz.lib;bcrypt.lib;secur32.lib;iphlpapi.lib;ws2_32.lib;advapi32.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Spark Engine/SparkEngine/build/MinSizeRel/SparkEngine.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/MinSizeRel/SparkEngine.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/lib/MinSizeRel/SparkEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/bin/MinSizeRel/SparkEngine.pdb</ProgramDataBaseFile>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
@@ -234,32 +231,30 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4005;4996;4244;4267</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;MINIZ_STATIC_DEFINE;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
-    <MASM>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CURL_STATICLIB;WITH_ANGELSCRIPT=1;NOMINMAX;_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
-      <IncludePaths>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(IncludePaths)</IncludePaths>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-    </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Source;D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\Engine\Core;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;D:\Spark Engine\SparkEngine\ThirdParty\Scripting\angelscript-mirror\sdk\angelscript\projects\cmake\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -267,13 +262,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>RelWithDebInfo\miniz.lib;RelWithDebInfo\tinyobjloader.lib;curl\lib\RelWithDebInfo\libcurl.lib;angelscript\RelWithDebInfo\angelscript.lib;d3d11.lib;dxgi.lib;dxguid.lib;Shlwapi.lib;user32.lib;gdi32.lib;winmm.lib;dbghelp.lib;windowscodecs.lib;bcrypt.lib;advapi32.lib;crypt32.lib;secur32.lib;ws2_32.lib;iphlpapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:/Spark Engine/SparkEngine/build/curl/lib/RelWithDebInfo;D:/Spark Engine/SparkEngine/build/curl/lib/RelWithDebInfo/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lib\RelWithDebInfo\libcurl.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;ws2_32.lib;wsock32.lib;ole32.lib;oleaut32.lib;uuid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;comdlg32.lib;advapi32.lib;crypt32.lib;wldap32.lib;normaliz.lib;lib\RelWithDebInfo\miniz.lib;bcrypt.lib;secur32.lib;iphlpapi.lib;ws2_32.lib;advapi32.lib;crypt32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/Spark Engine/SparkEngine/build/RelWithDebInfo/SparkEngine.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/RelWithDebInfo/SparkEngine.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/Spark Engine/SparkEngine/build/lib/RelWithDebInfo/SparkEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Spark Engine/SparkEngine/build/bin/RelWithDebInfo/SparkEngine.pdb</ProgramDataBaseFile>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
@@ -293,7 +288,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicPS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicVS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BloomExtract.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugUtils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugVisualize.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\EnvReflection.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\GaussianBlur.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\PBRSurface.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Phong.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Rim.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\SSAO.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Utils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Water.hlsl;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Spark Engine\SparkEngine\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Spark Engine/SparkEngine/CMakeLists.txt</Message>
@@ -306,7 +301,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicPS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicVS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BloomExtract.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugUtils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugVisualize.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\EnvReflection.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\GaussianBlur.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\PBRSurface.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Phong.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Rim.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\SSAO.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Utils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Water.hlsl;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Spark Engine\SparkEngine\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Spark Engine/SparkEngine/CMakeLists.txt</Message>
@@ -319,7 +314,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicPS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicVS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BloomExtract.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugUtils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugVisualize.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\EnvReflection.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\GaussianBlur.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\PBRSurface.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Phong.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Rim.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\SSAO.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Utils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Water.hlsl;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Spark Engine\SparkEngine\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Spark Engine/SparkEngine/CMakeLists.txt</Message>
@@ -332,80 +327,80 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicPS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BasicVS.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\BloomExtract.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugUtils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\DebugVisualize.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\EnvReflection.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\GaussianBlur.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\PBRSurface.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Phong.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Rim.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\SSAO.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Utils.hlsl;D:\Spark Engine\SparkEngine\Spark Engine\Shaders\HLSL\Water.hlsl;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeCXXCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeRCCompiler.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\3.25.2\CMakeSystem.cmake;D:\Spark Engine\SparkEngine\build\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Spark Engine\SparkEngine\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\AudioEngine.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\SoundEffect.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Camera\SparkEngineCamera.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Core\SparkEngine.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Console.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\CubeObject.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Game.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\GameObject.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Model.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\PlaneObject.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Player.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Primitives.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\SphereObject.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Terrain.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\GraphicsEngine.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\Mesh.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\Shader.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Input\InputManager.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Physics\CollisionSystem.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Bullet.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Grenade.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Projectile.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\ProjectilePool.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Rocket.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\CrashHandler.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\CrashHandlerHelpers.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\D3DUtils.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\MathUtils.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\Timer.cpp" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\TinyObjImpl.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\AudioEngine.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\SoundEffect.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\SoundEffect.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Camera\SparkEngineCamera.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Camera\SparkEngineCamera.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Core\SparkEngine.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Core\SparkEngine.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Core\framework.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Core\resource.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Core\targetver.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Engine\ECS\Components.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Engine\Scripting\AngelScriptEngine.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Console.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Console.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\CubeObject.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\CubeObject.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Game.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Game.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\GameObject.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\GameObject.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Model.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Model.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\ModelVertex.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\PlaceholderMesh.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\PlaneObject.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\PlaneObject.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Player.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Player.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Primitives.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Primitives.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\SphereObject.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\SphereObject.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Terrain.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Terrain.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\GraphicsEngine.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\GraphicsEngine.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\Mesh.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\Mesh.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\Shader.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Graphics\Shader.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Input\InputManager.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Input\InputManager.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Physics\CollisionSystem.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Physics\CollisionSystem.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Bullet.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Bullet.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Grenade.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Grenade.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Projectile.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Projectile.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\ProjectilePool.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\ProjectilePool.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Rocket.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Rocket.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\WeaponStats.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\Assert.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\CrashHandler.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\CrashHandler.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\CrashHandlerHelpers.cpp" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\D3DUtils.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\D3DUtils.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\MathUtils.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\MathUtils.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\ObjectPool.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\Timer.cpp" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\Timer.h" />
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\TinyObjImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\Spark Engine\SparkEngine\build\ZERO_CHECK.vcxproj">
@@ -414,25 +409,16 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\angelscript\angelscript.vcxproj">
-      <Project>{FF9B9B30-7156-3C3B-BAC8-20F499750678}</Project>
-      <Name>angelscript</Name>
-    </ProjectReference>
-    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\curl\lib\libcurl_static.vcxproj">
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\ThirdParty\Networking\curl\lib\libcurl_static.vcxproj">
       <Project>{5B7D6315-CE17-38E6-A8B8-21C4436243A4}</Project>
       <Name>libcurl_static</Name>
     </ProjectReference>
-    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\miniz.vcxproj">
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\ThirdParty\Utils\miniz\miniz.vcxproj">
       <Project>{CCB8D980-A653-3CA1-B72A-7150F80A5C89}</Project>
       <Name>miniz</Name>
-    </ProjectReference>
-    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\tinyobjloader.vcxproj">
-      <Project>{CDAC3C6B-676C-3BCD-9432-3F3423CE052E}</Project>
-      <Name>tinyobjloader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

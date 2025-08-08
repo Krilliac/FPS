@@ -22,7 +22,12 @@ void PlaneObject::CreateMesh()
     ASSERT_ALWAYS_MSG(!md.vertices.empty() && !md.indices.empty(),
         "Generated plane mesh is empty");
 
-    LoadOrPlaceholderMesh(*m_mesh, m_modelPath);
+    // Create the mesh if it doesn't exist
+    if (!m_mesh) {
+        m_mesh = std::make_unique<Mesh>();
+    }
+
+    LoadOrPlaceholderMesh(*m_mesh, m_device, m_context, m_modelPath);
 
     // Ensure mesh is valid
     ASSERT(m_mesh != nullptr);

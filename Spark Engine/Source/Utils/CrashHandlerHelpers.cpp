@@ -2,7 +2,7 @@
 #include "Utils/CrashHandler.h"
 #include "Utils/Assert.h"
 
-#include <windows.h>        // for ULONG, WCHAR, GetVersionExW, GetModuleHandleW, GetProcAddress
+#include <windows.h>        // for ULONG, WCHAR, GetVersionEx, GetModuleHandleW, GetProcAddress
 #include <wchar.h>          // for wcsncpy_s
 #include <tlhelp32.h>
 #include <dbghelp.h>
@@ -63,7 +63,7 @@ static bool QueryOsVersionNative(CH_OSVERSIONINFOW& os)
     return (status >= 0);  // NT_SUCCESS
 }
 
-// Fallback to the officially supported but deprecated GetVersionExW
+// Fallback to the officially supported but deprecated GetVersionEx
 static bool QueryOsVersionFallback(CH_OSVERSIONINFOW& os)
 {
     OSVERSIONINFOEXW ov = {};
@@ -551,7 +551,8 @@ static void SaveScreenshot(const std::wstring& file)
         staging->Release(); return;
     }
 
-    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    HRESULT hrCom = CoInitializeEx(NULL, COINIT_MULTITHREADED); 
+    (void)hrCom; (void)hrCom;
 
     IWICImagingFactory* wicFactory = nullptr;
     if (FAILED(CoCreateInstance(
@@ -731,3 +732,4 @@ static bool Upload(
 
     return (res == CURLE_OK);
 }
+
