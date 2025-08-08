@@ -2,7 +2,7 @@
  * @file GameObject.h
  * @brief Base class for all interactive objects in the game world
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides the fundamental interface and functionality for all objects
  * that can exist in the game world. It handles transformation, rendering, collision

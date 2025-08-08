@@ -2,7 +2,7 @@
  * @file SoundEffect.h
  * @brief Sound effect loading and procedural audio generation system
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This file provides comprehensive sound effect functionality including WAV file
  * loading, in-memory audio buffer management, and a factory system for generating

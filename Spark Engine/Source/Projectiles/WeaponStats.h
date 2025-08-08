@@ -2,7 +2,7 @@
  * @file WeaponStats.h
  * @brief Weapon configuration and statistics system
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This file defines weapon types, statistics structures, and default configurations
  * for the weapon system. It provides a data-driven approach to weapon balancing

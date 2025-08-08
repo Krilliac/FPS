@@ -2,7 +2,7 @@
  * @file Game.h
  * @brief Main game class managing the core game loop and scene systems
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * The Game class serves as the central coordinator for all game systems,
  * managing the main game loop, scene updates, rendering operations, and

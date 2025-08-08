@@ -2,7 +2,7 @@
  * @file Player.h
  * @brief Player character controller with movement, combat, and health systems
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * The Player class represents the player character in the game world, inheriting
  * from GameObject and providing comprehensive first-person character functionality

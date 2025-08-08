@@ -2,7 +2,7 @@
  * @file Projectile.h
  * @brief Base class for all projectile objects in the game
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides the fundamental functionality for projectile objects including
  * physics simulation, collision detection, lifetime management, and rendering.

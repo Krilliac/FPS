@@ -2,7 +2,7 @@
  * @file Console.h
  * @brief Debug console system for runtime commands and logging
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This file provides a debug console interface that can be toggled during gameplay
  * to execute commands, view log messages, and interact with the engine at runtime.

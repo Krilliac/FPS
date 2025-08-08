@@ -2,7 +2,7 @@
  * @file Shader.h
  * @brief HLSL shader management and constant buffer handling
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides a comprehensive shader management system for DirectX 11,
  * handling vertex and pixel shader compilation, loading, and constant buffer

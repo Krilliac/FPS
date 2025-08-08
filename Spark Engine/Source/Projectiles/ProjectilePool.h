@@ -2,7 +2,7 @@
  * @file ProjectilePool.h
  * @brief Object pool system for efficient projectile management
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides an efficient object pool for managing projectiles to avoid
  * frequent memory allocations and deallocations during gameplay. It supports

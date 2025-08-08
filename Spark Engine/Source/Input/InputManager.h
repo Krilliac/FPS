@@ -2,7 +2,7 @@
  * @file InputManager.h
  * @brief Comprehensive input handling system for keyboard and mouse
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * The InputManager class provides a complete input handling system that processes
  * keyboard and mouse input events, tracks button states, calculates mouse movement

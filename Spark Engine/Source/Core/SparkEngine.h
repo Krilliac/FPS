@@ -2,7 +2,7 @@
  * @file SparkEngine.h
  * @brief Main engine header containing global declarations and forward declarations
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This file serves as the central header for the Spark Engine, providing forward
  * declarations for core engine systems and global variable declarations that are

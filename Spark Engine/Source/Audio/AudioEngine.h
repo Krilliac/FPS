@@ -2,7 +2,7 @@
  * @file AudioEngine.h
  * @brief XAudio2-based audio engine with 3D spatial audio support
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides a comprehensive audio system built on XAudio2, supporting
  * both 2D and 3D audio playback, sound effect management, volume controls, and

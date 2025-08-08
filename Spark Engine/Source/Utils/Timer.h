@@ -2,7 +2,7 @@
  * @file Timer.h
  * @brief High-precision timing system for frame rate and delta time calculation
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides a high-precision timing system using the system's high-resolution
  * clock for accurate frame timing, delta time calculation, and total elapsed time tracking.

@@ -2,7 +2,7 @@
  * @file GraphicsEngine.h
  * @brief DirectX 11 graphics engine core implementation
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class manages the entire DirectX 11 rendering pipeline including device creation,
  * swap chain management, render target setup, depth buffer configuration, and frame

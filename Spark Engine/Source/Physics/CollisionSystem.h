@@ -2,7 +2,7 @@
  * @file CollisionSystem.h
  * @brief Comprehensive 3D collision detection and physics system
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This file provides a complete collision detection system with primitive shapes,
  * raycast functionality, contact resolution, and utility functions for 3D physics

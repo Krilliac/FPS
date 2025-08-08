@@ -2,7 +2,7 @@
  * @file framework.h
  * @brief Core framework header with essential includes and library links
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This header provides the fundamental includes required throughout the engine,
  * including Windows API, DirectX 11, STL containers, and necessary library links.

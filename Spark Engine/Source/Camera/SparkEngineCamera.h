@@ -2,7 +2,7 @@
  * @file SparkEngineCamera.h
  * @brief First-person camera system with smooth movement and controls
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides a comprehensive first-person camera implementation with
  * smooth movement, mouse look controls, zoom functionality, and proper matrix

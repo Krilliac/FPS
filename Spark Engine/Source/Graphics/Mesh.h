@@ -2,7 +2,7 @@
  * @file Mesh.h
  * @brief 3D mesh management and primitive generation system
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This class provides comprehensive 3D mesh functionality including vertex/index
  * buffer management, primitive shape generation (cube, sphere, plane), and mesh

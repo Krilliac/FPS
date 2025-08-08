@@ -2,7 +2,7 @@
  * @file targetver.h
  * @brief Windows platform version targeting
  * @author Spark Engine Team
- * @date 2024
+ * @date 2025
  * 
  * This header defines the Windows platform version that the application targets.
  * Including SDKDDKVer.h defines the highest available Windows platform. To target
