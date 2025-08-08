@@ -64,19 +64,23 @@ void GameObject::Update(float)
         UpdateWorldMatrix();
 }
 
-void GameObject::Render(const XMMATRIX&, const XMMATRIX&)
+void GameObject::Render(const XMMATRIX& view, const XMMATRIX& projection)
 {
     if (!m_visible || !m_mesh)
+    {
+        std::wcerr << L"[GameObject] Render skipped: visible=" << m_visible << L" mesh=" << (m_mesh ? L"OK" : L"NULL") << std::endl;
         return;
+    }
 
     if (m_worldMatrixDirty)
         UpdateWorldMatrix();
 
     ASSERT(m_mesh);
-	ASSERT_MSG(m_device != nullptr, "GameObject::Render - device is null");
+    ASSERT_MSG(m_device != nullptr, "GameObject::Render - device is null");
     ASSERT_MSG(m_context != nullptr, "GameObject::Render - context is null");
     ASSERT_MSG(m_mesh->GetVertexCount() > 0 && m_mesh->GetIndexCount() > 0, "Mesh has no vertices or indices to render");
-	m_mesh->Render(m_context);
+    std::wcerr << L"[GameObject] Rendering object ID=" << m_id << L" name=" << m_name.c_str() << L" verts=" << m_mesh->GetVertexCount() << L" inds=" << m_mesh->GetIndexCount() << std::endl;
+    m_mesh->Render(m_context);
 }
 
 void GameObject::SetPosition(const XMFLOAT3& pos)

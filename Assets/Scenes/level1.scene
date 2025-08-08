@@ -1,0 +1,11 @@
+# Each line: Type X Y Z [param1 param2 ...]
+Plane  0 -1  0   20 20
+Cube   -6 1 10   1
+Cube   -3 1 10   1
+Cube   0  1 10   1
+Cube   3  1 10   1
+Cube   6  1 10   1
+Pyramid -6 1 5  1
+Ramp    -2 0 5  2 1
+Sphere   2 1 5  1 16 16
+Wall     6 1 5  5 3

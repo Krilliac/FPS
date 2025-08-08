@@ -19,6 +19,7 @@
 #include "..\Game\Console.h"
 #include "..\Projectiles\ProjectilePool.h"
 #include <iostream>
+#include "..\Scene\SceneManager.h"
 
 // Pull in globals defined in SparkEngine.cpp
 extern std::unique_ptr<GraphicsEngine> g_graphics;
@@ -44,6 +45,11 @@ HRESULT Game::Initialize(GraphicsEngine* graphics,
 
     m_graphics = graphics;
     m_input = input;
+
+    // SceneManager setup
+    m_sceneManager = std::make_unique<SceneManager>(graphics, input);
+    bool sceneLoaded = m_sceneManager->LoadScene(L"Assets/Scenes/level1.scene");
+    std::wcerr << L"[Game] SceneManager::LoadScene returned: " << (sceneLoaded ? L"SUCCESS" : L"FAILURE") << std::endl;
 
     /* Camera ------------------------------------------------*/
     m_camera = std::make_unique<SparkEngineCamera>();
@@ -140,24 +146,29 @@ void Game::Render()
     XMMATRIX proj = m_camera->GetProjectionMatrix();
 
     int renderedCount = 0;
-    for (auto& obj : m_gameObjects)
-    {
-        if (!obj || !obj->IsActive() || !obj->IsVisible())
-            continue;
-
-        ConstantBuffer cb{};
-        cb.World = obj->GetWorldMatrix();
-        cb.View = view;
-        cb.Projection = proj;
-        m_shader->UpdateConstantBuffer(cb);
-        obj->Render(view, proj);
-        ++renderedCount;
+    int skippedCount = 0;
+    // Render objects from SceneManager
+    if (m_sceneManager) {
+        for (auto& obj : m_sceneManager->GetObjects()) {
+            if (!obj || !obj->IsActive() || !obj->IsVisible()) {
+                ++skippedCount;
+                std::wcerr << L"[Game] Skipping SceneManager object in Render: active=" << (obj ? obj->IsActive() : false) << L" visible=" << (obj ? obj->IsVisible() : false) << std::endl;
+                continue;
+            }
+            ConstantBuffer cb{};
+            cb.World = obj->GetWorldMatrix();
+            cb.View = view;
+            cb.Projection = proj;
+            m_shader->UpdateConstantBuffer(cb);
+            obj->Render(view, proj);
+            ++renderedCount;
+        }
     }
 
     static int frameNum = 0;
     if (++frameNum % 60 == 0)  // once per 60 frames
     {
-        std::wcerr << L"[DEBUG] Rendered " << renderedCount << L" placeholder objects this frame\n";
+        std::wcerr << L"[DEBUG] Rendered " << renderedCount << L" objects, skipped " << skippedCount << L" this frame\n";
     }
 
     if (m_player)         m_player->Render(view, proj);

@@ -32,6 +32,7 @@ struct ConstantBuffer;
 #include "CubeObject.h"
 #include "PlaneObject.h"
 #include "SphereObject.h"
+#include "SceneManager.h"
 
 /**
  * @brief Main game controller class managing the game loop and scene
@@ -161,6 +162,7 @@ private:
     std::unique_ptr<Shader>            m_shader;        ///< Shader management
     std::unique_ptr<Player>            m_player;        ///< Player controller
     std::unique_ptr<ProjectilePool>    m_projectilePool; ///< Projectile object pool
+    std::unique_ptr<SceneManager>      m_sceneManager;    ///< Scene management
 
     // Scene objects
     std::vector<std::unique_ptr<GameObject>> m_gameObjects; ///< All game objects in the scene

@@ -2,6 +2,7 @@
 #include "Utils/Assert.h"
 #include <DirectXMath.h>
 #include <cmath>
+#include <iostream>
 
 using namespace DirectX;
 
@@ -31,6 +32,8 @@ void SparkEngineCamera::UpdateViewMatrix()
     // Compute view matrix
     XMVECTOR pos = XMLoadFloat3(&m_position);
     m_viewMatrix = XMMatrixLookAtLH(pos, pos + fb, ub);
+
+    std::wcerr << L"[Camera] UpdateViewMatrix pos=(" << m_position.x << L"," << m_position.y << L"," << m_position.z << L") pitch=" << m_pitch << L" yaw=" << m_yaw << L" roll=" << m_roll << std::endl;
 }
 
 void SparkEngineCamera::Update(float deltaTime)
@@ -38,6 +41,7 @@ void SparkEngineCamera::Update(float deltaTime)
     ASSERT_MSG(deltaTime >= 0.0f && std::isfinite(deltaTime),
         "Camera Update deltaTime must be non-negative and finite");
     UpdateViewMatrix();
+    std::wcerr << L"[Camera] Update called, deltaTime=" << deltaTime << std::endl;
 }
 
 void SparkEngineCamera::MoveForward(float amount)
