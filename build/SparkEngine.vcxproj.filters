@@ -91,6 +91,9 @@
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\TinyObjImpl.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Spark Engine\SparkEngine\build\tinyobj_impl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\AudioEngine.h">

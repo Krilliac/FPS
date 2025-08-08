@@ -53,6 +53,7 @@ bool Mesh::LoadFromFile(const std::wstring& path)
         cfg.mtl_search_path = mtlSearch;                                                         // now a std::string
     }
 
+    // Replace the fallback section in LoadFromFile with this:
     if (!reader.ParseFromFile(u8Path, cfg))
     {
         // Report tinyobj error
@@ -63,20 +64,9 @@ bool Mesh::LoadFromFile(const std::wstring& path)
             std::cerr << err;
         }
 
-        // Fallback: create placeholder cube
-        std::wcerr << L"[DEBUG] Failed to load mesh. Creating placeholder cube." << std::endl;
-        HRESULT hr = CreateCube(1.0f);
-        if (SUCCEEDED(hr))
-        {
-            std::wcerr << L"[DEBUG] Placeholder cube created successfully." << std::endl;
-            m_vertexCount = 0;      // actual counts set by CreateCube/CreateFromVertices
-            m_indexCount = 0;
-            // Mark as placeholder if you want to distinguish later
-            // e.g. m_isPlaceholder = true;
-            return true;
-        }
-        std::wcerr << L"[ERROR] Failed to create placeholder cube!" << std::endl;
-        return false;
+        // Do NOT create placeholder here - let the calling code handle it
+        std::wcerr << L"[DEBUG] Failed to load mesh from file." << std::endl;
+        return false; // Return false so placeholder creation happens in calling code
     }
 
     // Report tinyobj warnings
@@ -184,37 +174,127 @@ HRESULT Mesh::CreateCube(float size)
 {
     ASSERT(size > 0.0f);
 
-    MeshData md;
+    std::wcerr << L"[DEBUG] CreateCube called with size: " << size << std::endl;
+
+    // Clear existing data
+    m_vertices.clear();
+    m_indices.clear();
+
     float h = size * 0.5f;
-    XMFLOAT3 pts[8] = {
-        {-h,-h,-h},{+h,-h,-h},{+h,+h,-h},{-h,+h,-h},
-        {-h,-h,+h},{+h,-h,+h},{+h,+h,+h},{-h,+h,+h}
-    };
-    XMFLOAT3 norms[6] = {
-        {0,0,-1},{0,0,1},{-1,0,0},
-        {1,0,0},{0,-1,0},{0,1,0}
-    };
-    unsigned int idxs[36] = {
-        0,1,2, 0,2,3, 4,6,5, 4,7,6,
-        4,5,1, 4,1,0, 3,2,6, 3,6,7,
-        4,0,3, 4,3,7, 1,5,6, 1,6,2
+
+    // 24 vertices (4 per face, 6 faces)
+    m_vertices = {
+        // Front face (z = +h)
+        {{-h, -h,  h}, {0, 0, 1}, {0, 1}},  // 0
+        {{ h, -h,  h}, {0, 0, 1}, {1, 1}},  // 1
+        {{ h,  h,  h}, {0, 0, 1}, {1, 0}},  // 2
+        {{-h,  h,  h}, {0, 0, 1}, {0, 0}},  // 3
+
+        // Back face (z = -h)  
+        {{ h, -h, -h}, {0, 0, -1}, {0, 1}}, // 4
+        {{-h, -h, -h}, {0, 0, -1}, {1, 1}}, // 5
+        {{-h,  h, -h}, {0, 0, -1}, {1, 0}}, // 6
+        {{ h,  h, -h}, {0, 0, -1}, {0, 0}}, // 7
+
+        // Left face (x = -h)
+        {{-h, -h, -h}, {-1, 0, 0}, {0, 1}}, // 8
+        {{-h, -h,  h}, {-1, 0, 0}, {1, 1}}, // 9
+        {{-h,  h,  h}, {-1, 0, 0}, {1, 0}}, // 10
+        {{-h,  h, -h}, {-1, 0, 0}, {0, 0}}, // 11
+
+        // Right face (x = +h)
+        {{ h, -h,  h}, {1, 0, 0}, {0, 1}},  // 12
+        {{ h, -h, -h}, {1, 0, 0}, {1, 1}},  // 13
+        {{ h,  h, -h}, {1, 0, 0}, {1, 0}},  // 14
+        {{ h,  h,  h}, {1, 0, 0}, {0, 0}},  // 15
+
+        // Bottom face (y = -h)
+        {{-h, -h, -h}, {0, -1, 0}, {0, 1}}, // 16
+        {{ h, -h, -h}, {0, -1, 0}, {1, 1}}, // 17
+        {{ h, -h,  h}, {0, -1, 0}, {1, 0}}, // 18
+        {{-h, -h,  h}, {0, -1, 0}, {0, 0}}, // 19
+
+        // Top face (y = +h)
+        {{-h,  h,  h}, {0, 1, 0}, {0, 1}},  // 20
+        {{ h,  h,  h}, {0, 1, 0}, {1, 1}},  // 21
+        {{ h,  h, -h}, {0, 1, 0}, {1, 0}},  // 22
+        {{-h,  h, -h}, {0, 1, 0}, {0, 0}}   // 23
     };
 
-    for (int f = 0; f < 6; ++f)
-    {
-        XMFLOAT3 n = norms[f];
-        for (int v = 0; v < 6; ++v)
-        {
-            unsigned int i = idxs[f * 6 + v];
-            md.vertices.emplace_back(pts[i], n, XMFLOAT2(0, 0));
-            md.indices.push_back(static_cast<unsigned int>(md.indices.size()));
-        }
+    // 36 indices (2 triangles per face, 6 faces)
+    m_indices = {
+        // Front face
+        0, 1, 2,  0, 2, 3,
+        // Back face
+        4, 5, 6,  4, 6, 7,
+        // Left face  
+        8, 9, 10,  8, 10, 11,
+        // Right face
+        12, 13, 14,  12, 14, 15,
+        // Bottom face
+        16, 17, 18,  16, 18, 19,
+        // Top face
+        20, 21, 22,  20, 22, 23
+    };
+
+    m_vertexCount = static_cast<UINT>(m_vertices.size());
+    m_indexCount = static_cast<UINT>(m_indices.size());
+
+    std::wcerr << L"[DEBUG] Created cube with " << m_vertexCount << L" vertices and "
+        << m_indexCount << L" indices" << std::endl;
+
+    ASSERT_ALWAYS_MSG(m_vertexCount > 0 && m_indexCount > 0, "CreateCube produced empty mesh");
+
+    // Create GPU buffers
+    HRESULT hr = CreateBuffers();
+    if (FAILED(hr)) {
+        std::wcerr << L"[ERROR] CreateBuffers failed in CreateCube!" << std::endl;
+        return hr;
     }
 
-    ASSERT_ALWAYS_MSG(!md.vertices.empty() && !md.indices.empty(),
-        "CreateCube produced empty mesh");
+    std::wcerr << L"[DEBUG] CreateCube completed successfully" << std::endl;
+    return S_OK;
+}
 
-    return CreateFromVertices(md.vertices, md.indices);
+HRESULT Mesh::CreateTriangle(float size)
+{
+    ASSERT(size > 0.0f);
+
+    std::wcerr << L"[DEBUG] CreateTriangle called with size: " << size << std::endl;
+
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    float h = size * 0.5f;
+
+    // Create a simple triangle
+    vertices.emplace_back(
+        XMFLOAT3(0.0f, h, 0.0f),      // Top vertex
+        XMFLOAT3(0.0f, 0.0f, 1.0f),   // Normal pointing forward
+        XMFLOAT2(0.5f, 0.0f)          // Texture coordinate
+    );
+
+    vertices.emplace_back(
+        XMFLOAT3(-h, -h, 0.0f),       // Bottom left
+        XMFLOAT3(0.0f, 0.0f, 1.0f),   // Normal pointing forward
+        XMFLOAT2(0.0f, 1.0f)          // Texture coordinate
+    );
+
+    vertices.emplace_back(
+        XMFLOAT3(h, -h, 0.0f),        // Bottom right
+        XMFLOAT3(0.0f, 0.0f, 1.0f),   // Normal pointing forward
+        XMFLOAT2(1.0f, 1.0f)          // Texture coordinate
+    );
+
+    // Triangle indices
+    indices = { 0, 1, 2 };
+
+    std::wcerr << L"[DEBUG] Created triangle with " << vertices.size() << L" vertices and "
+        << indices.size() << L" indices" << std::endl;
+
+    ASSERT_ALWAYS_MSG(!vertices.empty() && !indices.empty(), "CreateTriangle produced empty mesh");
+
+    return CreateFromVertices(vertices, indices);
 }
 
 HRESULT Mesh::CreatePlane(float width, float depth)

@@ -31,5 +31,5 @@ protected:
 
 private:
     float         m_size;
-    std::wstring  m_modelPath = L"Assets/Models/Cube.fbx";
+    std::wstring  m_modelPath = L"Assets/Models/Cube.obj";
 };

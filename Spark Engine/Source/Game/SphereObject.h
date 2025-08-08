@@ -38,5 +38,5 @@ protected:
 private:
     float         m_radius;
     int           m_slices, m_stacks;
-    std::wstring  m_modelPath{ L"Assets/Models/Sphere.fbx" };
+    std::wstring  m_modelPath{ L"Assets/Models/Sphere.obj" };
 };

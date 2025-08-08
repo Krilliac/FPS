@@ -2,42 +2,42 @@
 #include "Utils/CrashHandler.h"
 #include "Utils/Assert.h"
 
-#include <windows.h>        // for ULONG, WCHAR, GetVersionEx, GetModuleHandleW, GetProcAddress
-#include <wchar.h>          // for wcsncpy_s
-#include <tlhelp32.h>
+#include <windows.h>
+#include <string.h>
 #include <dbghelp.h>
-#include <wincodec.h>
 #include <dxgi.h>
 #include <d3d11.h>
+#include <wincodec.h>
+#include <wrl/client.h>
 #include <curl/curl.h>
 #include <miniz.h>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <iomanip>
 #include <vector>
-#include <filesystem>
 #include <mutex>
+#include <tlhelp32.h>
+#include <VersionHelpers.h>
 
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "windowscodecs.lib")
-#pragma comment(lib, "libcurl.lib")
 #pragma comment(lib, "dxgi.lib")
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // OS Version Helpers (Option B: self‐contained, no winternl.h)
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 // bring in NTSTATUS
 typedef LONG NTSTATUS;
 
 // your private version struct—never collides with SDK headers
 typedef struct _CH_OSVERSIONINFOW {
-    ULONG  dwOSVersionInfoSize;
-    ULONG  dwMajorVersion;
-    ULONG  dwMinorVersion;
-    ULONG  dwBuildNumber;
-    ULONG  dwPlatformId;
-    WCHAR  szCSDVersion[128];
+    ULONG dwOSVersionInfoSize;
+    ULONG dwMajorVersion;
+    ULONG dwMinorVersion;
+    ULONG dwBuildNumber;
+    ULONG dwPlatformId;
+    WCHAR szCSDVersion[128];
 } CH_OSVERSIONINFOW, * PCH_OSVERSIONINFOW;
 
 // pointer typedef for the native RtlGetVersion call
@@ -56,47 +56,64 @@ static bool QueryOsVersionNative(CH_OSVERSIONINFOW& os)
     if (!fn)
         return false;
 
-    os = {};  // zero all fields
+    os = {}; // zero all fields
     os.dwOSVersionInfoSize = sizeof(os);
 
     NTSTATUS status = fn(&os);
-    return (status >= 0);  // NT_SUCCESS
+    return (status >= 0); // NT_SUCCESS
 }
 
-// Fallback to the officially supported but deprecated GetVersionEx
+// FIXED: Replace deprecated GetVersionExW with VersionHelpers fallback
 static bool QueryOsVersionFallback(CH_OSVERSIONINFOW& os)
 {
-    OSVERSIONINFOEXW ov = {};
-    ov.dwOSVersionInfoSize = sizeof(ov);
-    if (!GetVersionExW(reinterpret_cast<OSVERSIONINFOW*>(&ov)))
-        return false;
-
     os = {};
     os.dwOSVersionInfoSize = sizeof(os);
-    os.dwMajorVersion = ov.dwMajorVersion;
-    os.dwMinorVersion = ov.dwMinorVersion;
-    os.dwBuildNumber = ov.dwBuildNumber;
-    os.dwPlatformId = ov.dwPlatformId;
-    wcsncpy_s(os.szCSDVersion,
-        ov.szCSDVersion,
-        _TRUNCATE);
 
+    // Use VersionHelpers for basic version detection
+    if (IsWindows10OrGreater()) {
+        os.dwMajorVersion = 10;
+        os.dwMinorVersion = 0;
+        wcsncpy_s(os.szCSDVersion, L"Windows 10+", _TRUNCATE);
+    }
+    else if (IsWindows8Point1OrGreater()) {
+        os.dwMajorVersion = 6;
+        os.dwMinorVersion = 3;
+        wcsncpy_s(os.szCSDVersion, L"Windows 8.1+", _TRUNCATE);
+    }
+    else if (IsWindows8OrGreater()) {
+        os.dwMajorVersion = 6;
+        os.dwMinorVersion = 2;
+        wcsncpy_s(os.szCSDVersion, L"Windows 8+", _TRUNCATE);
+    }
+    else if (IsWindows7OrGreater()) {
+        os.dwMajorVersion = 6;
+        os.dwMinorVersion = 1;
+        wcsncpy_s(os.szCSDVersion, L"Windows 7+", _TRUNCATE);
+    }
+    else {
+        os.dwMajorVersion = 6;
+        os.dwMinorVersion = 0;
+        wcsncpy_s(os.szCSDVersion, L"Windows Vista+", _TRUNCATE);
+    }
+
+    os.dwPlatformId = VER_PLATFORM_WIN32_NT;
+    os.dwBuildNumber = 0; // Cannot determine without deprecated API
     return true;
 }
 
 // Public helper: always returns true (zeroes on total failure)
 static void GetOsVersion(CH_OSVERSIONINFOW& os)
 {
-    if (QueryOsVersionNative(os))   return;
+    if (QueryOsVersionNative(os)) return;
     if (QueryOsVersionFallback(os)) return;
 
     // total failure => zero out
     os = {};
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // SystemInfo()
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 // Compose a human-readable string with OS, CPU, RAM, and GPU details
 static std::wstring SystemInfo()
@@ -121,7 +138,7 @@ static std::wstring SystemInfo()
     case PROCESSOR_ARCHITECTURE_AMD64: arch = L"x64"; break;
     case PROCESSOR_ARCHITECTURE_INTEL: arch = L"x86"; break;
     case PROCESSOR_ARCHITECTURE_ARM64: arch = L"ARM64"; break;
-    case PROCESSOR_ARCHITECTURE_ARM:   arch = L"ARM";   break;
+    case PROCESSOR_ARCHITECTURE_ARM: arch = L"ARM"; break;
     }
 
     ss << L"CPU: " << arch
@@ -133,8 +150,8 @@ static std::wstring SystemInfo()
     GlobalMemoryStatusEx(&mem);
 
     ss << L"Memory: "
-        << (mem.ullTotalPhys / (static_cast<unsigned long long>(1024) * 1024)) << L" MB total, "
-        << (mem.ullAvailPhys / (static_cast<unsigned long long>(1024) * 1024)) << L" MB available\n";
+        << (mem.ullTotalPhys / (static_cast<ULONGLONG>(1024) * 1024)) << L" MB total, "
+        << (mem.ullAvailPhys / (static_cast<ULONGLONG>(1024) * 1024)) << L" MB available\n";
 
     // 4) Primary GPU via DXGI
     IDXGIFactory* factory = nullptr;
@@ -158,9 +175,9 @@ static std::wstring SystemInfo()
     return ss.str();
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // UTF-8 Conversion Helper
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 static std::string WideToUtf8(const std::wstring& wstr)
 {
     if (wstr.empty()) return {};
@@ -180,12 +197,12 @@ static std::string WideToUtf8(const std::wstring& wstr)
     return utf8;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Crash Handler Implementation
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-static CrashConfig   g_cfg;
-static std::mutex    g_lock;
+static CrashConfig g_cfg;
+static std::mutex g_lock;
 
 // Externals from your engine
 extern IDXGISwapChain* GetMainSwapChain();
@@ -193,16 +210,15 @@ extern ID3D11Device* GetD3DDevice();
 extern ID3D11DeviceContext* GetD3DContext();
 
 // Forward declarations
-static LONG    WINAPI CrashFilter(EXCEPTION_POINTERS*);
-static void           HandleCrashInternal(EXCEPTION_POINTERS*, const char*);
-static void           WriteMiniDump(const std::wstring&, EXCEPTION_POINTERS*);
-static std::wstring   MakeTimeStamp();
-static std::wstring   SymStackTrace(EXCEPTION_POINTERS*);
-static std::wstring   SystemInfo();
-static std::wstring   ThreadStacks();
-static void           SaveScreenshot(const std::wstring&);
-static void           ZipFiles(const std::wstring&, const std::vector<std::wstring>&);
-static bool           Upload(const std::string&, const std::wstring&, const std::string&);
+static LONG WINAPI CrashFilter(EXCEPTION_POINTERS*);
+static void HandleCrashInternal(EXCEPTION_POINTERS*, const char*);
+static void WriteMiniDump(const std::wstring&, EXCEPTION_POINTERS*);
+static std::wstring MakeTimeStamp();
+static std::wstring SymStackTrace(EXCEPTION_POINTERS*);
+static std::wstring ThreadStacks();
+static void SaveScreenshot(const std::wstring&);
+static void ZipFiles(const std::wstring&, const std::vector<std::wstring>&);
+static bool Upload(const std::string&, const std::wstring&, const std::string&);
 
 static LONG WINAPI CrashFilter(EXCEPTION_POINTERS* ep)
 {
@@ -215,7 +231,7 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* msg)
     std::lock_guard<std::mutex> lock(g_lock);
     if (!ep) return;
 
-    auto        stamp = MakeTimeStamp();
+    auto stamp = MakeTimeStamp();
     std::wstring dump = g_cfg.dumpPrefix + stamp + L".dmp";
     std::wstring logFile = g_cfg.dumpPrefix + stamp + L".log";
     std::wstring shot = g_cfg.dumpPrefix + stamp + L".png";
@@ -231,8 +247,8 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* msg)
         log << L"*** Assertion ***\n" << wmsg << L"\n\n";
     }
     log << SymStackTrace(ep);
-    if (g_cfg.captureSystemInfo)   log << SystemInfo();
-    if (g_cfg.captureAllThreads)   log << ThreadStacks();
+    if (g_cfg.captureSystemInfo) log << SystemInfo();
+    if (g_cfg.captureAllThreads) log << ThreadStacks();
 
     std::wofstream ofs(logFile, std::ios::out | std::ios::trunc);
     if (ofs) {
@@ -280,9 +296,9 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* msg)
         MB_OK | MB_ICONERROR);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // MiniDump Writer
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 static void WriteMiniDump(const std::wstring& file, EXCEPTION_POINTERS* ep)
 {
@@ -323,9 +339,9 @@ static void WriteMiniDump(const std::wstring& file, EXCEPTION_POINTERS* ep)
     CloseHandle(hFile);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Timestamp Helper
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 static std::wstring MakeTimeStamp()
 {
@@ -339,9 +355,9 @@ static std::wstring MakeTimeStamp()
     return buf;
 }
 
-//-----------------------------------------------------------------------------
-// Single-Thread Stack Trace
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Single-Thread Stack Trace (FIXED)
+//------------------------------------------------------------------------------
 
 static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep)
 {
@@ -368,6 +384,12 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep)
 
     f.AddrPC.Mode = f.AddrFrame.Mode = f.AddrStack.Mode = AddrModeFlat;
 
+    // FIXED: Pre-allocate buffer outside loop instead of alloca in loop
+    BYTE bufSym[sizeof(SYMBOL_INFO) + 256] = {};
+    auto* sym = reinterpret_cast<SYMBOL_INFO*>(bufSym);
+    sym->SizeOfStruct = sizeof(SYMBOL_INFO);
+    sym->MaxNameLen = 255;
+
     for (int i = 0; i < 32; ++i) {
         if (!StackWalk64(
             m,
@@ -384,11 +406,6 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep)
             break;
         }
 
-        BYTE bufSym[sizeof(SYMBOL_INFO) + 256] = {};
-        auto* sym = reinterpret_cast<SYMBOL_INFO*>(bufSym);
-        sym->SizeOfStruct = sizeof(SYMBOL_INFO);
-        sym->MaxNameLen = 255;
-
         DWORD64 disp = 0;
         if (SymFromAddr(
             GetCurrentProcess(),
@@ -397,11 +414,11 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep)
             sym
         ))
         {
-            out << L"  " << sym->Name
+            out << L" " << sym->Name
                 << L"+0x" << std::hex << disp << std::dec << L"\n";
         }
         else {
-            out << L"  0x" << std::hex
+            out << L" 0x" << std::hex
                 << f.AddrPC.Offset << std::dec << L"\n";
         }
     }
@@ -410,9 +427,9 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep)
     return out.str();
 }
 
-//-----------------------------------------------------------------------------
-// All-Threads Stack Trace
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// All-Threads Stack Trace (FIXED)
+//------------------------------------------------------------------------------
 
 static std::wstring ThreadStacks()
 {
@@ -423,6 +440,9 @@ static std::wstring ThreadStacks()
     HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
     if (hSnap == INVALID_HANDLE_VALUE)
         return out.str();
+
+    // FIXED: Pre-allocate buffer outside loops
+    BYTE bufSym[sizeof(SYMBOL_INFO) + 256] = {};
 
     THREADENTRY32 te;
     te.dwSize = sizeof(te);
@@ -463,6 +483,11 @@ static std::wstring ThreadStacks()
 #endif
                     f.AddrPC.Mode = f.AddrFrame.Mode = f.AddrStack.Mode = AddrModeFlat;
 
+                    // FIXED: Reuse pre-allocated buffer instead of alloca in loop
+                    auto* sym = reinterpret_cast<SYMBOL_INFO*>(bufSym);
+                    sym->SizeOfStruct = sizeof(SYMBOL_INFO);
+                    sym->MaxNameLen = 255;
+
                     for (int i = 0; i < 32; ++i) {
                         if (!StackWalk64(
                             m,
@@ -479,11 +504,6 @@ static std::wstring ThreadStacks()
                             break;
                         }
 
-                        BYTE bufSym[sizeof(SYMBOL_INFO) + 256] = {};
-                        auto* sym = reinterpret_cast<SYMBOL_INFO*>(bufSym);
-                        sym->SizeOfStruct = sizeof(SYMBOL_INFO);
-                        sym->MaxNameLen = 255;
-
                         DWORD64 disp = 0;
                         if (SymFromAddr(
                             GetCurrentProcess(),
@@ -492,11 +512,11 @@ static std::wstring ThreadStacks()
                             sym
                         ))
                         {
-                            out << L"  " << sym->Name
+                            out << L" " << sym->Name
                                 << L"+0x" << std::hex << disp << std::dec << L"\n";
                         }
                         else {
-                            out << L"  0x" << std::hex
+                            out << L" 0x" << std::hex
                                 << f.AddrPC.Offset << std::dec << L"\n";
                         }
                     }
@@ -514,9 +534,9 @@ static std::wstring ThreadStacks()
     return out.str();
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Screenshot via D3D11 + WIC
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 static void SaveScreenshot(const std::wstring& file)
 {
@@ -551,8 +571,8 @@ static void SaveScreenshot(const std::wstring& file)
         staging->Release(); return;
     }
 
-    HRESULT hrCom = CoInitializeEx(NULL, COINIT_MULTITHREADED); 
-    (void)hrCom; (void)hrCom;
+    HRESULT hrCom = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    (void)hrCom;
 
     IWICImagingFactory* wicFactory = nullptr;
     if (FAILED(CoCreateInstance(
@@ -667,9 +687,9 @@ static void SaveScreenshot(const std::wstring& file)
     CoUninitialize();
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Zip Files via miniz
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 static void ZipFiles(
     const std::wstring& zipPath,
@@ -698,9 +718,9 @@ static void ZipFiles(
     mz_zip_writer_end(&zip);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Upload via libcurl
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 static bool Upload(
     const std::string& url,
@@ -732,4 +752,3 @@ static bool Upload(
 
     return (res == CURLE_OK);
 }
-

@@ -137,11 +137,37 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
     ASSERT_MSG(!filename.empty(), "CompileShaderFromFile: filename empty");
     ASSERT(blobOut != nullptr);
 
-    // Check if file exists first
-    if (!std::filesystem::exists(filename)) {
-        std::wstring errorMsg = L"Shader file not found: " + filename;
+    // Try multiple shader locations based on your actual directory structure
+    std::vector<std::wstring> searchPaths = {
+        filename,                                           // Relative to working dir
+        std::wstring(L"Spark Engine/Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1),  // Your actual location
+        std::wstring(L"Spark Engine\\Shaders\\HLSL\\") + filename.substr(filename.find_last_of(L"/\\") + 1), // Windows paths
+        std::wstring(L"Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1),       // Expected location
+        std::wstring(L"Shaders\\HLSL\\") + filename.substr(filename.find_last_of(L"/\\") + 1),     // Windows expected
+        std::wstring(L"../Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1),    // One level up
+        std::wstring(L"build/bin/Debug/Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1) // Build output
+    };
+
+    std::wstring foundPath;
+    bool fileFound = false;
+
+    for (const auto& path : searchPaths) {
+        if (std::filesystem::exists(path)) {
+            foundPath = path;
+            fileFound = true;
+            std::wstring msg = L"Found shader at: " + foundPath + L"\n";
+            OutputDebugStringW(msg.c_str());
+            break;
+        }
+    }
+
+    if (!fileFound) {
+        std::wstring errorMsg = L"Shader file not found in any search path: " + filename + L"\n";
+        errorMsg += L"Searched paths:\n";
+        for (const auto& path : searchPaths) {
+            errorMsg += L"  - " + path + L" (exists: " + (std::filesystem::exists(path) ? L"YES" : L"NO") + L")\n";
+        }
         OutputDebugStringW(errorMsg.c_str());
-        OutputDebugStringW(L"\n");
 
         // Also print current working directory for debugging
         wchar_t currentDir[MAX_PATH];
@@ -161,7 +187,7 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
 
     ID3DBlob* errorBlob = nullptr;
     HRESULT hr = D3DCompileFromFile(
-        filename.c_str(),
+        foundPath.c_str(),  // Use the found path
         nullptr,
         nullptr,
         entryPoint.c_str(),
@@ -172,7 +198,7 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
         &errorBlob);
 
     if (FAILED(hr)) {
-        std::wstring errorMsg = L"D3DCompileFromFile failed for: " + filename + L"\n";
+        std::wstring errorMsg = L"D3DCompileFromFile failed for: " + foundPath + L"\n";
         errorMsg += L"HRESULT: 0x" + std::to_wstring(hr) + L"\n";
         OutputDebugStringW(errorMsg.c_str());
 
@@ -185,7 +211,6 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
 
     if (errorBlob) errorBlob->Release();
 
-    ASSERT_MSG(SUCCEEDED(hr), "D3DCompileFromFile failed");
     return hr;
 }
 

@@ -47,6 +47,7 @@ public:
     void    Shutdown();
 
     HRESULT CreateCube(float size = 1.0f);
+    HRESULT CreateTriangle(float size = 1.0f);
     HRESULT CreatePlane(float width = 10.0f, float depth = 10.0f);
     HRESULT CreateSphere(float radius = 1.0f, int slices = 20, int stacks = 20);
 

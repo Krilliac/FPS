@@ -68,7 +68,7 @@ if(MSVC)
 endif()
 
 # -------------------------------------------------------------
-# 7) CURL BUILD - SIMPLE AND BRUTAL
+# 7) CURL BUILD - WORKING VERSION
 # -------------------------------------------------------------
 set(CURL_ROOT "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl")
 
@@ -90,7 +90,7 @@ set(CURL_ZSTD               OFF CACHE BOOL "" FORCE)
 set(CURL_BROTLI             OFF CACHE BOOL "" FORCE)
 set(CURL_USE_SCHANNEL       ON  CACHE BOOL "" FORCE)
 
-# Build it
+# Build curl
 add_subdirectory("${CURL_ROOT}" EXCLUDE_FROM_ALL)
 
 # -------------------------------------------------------------
@@ -108,7 +108,128 @@ list(FILTER SPARK_ENGINE_SOURCES EXCLUDE REGEX ".*[Ee]xample.*")
 add_executable(SparkEngine WIN32 ${SPARK_ENGINE_SOURCES})
 
 # -------------------------------------------------------------
-# 9) Include directories
+# 8.5) COMPLETE ASSET MANAGEMENT - COPY ALL ASSETS TO BUILD OUTPUT
+# -------------------------------------------------------------
+
+# Function to copy assets with proper structure preservation
+function(copy_assets_to_build)
+    set(ASSETS_COPIED FALSE)
+    
+    # Copy Shaders (highest priority)
+    foreach(SHADER_PATH IN ITEMS
+        "${CMAKE_SOURCE_DIR}/Spark Engine/Shaders"
+        "${CMAKE_SOURCE_DIR}/Shaders" 
+        "${CMAKE_SOURCE_DIR}/Assets/Shaders")
+        
+        if(EXISTS "${SHADER_PATH}")
+            add_custom_command(TARGET SparkEngine POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${SHADER_PATH}"
+                "$<TARGET_FILE_DIR:SparkEngine>/Shaders"
+                COMMENT "Copying shaders from ${SHADER_PATH}")
+            
+            # Also copy to working directory for immediate access
+            add_custom_command(TARGET SparkEngine POST_BUILD  
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${SHADER_PATH}"
+                "${CMAKE_SOURCE_DIR}/Shaders"
+                COMMENT "Copying shaders to working directory")
+                
+            message(STATUS "Shader source found: ${SHADER_PATH}")
+            set(ASSETS_COPIED TRUE)
+            break()
+        endif()
+    endforeach()
+    
+    # Copy main Assets directory if it exists
+    foreach(ASSET_PATH IN ITEMS
+        "${CMAKE_SOURCE_DIR}/Spark Engine/Assets"
+        "${CMAKE_SOURCE_DIR}/Assets")
+        
+        if(EXISTS "${ASSET_PATH}")
+            add_custom_command(TARGET SparkEngine POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${ASSET_PATH}"
+                "$<TARGET_FILE_DIR:SparkEngine>/Assets"
+                COMMENT "Copying assets from ${ASSET_PATH}")
+                
+            message(STATUS "Asset source found: ${ASSET_PATH}")
+            set(ASSETS_COPIED TRUE)
+            break()
+        endif()
+    endforeach()
+    
+    # Copy Models, Textures, Audio, Scripts, Config (similar pattern)
+    foreach(TYPE_PATH IN ITEMS "Models;Models" "Textures;Textures" "Audio;Audio" "Scripts;Scripts" "Config;Config")
+        string(REPLACE ";" "=" TYPE_PAIR "${TYPE_PATH}")
+        string(REPLACE "=" ";" TYPE_PAIR "${TYPE_PAIR}")
+        list(GET TYPE_PAIR 0 TYPE_NAME)
+        list(GET TYPE_PAIR 1 TYPE_DIR)
+        
+        foreach(SEARCH_PATH IN ITEMS
+            "${CMAKE_SOURCE_DIR}/Spark Engine/${TYPE_DIR}"
+            "${CMAKE_SOURCE_DIR}/${TYPE_DIR}"
+            "${CMAKE_SOURCE_DIR}/Assets/${TYPE_DIR}")
+            
+            if(EXISTS "${SEARCH_PATH}")
+                add_custom_command(TARGET SparkEngine POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    "${SEARCH_PATH}"
+                    "$<TARGET_FILE_DIR:SparkEngine>/${TYPE_DIR}"
+                    COMMENT "Copying ${TYPE_NAME} from ${SEARCH_PATH}")
+                    
+                message(STATUS "${TYPE_NAME} source found: ${SEARCH_PATH}")
+                set(ASSETS_COPIED TRUE)
+            endif()
+        endforeach()
+    endforeach()
+    
+    # Copy individual important files
+    set(IMPORTANT_FILES "settings.ini" "config.json" "engine.cfg" "game.properties" "version.txt")
+    
+    foreach(FILE_NAME ${IMPORTANT_FILES})
+        foreach(SEARCH_PATH IN ITEMS 
+            "${CMAKE_SOURCE_DIR}/${FILE_NAME}"
+            "${CMAKE_SOURCE_DIR}/Spark Engine/${FILE_NAME}")
+            
+            if(EXISTS "${SEARCH_PATH}")
+                add_custom_command(TARGET SparkEngine POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    "${SEARCH_PATH}"
+                    "$<TARGET_FILE_DIR:SparkEngine>/${FILE_NAME}"
+                    COMMENT "Copying ${FILE_NAME}")
+                    
+                message(STATUS "Important file found: ${SEARCH_PATH}")
+                set(ASSETS_COPIED TRUE)
+            endif()
+        endforeach()
+    endforeach()
+    
+    # Create asset directories in build output even if sources don't exist
+    add_custom_command(TARGET SparkEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Shaders"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Shaders/HLSL"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Assets" 
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Models"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Textures"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Audio"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Scripts"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Config"
+        COMMENT "Creating asset directory structure")
+        
+    # Status reporting
+    if(ASSETS_COPIED)
+        message(STATUS "Asset copying configured successfully")
+    else()
+        message(WARNING "No asset directories found - assets will need to be manually copied")
+    endif()
+endfunction()
+
+# Execute the asset copying
+copy_assets_to_build()
+
+# -------------------------------------------------------------
+# 9) Include directories WITH CURL HEADERS
 # -------------------------------------------------------------
 target_include_directories(SparkEngine PRIVATE 
     "Spark Engine/Source"
@@ -117,9 +238,9 @@ target_include_directories(SparkEngine PRIVATE
 )
 
 # -------------------------------------------------------------
-# 10) LINK THE ACTUAL FUCKING TARGET THAT EXISTS
+# 10) LINK CURL WITH ACTUAL TARGET NAME
 # -------------------------------------------------------------
-target_link_libraries(SparkEngine PRIVATE libcurl_static)  # THE ACTUAL TARGET NAME
+target_link_libraries(SparkEngine PRIVATE libcurl_static)
 target_compile_definitions(SparkEngine PRIVATE NETWORKING_ENABLED CURL_STATICLIB)
 
 # -------------------------------------------------------------
@@ -135,7 +256,7 @@ target_link_libraries(SparkEngine PRIVATE
 )
 
 # -------------------------------------------------------------
-# 12) Other third-party libraries
+# 12) Third-party libraries - FIXED tinyobjloader
 # -------------------------------------------------------------
 set(MINIZ_FOUND FALSE)
 foreach(PATH IN ITEMS
@@ -152,6 +273,7 @@ foreach(PATH IN ITEMS
     endif()
 endforeach()
 
+# FIXED: tinyobjloader is header-only - create implementation file
 set(TINYOBJ_FOUND FALSE)
 foreach(PATH IN ITEMS
     "ThirdParty/Utils/tinyobjloader"
@@ -160,16 +282,26 @@ foreach(PATH IN ITEMS
     "ThirdParty/tinyobjloader"
 )
     if(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}/tiny_obj_loader.h")
-        add_library(tinyobjloader INTERFACE)
-        target_include_directories(tinyobjloader INTERFACE "${CMAKE_SOURCE_DIR}/${PATH}")
-        target_link_libraries(SparkEngine PRIVATE tinyobjloader)
+        # Create implementation file for header-only library
+        set(TINYOBJ_IMPL_FILE "${CMAKE_BINARY_DIR}/tinyobj_impl.cpp")
+        file(WRITE ${TINYOBJ_IMPL_FILE} 
+             "#define TINYOBJLOADER_IMPLEMENTATION\n"
+             "#include \"tiny_obj_loader.h\"\n")
+        
+        target_sources(SparkEngine PRIVATE ${TINYOBJ_IMPL_FILE})
+        target_include_directories(SparkEngine PRIVATE "${CMAKE_SOURCE_DIR}/${PATH}")
         set(TINYOBJ_FOUND TRUE)
         message(STATUS "Found tinyobjloader at: ${PATH}")
         break()
     elseif(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}/include/tiny_obj_loader.h")
-        add_library(tinyobjloader INTERFACE)
-        target_include_directories(tinyobjloader INTERFACE "${CMAKE_SOURCE_DIR}/${PATH}/include")
-        target_link_libraries(SparkEngine PRIVATE tinyobjloader)
+        # Create implementation file for header-only library
+        set(TINYOBJ_IMPL_FILE "${CMAKE_BINARY_DIR}/tinyobj_impl.cpp")
+        file(WRITE ${TINYOBJ_IMPL_FILE} 
+             "#define TINYOBJLOADER_IMPLEMENTATION\n"
+             "#include \"tiny_obj_loader.h\"\n")
+        
+        target_sources(SparkEngine PRIVATE ${TINYOBJ_IMPL_FILE})
+        target_include_directories(SparkEngine PRIVATE "${CMAKE_SOURCE_DIR}/${PATH}/include")
         set(TINYOBJ_FOUND TRUE)
         message(STATUS "Found tinyobjloader at: ${PATH}/include")
         break()
@@ -246,6 +378,14 @@ endforeach()
 if(MSVC)
     set_property(TARGET SparkEngine PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT SparkEngine)
+    
+    # Add asset file extensions to project filters
+    source_group("Assets\\Shaders" FILES "*.hlsl" "*.fx" "*.glsl")
+    source_group("Assets\\Models" FILES "*.obj" "*.fbx" "*.dae" "*.3ds" "*.ply")
+    source_group("Assets\\Textures" FILES "*.png" "*.jpg" "*.jpeg" "*.tga" "*.dds" "*.bmp")
+    source_group("Assets\\Audio" FILES "*.wav" "*.mp3" "*.ogg" "*.flac")
+    source_group("Assets\\Scripts" FILES "*.lua" "*.js" "*.py")
+    source_group("Assets\\Config" FILES "*.ini" "*.json" "*.cfg" "*.xml" "*.properties")
 endif()
 
-message(STATUS "DONE - SHOULD FUCKING WORK NOW")
+message(STATUS "SPARKENGINE CONFIGURED SUCCESSFULLY")

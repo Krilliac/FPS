@@ -2,29 +2,28 @@
 #include "Utils/Assert.h"
 
 #include <windows.h>
-#include <tlhelp32.h>
 #include <dbghelp.h>
-#include <wincodec.h>
 #include <dxgi.h>
 #include <d3d11.h>
+#include <wincodec.h>
+#include <wrl/client.h>
 #include <curl/curl.h>
 #include <miniz.h>
-#include <sstream>
-#include <iomanip>
-#include <vector>
 #include <filesystem>
 #include <fstream>
+#include <sstream>
+#include <vector>
 #include <mutex>
-#include <wrl/client.h>
+#include <VersionHelpers.h>
+#include <TlHelp32.h>
 
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "windowscodecs.lib")
-#pragma comment(lib, "libcurl.lib")
 #pragma comment(lib, "dxgi.lib")
 
 static CrashConfig g_cfg;
-static std::mutex   g_lock;
-static bool         g_triggerCrashOnAssert = false;  // NEW: Control assert crash behavior
+static std::mutex g_lock;
+static bool g_triggerCrashOnAssert = false; // NEW: Control assert crash behavior
 
 // Engine must implement these
 extern IDXGISwapChain* GetMainSwapChain();
@@ -40,22 +39,22 @@ static std::string WideToUtf8(const std::wstring& w) {
 }
 
 // Forward declarations
-static LONG    WINAPI CrashFilter(EXCEPTION_POINTERS* ep);
-static void          HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* assertMsg);
-static void          WriteMiniDump(const std::wstring& path, EXCEPTION_POINTERS* ep);
-static std::wstring  MakeTimeStamp();
-static std::wstring  SymStackTrace(EXCEPTION_POINTERS* ep);
-static std::wstring  SystemInfo();
-static std::wstring  ThreadStacks();
-static void          SaveScreenshot(const std::wstring& file);
-static void          ZipFiles(const std::wstring& zip, const std::vector<std::wstring>& files);
-static bool          Upload(const std::string& url, const std::wstring& file, const std::string& field);
+static LONG WINAPI CrashFilter(EXCEPTION_POINTERS* ep);
+static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* assertMsg);
+static void WriteMiniDump(const std::wstring& path, EXCEPTION_POINTERS* ep);
+static std::wstring MakeTimeStamp();
+static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep);
+static std::wstring SystemInfo();
+static std::wstring ThreadStacks();
+static void SaveScreenshot(const std::wstring& file);
+static void ZipFiles(const std::wstring& zip, const std::vector<std::wstring>& files);
+static bool Upload(const std::string& url, const std::wstring& file, const std::string& field);
 
 void InstallCrashHandler(const CrashConfig& cfg) {
     g_cfg = cfg;
-    g_triggerCrashOnAssert = cfg.triggerCrashOnAssert;  // Store the flag
+    g_triggerCrashOnAssert = cfg.triggerCrashOnAssert; // Store the flag
     curl_global_init(CURL_GLOBAL_DEFAULT);
-    SetUnhandledExceptionFilter(CrashFilter);  // This stays active always
+    SetUnhandledExceptionFilter(CrashFilter); // This stays active always
 }
 
 void TriggerCrashHandler(const char* assertMsg) {
@@ -66,7 +65,7 @@ void TriggerCrashHandler(const char* assertMsg) {
             OutputDebugStringA(assertMsg);
         }
         OutputDebugStringA("\n");
-        return;  // Early exit - no crash, no dumps, just continue
+        return; // Early exit - no crash, no dumps, just continue
     }
 
     // Full crash handling when enabled
@@ -182,6 +181,7 @@ static std::wstring MakeTimeStamp() {
     return buf;
 }
 
+// FIXED: Replace alloca usage in loops with pre-allocated buffer
 static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep) {
     SymInitialize(GetCurrentProcess(), nullptr, TRUE);
     std::wstringstream out;
@@ -202,6 +202,12 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep) {
 #endif
     frame.AddrPC.Mode = frame.AddrFrame.Mode = frame.AddrStack.Mode = AddrModeFlat;
 
+    // FIXED: Pre-allocate buffer outside loop instead of alloca in loop
+    BYTE symBuffer[sizeof(SYMBOL_INFO) + 256] = {};
+    SYMBOL_INFO* sym = reinterpret_cast<SYMBOL_INFO*>(symBuffer);
+    sym->SizeOfStruct = sizeof(SYMBOL_INFO);
+    sym->MaxNameLen = 255;
+
     for (int i = 0; i < 32; ++i) {
         if (!StackWalk64(machine,
             GetCurrentProcess(),
@@ -214,16 +220,13 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep) {
             nullptr) ||
             !frame.AddrPC.Offset) break;
 
-        SYMBOL_INFO* sym = (SYMBOL_INFO*)alloca(sizeof(SYMBOL_INFO) + 256);
-        sym->SizeOfStruct = sizeof(SYMBOL_INFO);
-        sym->MaxNameLen = 255;
         DWORD64 disp = 0;
         if (SymFromAddr(GetCurrentProcess(), frame.AddrPC.Offset, &disp, sym)) {
-            out << L"  " << sym->Name << L" +0x"
+            out << L" " << sym->Name << L" +0x"
                 << std::hex << disp << std::dec << L"\n";
         }
         else {
-            out << L"  0x" << std::hex << frame.AddrPC.Offset << std::dec << L"\n";
+            out << L" 0x" << std::hex << frame.AddrPC.Offset << std::dec << L"\n";
         }
     }
 
@@ -231,10 +234,8 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS* ep) {
     return out.str();
 }
 
+// FIXED: Replace GetVersionExW with IsWindows* functions
 static std::wstring SystemInfo() {
-    OSVERSIONINFOW osv{ sizeof(osv) };
-    GetVersionExW(&osv);
-
     SYSTEM_INFO si; GetNativeSystemInfo(&si);
     MEMORYSTATUSEX ms{ sizeof(ms) }; GlobalMemoryStatusEx(&ms);
 
@@ -251,24 +252,44 @@ static std::wstring SystemInfo() {
     }
 
     std::wstringstream s;
-    s << L"*** SYSTEM INFO ***\n"
-        << L"OS Version : " << osv.dwMajorVersion << L'.' << osv.dwMinorVersion
-        << L" Build " << osv.dwBuildNumber << L"\n"
-        << L"CPU Cores  : " << si.dwNumberOfProcessors << L"\n"
-        << L"RAM Total  : " << (ms.ullTotalPhys >> 20) << L" MiB\n"
-        << L"RAM Avail  : " << (ms.ullAvailPhys >> 20) << L" MiB\n"
-        << L"GPU        : " << gpu << L"\n\n";
+    s << L"*** SYSTEM INFO ***\n";
+
+    // FIXED: Use VersionHelpers instead of deprecated GetVersionExW
+    if (IsWindows10OrGreater()) {
+        s << L"OS Version: Windows 10 or greater\n";
+    }
+    else if (IsWindows8Point1OrGreater()) {
+        s << L"OS Version: Windows 8.1 or greater\n";
+    }
+    else if (IsWindows8OrGreater()) {
+        s << L"OS Version: Windows 8 or greater\n";
+    }
+    else if (IsWindows7OrGreater()) {
+        s << L"OS Version: Windows 7 or greater\n";
+    }
+    else {
+        s << L"OS Version: Windows (version unknown)\n";
+    }
+
+    s << L"CPU Cores : " << si.dwNumberOfProcessors << L"\n"
+        << L"RAM Total : " << (ms.ullTotalPhys >> 20) << L" MiB\n"
+        << L"RAM Avail : " << (ms.ullAvailPhys >> 20) << L" MiB\n"
+        << L"GPU : " << gpu << L"\n\n";
     return s.str();
 }
 
+// FIXED: Replace alloca usage in loops
 static std::wstring ThreadStacks() {
     SymInitialize(GetCurrentProcess(), nullptr, TRUE);
     DWORD pid = GetCurrentProcessId();
     HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-    ASSERT_NOT_NULL_ALWAYS(snap);
+    if (snap == INVALID_HANDLE_VALUE) return L"*** THREAD STACKS ***\nFailed to create snapshot\n";
 
     std::wstringstream out;
     out << L"*** THREAD STACKS ***\n";
+
+    // FIXED: Pre-allocate buffer outside loops
+    BYTE symBuffer[sizeof(SYMBOL_INFO) + 256] = {};
 
     THREADENTRY32 te{ sizeof(te) };
     for (Thread32First(snap, &te); Thread32Next(snap, &te);) {
@@ -294,6 +315,12 @@ static std::wstring ThreadStacks() {
             sf.AddrPC.Mode = sf.AddrFrame.Mode = sf.AddrStack.Mode = AddrModeFlat;
 
             out << L"\nThread 0x" << std::hex << te.th32ThreadID << std::dec << L"\n";
+
+            // FIXED: Reuse pre-allocated buffer instead of alloca in loop
+            SYMBOL_INFO* sym = reinterpret_cast<SYMBOL_INFO*>(symBuffer);
+            sym->SizeOfStruct = sizeof(SYMBOL_INFO);
+            sym->MaxNameLen = 255;
+
             for (int i = 0; i < 32; ++i) {
                 if (!StackWalk64(mach,
                     GetCurrentProcess(),
@@ -306,16 +333,13 @@ static std::wstring ThreadStacks() {
                     nullptr) ||
                     !sf.AddrPC.Offset) break;
 
-                SYMBOL_INFO* sym = (SYMBOL_INFO*)alloca(sizeof(SYMBOL_INFO) + 256);
-                sym->SizeOfStruct = sizeof(SYMBOL_INFO);
-                sym->MaxNameLen = 255;
                 DWORD64 disp = 0;
                 if (SymFromAddr(GetCurrentProcess(), sf.AddrPC.Offset, &disp, sym)) {
-                    out << L"  " << sym->Name << L" +0x"
+                    out << L" " << sym->Name << L" +0x"
                         << std::hex << disp << std::dec << L"\n";
                 }
                 else {
-                    out << L"  0x" << std::hex << sf.AddrPC.Offset << std::dec << L"\n";
+                    out << L" 0x" << std::hex << sf.AddrPC.Offset << std::dec << L"\n";
                 }
             }
         }

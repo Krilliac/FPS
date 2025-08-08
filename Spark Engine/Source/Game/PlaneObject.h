@@ -34,5 +34,5 @@ protected:
 private:
     float        m_width;
     float        m_depth;
-    std::wstring m_modelPath{ L"Assets/Models/Plane.fbx" };
+    std::wstring m_modelPath{ L"Assets/Models/Plane.obj" };
 };
