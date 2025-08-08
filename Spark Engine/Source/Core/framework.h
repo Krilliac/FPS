@@ -1,4 +1,15 @@
-﻿#pragma once
+﻿/**
+ * @file framework.h
+ * @brief Core framework header with essential includes and library links
+ * @author Spark Engine Team
+ * @date 2025
+ * 
+ * This header provides the fundamental includes required throughout the engine,
+ * including Windows API, DirectX 11, STL containers, and necessary library links.
+ * It serves as a precompiled header equivalent for the engine's core dependencies.
+ */
+
+#pragma once
 
 #include "targetver.h"
 //#define WIN32_LEAN_AND_MEAN
@@ -29,4 +40,3 @@
 #pragma comment(lib, "dxgi.lib")
 
 using namespace DirectX;
-
