@@ -73,6 +73,9 @@
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Rocket.cpp">
       <Filter>Source Files\Projectiles</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\SceneManager\SceneManager.cpp">
+      <Filter>Source Files\SceneManager</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\CrashHandler.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
@@ -94,6 +97,10 @@
     <ClCompile Include="D:\Spark Engine\SparkEngine\build\tinyobj_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SparkConsole\src\main.cpp" />
+    <ClCompile Include="SparkConsole\src\ConsoleApp.cpp" />
+    <ClCompile Include="SparkConsole\src\CommandRegistry.cpp" />
+    <ClCompile Include="SparkConsole\src\CommandParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\AudioEngine.h">
@@ -192,6 +199,9 @@
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\WeaponStats.h">
       <Filter>Source Files\Projectiles</Filter>
     </ClInclude>
+    <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\SceneManager\SceneManager.h">
+      <Filter>Source Files\SceneManager</Filter>
+    </ClInclude>
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\Assert.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
@@ -210,6 +220,12 @@
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Utils\Timer.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="SparkConsole\include\ConsoleApp.h" />
+    <ClInclude Include="SparkConsole\include\CommandRegistry.h" />
+    <ClInclude Include="SparkConsole\include\CommandParser.h" />
+    <ClInclude Include="SparkConsole\src\CommandRegistry.h" />
+    <ClInclude Include="SparkConsole\src\CommandParser.h" />
+    <ClInclude Include="SparkConsole\src\ConsoleApp.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\Spark Engine\SparkEngine\CMakeLists.txt" />
@@ -251,8 +267,15 @@
     <Filter Include="Source Files\Projectiles">
       <UniqueIdentifier>{55783175-A1AC-3741-8880-298BE5510649}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SceneManager">
+      <UniqueIdentifier>{0D02453A-0399-3530-B0D0-D7A835325912}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{94075FF1-B464-37CB-9A2D-7311C9EFDEF0}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="SparkConsole\CMakeLists.txt" />
+    <Text Include="SparkConsole\CMakeLists_test.txt" />
   </ItemGroup>
 </Project>

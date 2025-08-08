@@ -18,6 +18,7 @@
 #include <mutex>
 #include <tlhelp32.h>
 #include <VersionHelpers.h>
+#include <iostream>
 
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "windowscodecs.lib")

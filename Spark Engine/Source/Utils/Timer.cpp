@@ -1,5 +1,6 @@
 ﻿// Timer.cpp
 #include "Timer.h"
+#include <iostream>
 
 Timer::Timer()
     : m_deltaTime(0.0f)
@@ -7,9 +8,13 @@ Timer::Timer()
     , m_paused(false)
 {
     m_lastTime = std::chrono::high_resolution_clock::now();
+    std::wcout << L"[INFO] Timer constructed." << std::endl;
 }
 
-Timer::~Timer() = default;
+Timer::~Timer()
+{
+    std::wcout << L"[INFO] Timer destructor called." << std::endl;
+}
 
 void Timer::Start()
 {
@@ -17,12 +22,14 @@ void Timer::Start()
     {
         m_lastTime = std::chrono::high_resolution_clock::now();
         m_paused = false;
+        std::wcout << L"[INFO] Timer started." << std::endl;
     }
 }
 
 void Timer::Stop()
 {
     m_paused = true;
+    std::wcout << L"[INFO] Timer stopped." << std::endl;
 }
 
 void Timer::Reset()
@@ -31,6 +38,7 @@ void Timer::Reset()
     m_deltaTime = 0.0f;
     m_totalTime = 0.0f;
     m_paused = false;
+    std::wcout << L"[INFO] Timer reset." << std::endl;
 }
 
 float Timer::GetDeltaTime()

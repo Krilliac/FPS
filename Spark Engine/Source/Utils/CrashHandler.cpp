@@ -1,5 +1,6 @@
 ﻿#include "Utils/CrashHandler.h"
 #include "Utils/Assert.h"
+#include "Utils/ConsoleProcessManager.h"
 
 #include <windows.h>
 #include <dbghelp.h>
@@ -16,6 +17,7 @@
 #include <mutex>
 #include <VersionHelpers.h>
 #include <TlHelp32.h>
+#include <iostream>
 
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "windowscodecs.lib")
@@ -60,11 +62,20 @@ void InstallCrashHandler(const CrashConfig& cfg) {
 void TriggerCrashHandler(const char* assertMsg) {
     if (!g_triggerCrashOnAssert) {
         // Just log the assertion but don't trigger full crash handling
-        OutputDebugStringA("Assert triggered but crash handling disabled: ");
+        std::string logMsg = "Assert triggered but crash handling disabled: ";
         if (assertMsg) {
-            OutputDebugStringA(assertMsg);
+            logMsg += assertMsg;
         }
-        OutputDebugStringA("\n");
+        
+        // **NEW: Log to external console**
+        try {
+            Spark::ConsoleProcessManager::GetInstance().LogCrash(logMsg);
+        } catch (...) {
+            // Fallback to OutputDebugString if console logging fails
+            OutputDebugStringA(logMsg.c_str());
+            OutputDebugStringA("\n");
+        }
+        
         return; // Early exit - no crash, no dumps, just continue
     }
 
@@ -85,6 +96,15 @@ void TriggerCrashHandler(const char* assertMsg) {
 void SetAssertCrashBehavior(bool shouldCrash) {
     std::lock_guard<std::mutex> lock(g_lock);
     g_triggerCrashOnAssert = shouldCrash;
+    
+    // **NEW: Log the change to external console**
+    try {
+        std::string logMsg = "Assert crash behavior changed to: ";
+        logMsg += (shouldCrash ? "ENABLED" : "DISABLED");
+        Spark::ConsoleProcessManager::GetInstance().LogCrash(logMsg);
+    } catch (...) {
+        // Fallback if console logging fails
+    }
 }
 
 static LONG WINAPI CrashFilter(EXCEPTION_POINTERS* ep) {
@@ -111,10 +131,34 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* assertMsg) {
         std::wstring wmsg(len, L'\0');
         MultiByteToWideChar(CP_UTF8, 0, assertMsg, -1, &wmsg[0], len);
         log << L"*** ASSERTION FAILURE ***\n" << wmsg << L"\n\n";
+    } else {
+        log << L"*** CRASH DETECTED ***\n\n";
     }
     log << SymStackTrace(ep);
     if (g_cfg.captureSystemInfo) log << SystemInfo();
     if (g_cfg.captureAllThreads) log << ThreadStacks();
+
+    // **NEW: Log crash info to external console**
+    try {
+        std::string crashSummary = assertMsg ? "ASSERTION FAILURE" : "CRASH DETECTED";
+        crashSummary += "\nDump file: " + WideToUtf8(dump);
+        crashSummary += "\nLog file: " + WideToUtf8(logFile);
+        if (g_cfg.captureScreenshot) {
+            crashSummary += "\nScreenshot: " + WideToUtf8(shot);
+        }
+        
+        Spark::ConsoleProcessManager::GetInstance().LogCrash(crashSummary);
+        
+        // Also log the actual crash details (truncated for console)
+        std::string logContent = WideToUtf8(log.str());
+        if (logContent.length() > 1000) {
+            logContent = logContent.substr(0, 1000) + "... (truncated, see log file for full details)";
+        }
+        Spark::ConsoleProcessManager::GetInstance().LogCrash(logContent);
+        
+    } catch (...) {
+        // If external console logging fails, continue with normal crash handling
+    }
 
     // Write log file
     {

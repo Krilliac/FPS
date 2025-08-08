@@ -4,18 +4,19 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <filesystem>
+#include <iostream>
 
-Shader::Shader()
-{
+Shader::Shader() {
+    std::wcout << L"[INFO] Shader constructed." << std::endl;
 }
 
-Shader::~Shader()
-{
+Shader::~Shader() {
+    std::wcout << L"[INFO] Shader destructor called." << std::endl;
     Shutdown();
 }
 
-HRESULT Shader::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
-{
+HRESULT Shader::Initialize(ID3D11Device* device, ID3D11DeviceContext* context) {
+    std::wcout << L"[OPERATION] Shader::Initialize called." << std::endl;
     ASSERT_MSG(device != nullptr, "Shader::Initialize device is null");
     ASSERT_MSG(context != nullptr, "Shader::Initialize context is null");
 
@@ -23,20 +24,22 @@ HRESULT Shader::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
     m_context = context;
 
     HRESULT hr = CreateConstantBuffer();
+    std::wcout << L"[INFO] Shader constant buffer creation HR=0x" << std::hex << hr << std::dec << std::endl;
     ASSERT_MSG(SUCCEEDED(hr), "CreateConstantBuffer failed");
     return hr;
 }
 
-void Shader::Shutdown()
-{
+void Shader::Shutdown() {
+    std::wcout << L"[OPERATION] Shader::Shutdown called." << std::endl;
     if (m_constantBuffer) { m_constantBuffer->Release(); m_constantBuffer = nullptr; }
     if (m_inputLayout) { m_inputLayout->Release();    m_inputLayout = nullptr; }
     if (m_pixelShader) { m_pixelShader->Release();    m_pixelShader = nullptr; }
     if (m_vertexShader) { m_vertexShader->Release();   m_vertexShader = nullptr; }
+    std::wcout << L"[INFO] Shader shutdown complete." << std::endl;
 }
 
-HRESULT Shader::LoadVertexShader(const std::wstring& filename)
-{
+HRESULT Shader::LoadVertexShader(const std::wstring& filename) {
+    std::wcout << L"[OPERATION] Shader::LoadVertexShader called. filename=" << filename << std::endl;
     ASSERT_MSG(!filename.empty(), "LoadVertexShader: filename empty");
     ASSERT_MSG(m_device != nullptr, "LoadVertexShader: device is null");
 
@@ -68,11 +71,12 @@ HRESULT Shader::LoadVertexShader(const std::wstring& filename)
     ASSERT_MSG(SUCCEEDED(hr), "CreateInputLayout failed");
 
     vsBlob->Release();
+    std::wcout << L"[INFO] Vertex shader loaded." << std::endl;
     return hr;
 }
 
-HRESULT Shader::LoadPixelShader(const std::wstring& filename)
-{
+HRESULT Shader::LoadPixelShader(const std::wstring& filename) {
+    std::wcout << L"[OPERATION] Shader::LoadPixelShader called. filename=" << filename << std::endl;
     ASSERT_MSG(!filename.empty(), "LoadPixelShader: filename empty");
     ASSERT_MSG(m_device != nullptr, "LoadPixelShader: device is null");
 
@@ -89,11 +93,12 @@ HRESULT Shader::LoadPixelShader(const std::wstring& filename)
     ASSERT_MSG(SUCCEEDED(hr), "CreatePixelShader failed");
 
     psBlob->Release();
+    std::wcout << L"[INFO] Pixel shader loaded." << std::endl;
     return hr;
 }
 
-void Shader::SetShaders()
-{
+void Shader::SetShaders() {
+    std::wcout << L"[OPERATION] Shader::SetShaders called." << std::endl;
     ASSERT(m_context != nullptr);
     ASSERT(m_vertexShader != nullptr);
     ASSERT(m_pixelShader != nullptr);
@@ -104,10 +109,12 @@ void Shader::SetShaders()
     m_context->PSSetShader(m_pixelShader, nullptr, 0);
     m_context->IASetInputLayout(m_inputLayout);
     m_context->VSSetConstantBuffers(0, 1, &m_constantBuffer);
+
+    std::wcout << L"[INFO] Shaders set and constant buffer bound." << std::endl;
 }
 
-void Shader::UpdateConstantBuffer(const ConstantBuffer& cb)
-{
+void Shader::UpdateConstantBuffer(const ConstantBuffer& cb) {
+    std::wcout << L"[OPERATION] Shader::UpdateConstantBuffer called." << std::endl;
     ASSERT(m_context != nullptr);
     ASSERT(m_constantBuffer != nullptr);
 
@@ -127,6 +134,7 @@ void Shader::UpdateConstantBuffer(const ConstantBuffer& cb)
     dataPtr->Projection = XMMatrixTranspose(cb.Projection);
 
     m_context->Unmap(m_constantBuffer, 0);
+    std::wcout << L"[INFO] Constant buffer updated." << std::endl;
 }
 
 HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
@@ -134,6 +142,7 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
     const std::string& shaderModel,
     ID3DBlob** blobOut)
 {
+    std::wcout << L"[OPERATION] Shader::CompileShaderFromFile called. filename=" << filename << std::endl;
     ASSERT_MSG(!filename.empty(), "CompileShaderFromFile: filename empty");
     ASSERT(blobOut != nullptr);
 
@@ -211,11 +220,12 @@ HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
 
     if (errorBlob) errorBlob->Release();
 
+    std::wcout << L"[INFO] Shader compiled from file." << std::endl;
     return hr;
 }
 
-HRESULT Shader::CreateConstantBuffer()
-{
+HRESULT Shader::CreateConstantBuffer() {
+    std::wcout << L"[OPERATION] Shader::CreateConstantBuffer called." << std::endl;
     ASSERT_MSG(m_device != nullptr, "CreateConstantBuffer: device is null");
 
     D3D11_BUFFER_DESC bd{};
@@ -226,5 +236,6 @@ HRESULT Shader::CreateConstantBuffer()
 
     HRESULT hr = m_device->CreateBuffer(&bd, nullptr, &m_constantBuffer);
     ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (constant) failed");
+    std::wcout << L"[INFO] Constant buffer created." << std::endl;
     return hr;
 }

@@ -1,6 +1,7 @@
 ﻿// Console.cpp
 #include "Console.h"
 #include "Utils/Assert.h"
+#include <iostream>
 
 // -----------------------------------------------------------------------------
 void Console::Initialize(int screenW, int screenH)
@@ -16,6 +17,8 @@ void Console::Initialize(int screenW, int screenH)
         for (auto& c : commands)
             Log(L"  " + c.name);
     } });
+
+    std::wcout << L"[INFO] Console initialization complete." << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -108,4 +111,6 @@ void Console::Render(ID3D11DeviceContext* ctx)
         y += lineH;
     }
     DrawText(L"> " + inputLine, 10.0f, y, scale, ctx);
+
+    std::wcout << L"[INFO] Console rendered." << std::endl;
 }

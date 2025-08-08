@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <random>
 #include <cmath>
+#include <iostream>
 
 using namespace DirectX;
 
@@ -124,12 +125,11 @@ void MathUtils::InitializeRandom()
     }
 }
 
-float MathUtils::RandomFloat(float min, float max)
-{
-    ASSERT_MSG(min <= max, "RandomFloat min must be <= max");
-    InitializeRandom();
-    std::uniform_real_distribution<float> distribution(min, max);
-    return distribution(s_randomGenerator);
+float MathUtils::RandomFloat(float min, float max) {
+    std::wcout << L"[OPERATION] MathUtils::RandomFloat called. min=" << min << L" max=" << max << std::endl;
+    float result = min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min)));
+    std::wcout << L"[INFO] MathUtils::RandomFloat result=" << result << std::endl;
+    return result;
 }
 
 int MathUtils::RandomInt(int min, int max)

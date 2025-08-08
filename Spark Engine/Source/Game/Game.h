@@ -32,7 +32,7 @@ struct ConstantBuffer;
 #include "CubeObject.h"
 #include "PlaneObject.h"
 #include "SphereObject.h"
-#include "SceneManager.h"
+#include "SceneManager/SceneManager.h"
 
 /**
  * @brief Main game controller class managing the game loop and scene

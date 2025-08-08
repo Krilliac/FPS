@@ -23,7 +23,7 @@ BUILD_CURL_EXE:BOOL=OFF
 //Disable docs
 BUILD_DOCS:BOOL=OFF
 
-//Build examples
+//Disable all examples
 BUILD_EXAMPLES:BOOL=OFF
 
 //Build fuzz targets
@@ -44,7 +44,7 @@ BUILD_NO_STDIO" Build a without stdio version":BOOL=OFF
 //Disable all samples
 BUILD_SAMPLES:BOOL=OFF
 
-//Build shared library instead of static
+//Build shared libraries
 BUILD_SHARED_LIBS:BOOL=OFF
 
 //Build curl executable with static libcurl
@@ -53,7 +53,7 @@ BUILD_STATIC_CURL:BOOL=OFF
 //Build static libraries
 BUILD_STATIC_LIBS:BOOL=OFF
 
-//Build tests
+//Disable all testing
 BUILD_TESTING:BOOL=OFF
 
 //Build tests
@@ -64,9 +64,6 @@ BUILD_TOOLS:BOOL=OFF
 
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
-
-//No help, variable specified on the command line.
-CMAKE_BUILD_TYPE:UNINITIALIZED=Debug
 
 //Semicolon separated list of supported configuration types, only
 // supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
@@ -293,10 +290,6 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 // during RELWITHDEBINFO builds.
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
-CMAKE_USE_LIBSSH2:BOOL=OFF
-
-CMAKE_USE_OPENSSL:BOOL=OFF
-
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
 // during the make.  This is useful for debugging only. With Visual
@@ -314,10 +307,6 @@ CURL_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/ThirdParty/Networking/c
 
 CURL_BROTLI:BOOL=OFF
 
-CURL_CA_BUNDLE:BOOL=OFF
-
-CURL_CA_PATH:BOOL=OFF
-
 //Enable safe CA bundle search (within the curl tool directory)
 // on Windows
 CURL_CA_SEARCH_SAFE:BOOL=OFF
@@ -330,9 +319,6 @@ CURL_COMPLETION_FISH:BOOL=OFF
 
 //Install zsh completions
 CURL_COMPLETION_ZSH:BOOL=OFF
-
-//The directory containing a CMake configuration file for CURL.
-CURL_DIR:PATH=CURL_DIR-NOTFOUND
 
 //Disable alt-svc support
 CURL_DISABLE_ALTSVC:BOOL=OFF
@@ -485,17 +471,8 @@ CURL_ENABLE_SSL:BOOL=ON
 // officially external)
 CURL_HIDDEN_SYMBOLS:BOOL=ON
 
-//Path to a file.
-CURL_INCLUDE_DIR:PATH=CURL_INCLUDE_DIR-NOTFOUND
-
 //Value Computed by CMake
 CURL_IS_TOP_LEVEL:STATIC=OFF
-
-//Path to a library.
-CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
-
-//Path to a library.
-CURL_LIBRARY_RELEASE:FILEPATH=CURL_LIBRARY_RELEASE-NOTFOUND
 
 //Enable compiler Link Time Optimizations
 CURL_LTO:BOOL=OFF
@@ -557,7 +534,7 @@ CURL_USE_WOLFSSL:BOOL=OFF
 CURL_WERROR:BOOL=OFF
 
 //Enable SSPI on Windows
-CURL_WINDOWS_SSPI:BOOL=OFF
+CURL_WINDOWS_SSPI:BOOL=ON
 
 //Build curl with ZLIB support (AUTO, ON or OFF)
 CURL_ZLIB:STRING=AUTO
@@ -606,10 +583,8 @@ ENABLE_LIGHTING_SYSTEM:BOOL=ON
 //Enable Lua scripting support
 ENABLE_LUA:BOOL=ON
 
-ENABLE_MANUAL:BOOL=OFF
-
 //Enable networking features
-ENABLE_NETWORKING:BOOL=OFF
+ENABLE_NETWORKING:BOOL=ON
 
 //Enable PhysX physics engine
 ENABLE_PHYSX:BOOL=ON
@@ -669,11 +644,23 @@ PERL_EXECUTABLE:FILEPATH=PERL_EXECUTABLE-NOTFOUND
 //Enable picky compiler options
 PICKY_COMPILER:BOOL=ON
 
-//Arguments to supply to pkg-config
-PKG_CONFIG_ARGN:STRING=
+//Value Computed by CMake
+SparkConsole_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/SparkConsole
 
-//pkg-config executable
-PKG_CONFIG_EXECUTABLE:FILEPATH=PKG_CONFIG_EXECUTABLE-NOTFOUND
+//Value Computed by CMake
+SparkConsole_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+SparkConsole_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/SparkConsole
+
+//Value Computed by CMake
+SparkEngineComplete_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build
+
+//Value Computed by CMake
+SparkEngineComplete_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+SparkEngineComplete_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine
 
 //Value Computed by CMake
 SparkEngine_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build
@@ -852,7 +839,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -908,8 +895,6 @@ CPACK_SOURCE_7Z-ADVANCED:INTERNAL=1
 CPACK_SOURCE_ZIP-ADVANCED:INTERNAL=1
 //STRINGS property for variable: CURL_BROTLI
 CURL_BROTLI-STRINGS:INTERNAL=AUTO;ON;OFF
-//ADVANCED property for variable: CURL_DIR
-CURL_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_DISABLE_ALTSVC
 CURL_DISABLE_ALTSVC-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_DISABLE_AWS
@@ -1002,12 +987,6 @@ CURL_DISABLE_WEBSOCKETS-ADVANCED:INTERNAL=1
 CURL_ENABLE_EXPORT_TARGET-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_HIDDEN_SYMBOLS
 CURL_HIDDEN_SYMBOLS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_INCLUDE_DIR
-CURL_INCLUDE_DIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_LIBRARY_DEBUG
-CURL_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_LIBRARY_RELEASE
-CURL_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_USE_GSASL
 CURL_USE_GSASL-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CURL_USE_GSSAPI
@@ -1052,10 +1031,6 @@ NGHTTP2_INCLUDE_DIR-ADVANCED:INTERNAL=1
 NGHTTP2_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PERL_EXECUTABLE
 PERL_EXECUTABLE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: PKG_CONFIG_ARGN
-PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
-PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
 //CHECK_TYPE_SIZE: sizeof(curl_socket_t)
 SIZEOF_CURL_SOCKET_T:INTERNAL=8
 //CHECK_TYPE_SIZE: sizeof(size_t)

@@ -11,19 +11,25 @@
 
 using namespace DirectX;
 
-Mesh::Mesh() = default;
-Mesh::~Mesh() { Shutdown(); }
+Mesh::Mesh() {
+    std::wcout << L"[INFO] Mesh constructed." << std::endl;
+}
+Mesh::~Mesh() {
+    std::wcout << L"[INFO] Mesh destructor called." << std::endl;
+    Shutdown();
+}
 
-HRESULT Mesh::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
-{
+HRESULT Mesh::Initialize(ID3D11Device* device, ID3D11DeviceContext* context) {
+    std::wcout << L"[OPERATION] Mesh::Initialize called." << std::endl;
     ASSERT(device && context);
     m_device = device;
     m_context = context;
+    std::wcout << L"[INFO] Mesh initialized with device/context." << std::endl;
     return S_OK;
 }
 
-void Mesh::Shutdown()
-{
+void Mesh::Shutdown() {
+    std::wcout << L"[OPERATION] Mesh::Shutdown called." << std::endl;
     if (m_ib) { m_ib->Release(); m_ib = nullptr; }
     if (m_vb) { m_vb->Release(); m_vb = nullptr; }
     m_vertices.clear();
@@ -31,10 +37,11 @@ void Mesh::Shutdown()
     m_vertexCount = m_indexCount = 0;
     m_device = nullptr;
     m_context = nullptr;
+    std::wcout << L"[INFO] Mesh shutdown complete." << std::endl;
 }
 
-bool Mesh::LoadFromFile(const std::wstring& path)
-{
+bool Mesh::LoadFromFile(const std::wstring& path) {
+    std::wcout << L"[OPERATION] Mesh::LoadFromFile called. path=" << path << std::endl;
     ASSERT_ALWAYS_MSG(!path.empty(), "Mesh::LoadFromFile – empty path");
 
     // Convert wide path to UTF-8 for tinyobjloader
@@ -152,13 +159,14 @@ bool Mesh::LoadFromFile(const std::wstring& path)
         return false;
     }
 
-    std::wcerr << L"[DEBUG] Successfully loaded mesh: " << path << std::endl;
+    std::wcout << L"[INFO] Mesh loaded from file: " << path << std::endl;
     return true;
 }
 
 HRESULT Mesh::CreateFromVertices(const std::vector<Vertex>& verts,
     const std::vector<unsigned int>& inds)
 {
+    std::wcout << L"[OPERATION] Mesh::CreateFromVertices called. verts=" << verts.size() << L" inds=" << inds.size() << std::endl;
     ASSERT(!verts.empty() && !inds.empty());
 
     m_vertices = verts;
@@ -172,9 +180,8 @@ HRESULT Mesh::CreateFromVertices(const std::vector<Vertex>& verts,
 
 HRESULT Mesh::CreateCube(float size)
 {
+    std::wcout << L"[OPERATION] Mesh::CreateCube called. size=" << size << std::endl;
     ASSERT(size > 0.0f);
-
-    std::wcerr << L"[DEBUG] CreateCube called with size: " << size << std::endl;
 
     // Clear existing data
     m_vertices.clear();
@@ -240,8 +247,7 @@ HRESULT Mesh::CreateCube(float size)
     m_vertexCount = static_cast<UINT>(m_vertices.size());
     m_indexCount = static_cast<UINT>(m_indices.size());
 
-    std::wcerr << L"[DEBUG] Created cube with " << m_vertexCount << L" vertices and "
-        << m_indexCount << L" indices" << std::endl;
+    std::wcout << L"[INFO] Cube mesh created. Vertices=" << m_vertexCount << L" Indices=" << m_indexCount << std::endl;
 
     ASSERT_ALWAYS_MSG(m_vertexCount > 0 && m_indexCount > 0, "CreateCube produced empty mesh");
 
@@ -252,7 +258,7 @@ HRESULT Mesh::CreateCube(float size)
         return hr;
     }
 
-    std::wcerr << L"[DEBUG] CreateCube completed successfully" << std::endl;
+    std::wcout << L"[DEBUG] CreateCube completed successfully" << std::endl;
     return S_OK;
 }
 
@@ -260,7 +266,7 @@ HRESULT Mesh::CreateTriangle(float size)
 {
     ASSERT(size > 0.0f);
 
-    std::wcerr << L"[DEBUG] CreateTriangle called with size: " << size << std::endl;
+    std::wcout << L"[OPERATION] Mesh::CreateTriangle called. size=" << size << std::endl;
 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -289,8 +295,7 @@ HRESULT Mesh::CreateTriangle(float size)
     // Triangle indices
     indices = { 0, 1, 2 };
 
-    std::wcerr << L"[DEBUG] Created triangle with " << vertices.size() << L" vertices and "
-        << indices.size() << L" indices" << std::endl;
+    std::wcout << L"[INFO] Triangle mesh created." << std::endl;
 
     ASSERT_ALWAYS_MSG(!vertices.empty() && !indices.empty(), "CreateTriangle produced empty mesh");
 
@@ -300,6 +305,8 @@ HRESULT Mesh::CreateTriangle(float size)
 HRESULT Mesh::CreatePlane(float width, float depth)
 {
     ASSERT(width > 0.0f && depth > 0.0f);
+
+    std::wcout << L"[OPERATION] Mesh::CreatePlane called. width=" << width << L" depth=" << depth << std::endl;
 
     MeshData md;
     float hw = width * 0.5f, hd = depth * 0.5f;
@@ -316,6 +323,8 @@ HRESULT Mesh::CreatePlane(float width, float depth)
     ASSERT_ALWAYS_MSG(!md.vertices.empty() && !md.indices.empty(),
         "CreatePlane produced empty mesh");
 
+    std::wcout << L"[INFO] Plane mesh created." << std::endl;
+
     return CreateFromVertices(md.vertices, md.indices);
 }
 
@@ -323,6 +332,8 @@ HRESULT Mesh::CreateSphere(float radius, int slices, int stacks)
 {
     ASSERT(radius > 0.0f);
     ASSERT(slices >= 3 && stacks >= 2);
+
+    std::wcout << L"[OPERATION] Mesh::CreateSphere called. radius=" << radius << L" slices=" << slices << L" stacks=" << stacks << std::endl;
 
     MeshData md;
     for (int i = 0; i <= stacks; ++i)
@@ -366,11 +377,13 @@ HRESULT Mesh::CreateSphere(float radius, int slices, int stacks)
     ASSERT_ALWAYS_MSG(!md.vertices.empty() && !md.indices.empty(),
         "CreateSphere produced empty mesh");
 
+    std::wcout << L"[INFO] Sphere mesh created." << std::endl;
+
     return CreateFromVertices(md.vertices, md.indices);
 }
 
-void Mesh::CalculateNormals()
-{
+void Mesh::CalculateNormals() {
+    std::wcout << L"[OPERATION] Mesh::CalculateNormals called." << std::endl;
     ASSERT(!m_vertices.empty() && !m_indices.empty());
 
     for (size_t i = 0; i + 2 < m_indices.size(); i += 3)
@@ -387,10 +400,12 @@ void Mesh::CalculateNormals()
         m_vertices[i1].Normal = nf;
         m_vertices[i2].Normal = nf;
     }
+
+    std::wcout << L"[INFO] Mesh normals calculated." << std::endl;
 }
 
-HRESULT Mesh::CreateBuffers()
-{
+HRESULT Mesh::CreateBuffers() {
+    std::wcout << L"[OPERATION] Mesh::CreateBuffers called." << std::endl;
     ASSERT(m_device);
     ASSERT(!m_vertices.empty() && !m_indices.empty());
 
@@ -418,11 +433,12 @@ HRESULT Mesh::CreateBuffers()
     ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (IB) failed");
     if (FAILED(hr)) return hr;
 
+    std::wcout << L"[INFO] Mesh buffers created." << std::endl;
     return S_OK;
 }
 
-void Mesh::Render(ID3D11DeviceContext* ctx)
-{
+void Mesh::Render(ID3D11DeviceContext* ctx) {
+    std::wcout << L"[OPERATION] Mesh::Render called." << std::endl;
     ASSERT(ctx && m_vb && m_ib && m_indexCount > 0);
 
     UINT stride = sizeof(Vertex), offset = 0;
@@ -430,4 +446,6 @@ void Mesh::Render(ID3D11DeviceContext* ctx)
     ctx->IASetIndexBuffer(m_ib, DXGI_FORMAT_R32_UINT, 0);
     ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ctx->DrawIndexed(m_indexCount, 0, 0);
+
+    std::wcout << L"[INFO] Mesh rendered." << std::endl;
 }

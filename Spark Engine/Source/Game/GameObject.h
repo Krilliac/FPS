@@ -298,6 +298,11 @@ protected:
     UINT          m_id{ 0 }; ///< Unique identifier for this object
     std::string   m_name;   ///< Human-readable name for debugging
 
+    /**
+     * @brief Path to model file for mesh loading
+     */
+    std::wstring m_modelPath{}; // Path to model file for mesh loading
+
 private:
     /**
      * @brief Copy constructor (deleted)

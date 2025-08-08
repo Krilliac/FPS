@@ -1,4 +1,5 @@
 #include "D3DUtils.h"
+#include <iostream>
 
 // Define the globals
 IDXGISwapChain* g_MainSwapChain = nullptr;

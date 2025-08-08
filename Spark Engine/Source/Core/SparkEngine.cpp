@@ -9,6 +9,8 @@
 #include <memory>
 #include <DirectXMath.h>
 #include <cstdio>                     // for swprintf_s
+#include <algorithm>                  // for std::transform
+#include <sstream>                    // for stringstream
 
 #include "../Graphics/GraphicsEngine.h"
 #include "../Game/Game.h"
@@ -16,6 +18,7 @@
 #include "../Utils/Timer.h"
 #include "../Game/Console.h"
 #include "Utils/CrashHandler.h"
+#include "../Utils/ConsoleProcessManager.h"  // Add external console manager
 
 // -----------------------------------------------------------------------------
 // Globals & constants
@@ -106,6 +109,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             float dt = g_timer->GetDeltaTime();
 
+            // Process external console commands
+            Spark::ConsoleProcessManager::GetInstance().ProcessCommands();
+
             if (g_input)                      g_input->Update();
             if (g_game && !g_console.IsVisible()) g_game->Update(dt);
 
@@ -116,6 +122,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             g_graphics->EndFrame();
         }
     }
+
+    // Shutdown external console
+    Spark::ConsoleProcessManager::GetInstance().Shutdown();
 
     return static_cast<int>(msg.wParam);
 }
@@ -161,6 +170,136 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
         swprintf_s(buf, L"CreateWindowW failed (0x%08X)", static_cast<unsigned>(err));
         MessageBoxW(nullptr, buf, L"Fatal Error", MB_ICONERROR);
         return FALSE;
+    }
+
+    // 0. Initialize External Console Process Manager
+    auto& consoleManager = Spark::ConsoleProcessManager::GetInstance();
+    if (consoleManager.Initialize()) {
+        // Register default engine commands
+        consoleManager.RegisterCommand("info", 
+            [](const std::vector<std::string>& args) -> std::string {
+                return "Spark Engine v1.0.0 - External Console System Active";
+            },
+            "Show engine information",
+            "info"
+        );
+        
+        consoleManager.RegisterCommand("fps", 
+            [](const std::vector<std::string>& args) -> std::string {
+                if (g_timer) {
+                    float dt = g_timer->GetDeltaTime();
+                    float fps = (dt > 0.0f) ? (1.0f / dt) : 0.0f;
+                    return "FPS: " + std::to_string(fps);
+                }
+                return "Timer not available";
+            },
+            "Show current FPS",
+            "fps"
+        );
+
+        // **NEW: Register assert and crash debugging commands**
+        consoleManager.RegisterCommand("test_assert", 
+            [](const std::vector<std::string>& args) -> std::string {
+                // Trigger a test assertion with custom message
+                std::string msg = "Test assertion triggered from console";
+                if (!args.empty()) {
+                    msg = "Custom assert: " + args[0];
+                }
+                ASSERT_MSG(false, msg.c_str());
+                return "This should not be reached";
+            },
+            "Trigger a test assertion",
+            "test_assert [custom_message]"
+        );
+
+        consoleManager.RegisterCommand("test_null_access", 
+            [](const std::vector<std::string>& args) -> std::string {
+                // Trigger a null pointer access (will cause crash)
+                int* nullPtr = nullptr;
+                return "Value: " + std::to_string(*nullPtr);
+            },
+            "Trigger a null pointer access crash",
+            "test_null_access"
+        );
+
+        consoleManager.RegisterCommand("test_assert_not_null", 
+            [](const std::vector<std::string>& args) -> std::string {
+                // Test the ASSERT_NOT_NULL macro
+                void* nullPtr = nullptr;
+                ASSERT_NOT_NULL(nullPtr);
+                return "This should not be reached";
+            },
+            "Test ASSERT_NOT_NULL with null pointer",
+            "test_assert_not_null"
+        );
+
+        consoleManager.RegisterCommand("test_assert_range", 
+            [](const std::vector<std::string>& args) -> std::string {
+                // Test range assertion
+                int value = 150;
+                if (!args.empty()) {
+                    try {
+                        value = std::stoi(args[0]);
+                    } catch (...) {
+                        return "Invalid number provided";
+                    }
+                }
+                ASSERT_IN_RANGE(value, 0, 100);
+                return "Value " + std::to_string(value) + " is in range [0,100]";
+            },
+            "Test range assertion (expects value 0-100)",
+            "test_assert_range [value]"
+        );
+
+        consoleManager.RegisterCommand("crash_mode", 
+            [](const std::vector<std::string>& args) -> std::string {
+                if (args.empty()) {
+                    return "Usage: crash_mode <on|off>\n"
+                           "Controls whether assertions trigger full crash dumps";
+                }
+                
+                std::string mode = args[0];
+                std::transform(mode.begin(), mode.end(), mode.begin(), ::tolower);
+                
+                if (mode == "on" || mode == "true" || mode == "1") {
+                    SetAssertCrashBehavior(true);
+                    return "Assertion crash dumps ENABLED - assertions will now create dump files";
+                } else if (mode == "off" || mode == "false" || mode == "0") {
+                    SetAssertCrashBehavior(false);
+                    return "Assertion crash dumps DISABLED - assertions will only log to console";
+                } else {
+                    return "Invalid mode. Use: on, off, true, false, 1, or 0";
+                }
+            },
+            "Enable/disable crash dump generation for assertions",
+            "crash_mode <on|off>"
+        );
+
+        consoleManager.RegisterCommand("memory_info", 
+            [](const std::vector<std::string>& args) -> std::string {
+                MEMORYSTATUSEX memInfo;
+                memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+                GlobalMemoryStatusEx(&memInfo);
+                
+                std::stringstream ss;
+                ss << "Memory Information:\n";
+                ss << "  Total Physical: " << (memInfo.ullTotalPhys / 1024 / 1024) << " MB\n";
+                ss << "  Available Physical: " << (memInfo.ullAvailPhys / 1024 / 1024) << " MB\n";
+                ss << "  Memory Load: " << memInfo.dwMemoryLoad << "%\n";
+                ss << "  Total Virtual: " << (memInfo.ullTotalVirtual / 1024 / 1024) << " MB\n";
+                ss << "  Available Virtual: " << (memInfo.ullAvailVirtual / 1024 / 1024) << " MB";
+                
+                return ss.str();
+            },
+            "Show system memory information",
+            "memory_info"
+        );
+        
+        consoleManager.Log(L"External console system initialized successfully", L"INFO");
+        consoleManager.Log(L"Assert and crash logging integrated with external console", L"INFO");
+        consoleManager.Log(L"Use 'help' to see available commands including assertion tests", L"INFO");
+    } else {
+        consoleManager.Log(L"External console not found - using fallback logging", L"WARNING");
     }
 
     // 1. Initialize Console

@@ -2,24 +2,22 @@
 #include "AudioEngine.h"
 #include "Utils/Assert.h"
 #include <algorithm>
+#include <iostream>
 
 AudioEngine::AudioEngine()
-    : m_xAudio2(nullptr)
-    , m_masterVoice(nullptr)
-    , m_masterVolume(1.0f)
-    , m_sfxVolume(0.8f)
-    , m_musicVolume(0.6f)
-    , m_maxSources(0)
 {
+    std::wcout << L"[INFO] AudioEngine constructed." << std::endl;
 }
 
 AudioEngine::~AudioEngine()
 {
+    std::wcout << L"[INFO] AudioEngine destructor called." << std::endl;
     Shutdown();
 }
 
 HRESULT AudioEngine::Initialize(size_t maxSources)
 {
+    std::wcout << L"[OPERATION] AudioEngine::Initialize called." << std::endl;
     ASSERT_MSG(maxSources > 0, "AudioEngine maxSources must be positive");
     m_maxSources = maxSources;
 
@@ -44,16 +42,20 @@ HRESULT AudioEngine::Initialize(size_t maxSources)
         m_audioSources.push_back(std::move(source));
     }
 
+    std::wcout << L"[INFO] AudioEngine initialization successful." << std::endl;
     return S_OK;
 }
 
 void AudioEngine::Update(float /*deltaTime*/)
 {
+    std::wcout << L"[OPERATION] AudioEngine::Update called." << std::endl;
     UpdateSources();
+    std::wcout << L"[INFO] AudioEngine update complete." << std::endl;
 }
 
 void AudioEngine::Shutdown()
 {
+    std::wcout << L"[OPERATION] AudioEngine::Shutdown called." << std::endl;
     StopAllSounds();
     m_soundEffects.clear();
     m_audioSources.clear();
@@ -69,6 +71,7 @@ void AudioEngine::Shutdown()
         m_xAudio2->Release();
         m_xAudio2 = nullptr;
     }
+    std::wcout << L"[INFO] AudioEngine shutdown complete." << std::endl;
 }
 
 HRESULT AudioEngine::LoadSound(const std::string& name, const std::wstring& filename)

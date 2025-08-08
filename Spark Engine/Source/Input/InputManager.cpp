@@ -3,6 +3,7 @@
 #include "Utils/Assert.h"
 #include <Windows.h>
 #include <cstring>
+#include <iostream>
 
 InputManager::InputManager()
     : m_mouseX(0), m_mouseY(0)
@@ -13,10 +14,12 @@ InputManager::InputManager()
 {
     ZeroMemory(m_mouseButtons, sizeof(m_mouseButtons));
     ZeroMemory(m_prevMouseButtons, sizeof(m_prevMouseButtons));
+    std::wcout << L"[INFO] InputManager constructed." << std::endl;
 }
 
 InputManager::~InputManager()
 {
+    std::wcout << L"[INFO] InputManager destructor called." << std::endl;
     if (m_mouseCaptured)
         CaptureMouse(false);
 }
@@ -38,6 +41,7 @@ void InputManager::Initialize(HWND hwnd)
 
 void InputManager::Update()
 {
+    std::wcout << L"[OPERATION] InputManager::Update called." << std::endl;
     ASSERT_MSG(m_hwnd != nullptr, "InputManager::Update - hwnd not initialized");
 
     m_prevKeyStates = m_keyStates;
@@ -69,6 +73,7 @@ void InputManager::Update()
         m_mouseDeltaX = m_mouseX - m_prevMouseX;
         m_mouseDeltaY = m_mouseY - m_prevMouseY;
     }
+    std::wcout << L"[INFO] InputManager update complete." << std::endl;
 }
 
 void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
@@ -111,9 +116,12 @@ void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
 
 bool InputManager::IsKeyDown(int key) const
 {
+    std::wcout << L"[OPERATION] InputManager::IsKeyDown called. key=" << key << std::endl;
     ASSERT_MSG(key >= 0, "IsKeyDown - invalid key code");
     auto it = m_keyStates.find(key);
-    return it != m_keyStates.end() && it->second;
+    bool result = it != m_keyStates.end() && it->second;
+    std::wcout << L"[INFO] InputManager::IsKeyDown result=" << result << std::endl;
+    return result;
 }
 
 bool InputManager::IsKeyUp(int key) const
@@ -123,10 +131,13 @@ bool InputManager::IsKeyUp(int key) const
 
 bool InputManager::WasKeyPressed(int key) const
 {
+    std::wcout << L"[OPERATION] InputManager::WasKeyPressed called. key=" << key << std::endl;
     ASSERT_MSG(key >= 0, "WasKeyPressed - invalid key code");
     bool curr = IsKeyDown(key);
     bool prev = m_prevKeyStates.count(key) ? m_prevKeyStates.at(key) : false;
-    return curr && !prev;
+    bool result = curr && !prev;
+    std::wcout << L"[INFO] InputManager::WasKeyPressed result=" << result << std::endl;
+    return result;
 }
 
 bool InputManager::WasKeyReleased(int key) const
@@ -139,14 +150,20 @@ bool InputManager::WasKeyReleased(int key) const
 
 bool InputManager::IsMouseButtonDown(int button) const
 {
+    std::wcout << L"[OPERATION] InputManager::IsMouseButtonDown called. button=" << button << std::endl;
     ASSERT_MSG(button >= 0 && button < 3, "IsMouseButtonDown - invalid button");
-    return m_mouseButtons[button];
+    bool result = m_mouseButtons[button];
+    std::wcout << L"[INFO] InputManager::IsMouseButtonDown result=" << result << std::endl;
+    return result;
 }
 
 bool InputManager::WasMouseButtonPressed(int button) const
 {
+    std::wcout << L"[OPERATION] InputManager::WasMouseButtonPressed called. button=" << button << std::endl;
     ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonPressed - invalid button");
-    return m_mouseButtons[button] && !m_prevMouseButtons[button];
+    bool result = m_mouseButtons[button] && !m_prevMouseButtons[button];
+    std::wcout << L"[INFO] InputManager::WasMouseButtonPressed result=" << result << std::endl;
+    return result;
 }
 
 bool InputManager::WasMouseButtonReleased(int button) const
@@ -157,9 +174,12 @@ bool InputManager::WasMouseButtonReleased(int button) const
 
 bool InputManager::GetMouseDelta(int& deltaX, int& deltaY) const
 {
+    std::wcout << L"[OPERATION] InputManager::GetMouseDelta called." << std::endl;
     deltaX = m_mouseDeltaX;
     deltaY = m_mouseDeltaY;
-    return (m_mouseDeltaX != 0 || m_mouseDeltaY != 0);
+    bool result = (m_mouseDeltaX != 0 || m_mouseDeltaY != 0);
+    std::wcout << L"[INFO] InputManager::GetMouseDelta result=" << result << std::endl;
+    return result;
 }
 
 void InputManager::GetMousePosition(int& x, int& y) const
@@ -176,6 +196,7 @@ void InputManager::CaptureMouse(bool capture)
         SetCapture(m_hwnd);
         ShowCursor(FALSE);
         m_mouseCaptured = true;
+        std::wcout << L"[INFO] Mouse captured." << std::endl;
     }
     else
     {
@@ -183,6 +204,7 @@ void InputManager::CaptureMouse(bool capture)
         ReleaseCapture();
         ShowCursor(TRUE);
         m_mouseCaptured = false;
+        std::wcout << L"[INFO] Mouse capture released." << std::endl;
     }
 }
 

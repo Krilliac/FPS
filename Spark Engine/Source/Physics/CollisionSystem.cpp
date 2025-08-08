@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cfloat>
 #include <cmath>
+#include <iostream>
 
 using namespace DirectX;
 
@@ -171,7 +172,6 @@ CollisionResult CollisionSystem::RayVsSphere(const Ray& ray, const BoundingSpher
     return res;
 }
 
-// Ray-vs-Box
 // Ray-vs-Box
 CollisionResult CollisionSystem::RayVsBox(const Ray& ray, const BoundingBox& box)
 {

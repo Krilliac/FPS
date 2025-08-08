@@ -19,18 +19,24 @@
 #include "..\Game\Console.h"
 #include "..\Projectiles\ProjectilePool.h"
 #include <iostream>
-#include "..\Scene\SceneManager.h"
+#include "..\SceneManager\SceneManager.h"
+#include "..\Utils\ConsoleProcessManager.h"
 
 // Pull in globals defined in SparkEngine.cpp
 extern std::unique_ptr<GraphicsEngine> g_graphics;
 extern Console                         g_console;
 
+// Helper macro for logging to external console
+#define LOG_TO_CONSOLE(msg, type) Spark::ConsoleProcessManager::GetInstance().Log(msg, type)
+
 /*-------------------------------------------------------------
   Ctor / Dtor
 --------------------------------------------------------------*/
-Game::Game() = default;
-Game::~Game()
-{
+Game::Game() {
+    LOG_TO_CONSOLE(L"Game constructor called.", L"INFO");
+}
+Game::~Game() {
+    LOG_TO_CONSOLE(L"Game destructor called.", L"INFO");
     Shutdown();
 }
 
@@ -40,16 +46,19 @@ Game::~Game()
 HRESULT Game::Initialize(GraphicsEngine* graphics,
     InputManager* input)
 {
+    LOG_TO_CONSOLE(L"Game::Initialize called.", L"OPERATION");
+
     ASSERT(graphics != nullptr);
     ASSERT(input != nullptr);
 
     m_graphics = graphics;
     m_input = input;
+    LOG_TO_CONSOLE(L"Graphics and InputManager assigned.", L"INFO");
 
     // SceneManager setup
     m_sceneManager = std::make_unique<SceneManager>(graphics, input);
     bool sceneLoaded = m_sceneManager->LoadScene(L"Assets/Scenes/level1.scene");
-    std::wcerr << L"[Game] SceneManager::LoadScene returned: " << (sceneLoaded ? L"SUCCESS" : L"FAILURE") << std::endl;
+    LOG_TO_CONSOLE(L"SceneManager::LoadScene returned: " + std::wstring(sceneLoaded ? L"SUCCESS" : L"FAILURE"), L"INFO");
 
     /* Camera ------------------------------------------------*/
     m_camera = std::make_unique<SparkEngineCamera>();
@@ -104,6 +113,7 @@ HRESULT Game::Initialize(GraphicsEngine* graphics,
 
     /* Scene objects ----------------------------------------*/
     CreateTestObjects();
+    LOG_TO_CONSOLE(L"Game initialization complete.", L"INFO");
     return S_OK;
 }
 
@@ -112,11 +122,15 @@ HRESULT Game::Initialize(GraphicsEngine* graphics,
 --------------------------------------------------------------*/
 void Game::Shutdown()
 {
+    LOG_TO_CONSOLE(L"Game::Shutdown called.", L"OPERATION");
+
     m_gameObjects.clear();
     m_projectilePool.reset();
     m_player.reset();
     m_shader.reset();
     m_camera.reset();
+
+    LOG_TO_CONSOLE(L"Game shutdown complete.", L"INFO");
 }
 
 /*-------------------------------------------------------------
@@ -124,7 +138,12 @@ void Game::Shutdown()
 --------------------------------------------------------------*/
 void Game::Update(float dt)
 {
-    if (m_isPaused) return;
+    LOG_TO_CONSOLE(L"Game::Update called. dt=" + std::to_wstring(dt), L"OPERATION");
+
+    if (m_isPaused) {
+        LOG_TO_CONSOLE(L"Game is paused. Update skipped.", L"INFO");
+        return;
+    }
 
     HandleInput(dt);
     UpdateCamera(dt);
@@ -132,6 +151,8 @@ void Game::Update(float dt)
 
     if (m_player)         m_player->Update(dt);
     if (m_projectilePool) m_projectilePool->Update(dt);
+
+    LOG_TO_CONSOLE(L"Game update complete.", L"INFO");
 }
 
 /*-------------------------------------------------------------
@@ -139,6 +160,8 @@ void Game::Update(float dt)
 --------------------------------------------------------------*/
 void Game::Render()
 {
+    LOG_TO_CONSOLE(L"Game::Render called.", L"OPERATION");
+
     ASSERT(m_shader != nullptr);
     m_shader->SetShaders();
 
@@ -152,7 +175,7 @@ void Game::Render()
         for (auto& obj : m_sceneManager->GetObjects()) {
             if (!obj || !obj->IsActive() || !obj->IsVisible()) {
                 ++skippedCount;
-                std::wcerr << L"[Game] Skipping SceneManager object in Render: active=" << (obj ? obj->IsActive() : false) << L" visible=" << (obj ? obj->IsVisible() : false) << std::endl;
+                LOG_TO_CONSOLE(L"Skipping SceneManager object in Render: active=" + std::to_wstring(obj ? obj->IsActive() : false) + L" visible=" + std::to_wstring(obj ? obj->IsVisible() : false), L"WARNING");
                 continue;
             }
             ConstantBuffer cb{};
@@ -160,27 +183,62 @@ void Game::Render()
             cb.View = view;
             cb.Projection = proj;
             m_shader->UpdateConstantBuffer(cb);
+            auto pos = obj->GetPosition();
+            auto scale = obj->GetScale();
+            auto rot = obj->GetRotation();
+            std::wstring logMsg = L"[Render] Object ID=" + std::to_wstring(obj->GetID()) + L" Name=" + std::wstring(obj->GetName().begin(), obj->GetName().end()) +
+                L" Pos=(" + std::to_wstring(pos.x) + L"," + std::to_wstring(pos.y) + L"," + std::to_wstring(pos.z) + L")" +
+                L" Scale=(" + std::to_wstring(scale.x) + L"," + std::to_wstring(scale.y) + L"," + std::to_wstring(scale.z) + L")" +
+                L" Rot=(" + std::to_wstring(rot.x) + L"," + std::to_wstring(rot.y) + L"," + std::to_wstring(rot.z) + L")";
+            LOG_TO_CONSOLE(logMsg, L"INFO");
             obj->Render(view, proj);
             ++renderedCount;
         }
     }
 
+    // Also render m_gameObjects (test objects)
+    for (auto& obj : m_gameObjects) {
+        if (!obj || !obj->IsActive() || !obj->IsVisible()) {
+            ++skippedCount;
+            LOG_TO_CONSOLE(L"Skipping game object in Render: active=" + std::to_wstring(obj ? obj->IsActive() : false) + L" visible=" + std::to_wstring(obj ? obj->IsVisible() : false), L"WARNING");
+            continue;
+        }
+        ConstantBuffer cb{};
+        cb.World = obj->GetWorldMatrix();
+        cb.View = view;
+        cb.Projection = proj;
+        m_shader->UpdateConstantBuffer(cb);
+        auto pos = obj->GetPosition();
+        auto scale = obj->GetScale();
+        auto rot = obj->GetRotation();
+        std::wstring logMsg = L"[Render] GameObject ID=" + std::to_wstring(obj->GetID()) + L" Name=" + std::wstring(obj->GetName().begin(), obj->GetName().end()) +
+            L" Pos=(" + std::to_wstring(pos.x) + L"," + std::to_wstring(pos.y) + L"," + std::to_wstring(pos.z) + L")" +
+            L" Scale=(" + std::to_wstring(scale.x) + L"," + std::to_wstring(scale.y) + L"," + std::to_wstring(scale.z) + L")" +
+            L" Rot=(" + std::to_wstring(rot.x) + L"," + std::to_wstring(rot.y) + L"," + std::to_wstring(rot.z) + L")";
+        LOG_TO_CONSOLE(logMsg, L"INFO");
+        obj->Render(view, proj);
+        ++renderedCount;
+    }
+
     static int frameNum = 0;
-    if (++frameNum % 60 == 0)  // once per 60 frames
-    {
-        std::wcerr << L"[DEBUG] Rendered " << renderedCount << L" objects, skipped " << skippedCount << L" this frame\n";
+    if (++frameNum % 60 == 0) {
+        LOG_TO_CONSOLE(L"[DEBUG] Rendered " + std::to_wstring(renderedCount) + L" objects, skipped " + std::to_wstring(skippedCount) + L" this frame", L"INFO");
     }
 
     if (m_player)         m_player->Render(view, proj);
     if (m_projectilePool) m_projectilePool->Render(view, proj);
 
     if (g_console.IsVisible())
-        g_console.Render(g_graphics->GetContext());
+        g_console.Render(m_graphics->GetContext());
+
+    LOG_TO_CONSOLE(L"Game::Render complete.", L"INFO");
 }
 
 /*-------------------------------------------------------------*/
 void Game::UpdateCamera(float dt)
 {
+    LOG_TO_CONSOLE(L"Game::UpdateCamera called. dt=" + std::to_wstring(dt), L"OPERATION");
+
     ASSERT(dt >= 0.0f);
     if (m_camera) m_camera->Update(dt);
 }
@@ -188,10 +246,11 @@ void Game::UpdateCamera(float dt)
 /*-------------------------------------------------------------*/
 void Game::UpdateGameObjects(float dt)
 {
+    LOG_TO_CONSOLE(L"Game::UpdateGameObjects called. dt=" + std::to_wstring(dt), L"OPERATION");
+
     ASSERT(dt >= 0.0f);
     for (auto& obj : m_gameObjects)
-        if (obj && obj->IsActive())
-            obj->Update(dt);
+        if (obj && obj->IsActive()) obj->Update(dt);
 }
 
 /*-------------------------------------------------------------
@@ -199,15 +258,20 @@ void Game::UpdateGameObjects(float dt)
 --------------------------------------------------------------*/
 void Game::HandleInput(float dt)
 {
+    LOG_TO_CONSOLE(L"Game::HandleInput called. dt=" + std::to_wstring(dt), L"OPERATION");
+
     ASSERT(dt >= 0.0f);
-    if (!m_input || !m_camera) return;
+    if (!m_input || !m_camera) {
+        LOG_TO_CONSOLE(L"Input or Camera is null in HandleInput.", L"ERROR");
+        return;
+    }
 
     int dx = 0, dy = 0;
-    if (m_input->GetMouseDelta(dx, dy))
-    {
+    if (m_input->GetMouseDelta(dx, dy)) {
         constexpr float mouseSens = 0.005f;
         m_camera->Yaw(dx * mouseSens);
         m_camera->Pitch(-dy * mouseSens);
+        LOG_TO_CONSOLE(L"Mouse delta applied: dx=" + std::to_wstring(dx) + L" dy=" + std::to_wstring(dy), L"INFO");
     }
 
     float moveSpeed = 10.0f * dt;
@@ -226,6 +290,7 @@ void Game::HandleInput(float dt)
         auto dir = m_camera->GetForward();
         m_projectilePool->FireProjectile(
             ProjectileType::BULLET, pos, dir, 50.0f);
+        LOG_TO_CONSOLE(L"Fired projectile from pos=(" + std::to_wstring(pos.x) + L"," + std::to_wstring(pos.y) + L"," + std::to_wstring(pos.z) + L") dir=(" + std::to_wstring(dir.x) + L"," + std::to_wstring(dir.y) + L"," + std::to_wstring(dir.z) + L")", L"INFO");
     }
 }
 
@@ -234,19 +299,15 @@ void Game::HandleInput(float dt)
 --------------------------------------------------------------*/
 void Game::CreateTestObjects()
 {
-    std::wcerr << L"[DEBUG] CreateTestObjects() begin, will spawn placeholder objects\n";
+    LOG_TO_CONSOLE(L"CreateTestObjects() begin, will spawn placeholder objects", L"OPERATION");
 
     // Ground plane
     {
         auto ground = std::make_unique<PlaneObject>(20.0f, 20.0f);
         ASSERT(ground);
         HRESULT hr = ground->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
-        std::wcerr << L"[DEBUG] Ground mesh counts: Vertices="
-            << ground->GetMesh()->GetVertexCount()
-            << L", Indices=" << ground->GetMesh()->GetIndexCount() << std::endl;
-        std::wcerr << (SUCCEEDED(hr)
-            ? L"[DEBUG] Ground plane initialized\n"
-            : L"[ERROR] Ground plane initialization FAILED\n");
+        LOG_TO_CONSOLE(L"Ground mesh counts: Vertices=" + std::to_wstring(ground->GetMesh()->GetVertexCount()) + L", Indices=" + std::to_wstring(ground->GetMesh()->GetIndexCount()), L"DEBUG");
+        LOG_TO_CONSOLE(SUCCEEDED(hr) ? L"Ground plane initialized" : L"Ground plane initialization FAILED", SUCCEEDED(hr) ? L"DEBUG" : L"ERROR");
         ground->SetPosition({ 0.0f, -1.0f, 0.0f });
         m_gameObjects.push_back(std::move(ground));
     }
@@ -257,12 +318,8 @@ void Game::CreateTestObjects()
         auto cube = std::make_unique<CubeObject>(1.0f);
         ASSERT(cube);
         HRESULT hr = cube->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
-        std::wcerr << L"[DEBUG] Cube " << i << L" mesh counts: Vertices="
-            << cube->GetMesh()->GetVertexCount()
-            << L", Indices=" << cube->GetMesh()->GetIndexCount() << std::endl;
-        std::wcerr << (SUCCEEDED(hr)
-            ? L"[DEBUG] Cube " + std::to_wstring(i) + L" initialized\n"
-            : L"[ERROR] Cube " + std::to_wstring(i) + L" FAILED to initialize\n");
+        LOG_TO_CONSOLE(L"Cube " + std::to_wstring(i) + L" mesh counts: Vertices=" + std::to_wstring(cube->GetMesh()->GetVertexCount()) + L", Indices=" + std::to_wstring(cube->GetMesh()->GetIndexCount()), L"DEBUG");
+        LOG_TO_CONSOLE(SUCCEEDED(hr) ? L"Cube " + std::to_wstring(i) + L" initialized" : L"Cube " + std::to_wstring(i) + L" FAILED to initialize", SUCCEEDED(hr) ? L"DEBUG" : L"ERROR");
         cube->SetPosition({ i * 3.0f - 6.0f, 1.0f, 10.0f });
         m_gameObjects.push_back(std::move(cube));
     }
@@ -272,15 +329,11 @@ void Game::CreateTestObjects()
         auto sphere = std::make_unique<SphereObject>(1.0f, 16, 16);
         ASSERT(sphere);
         HRESULT hr = sphere->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
-        std::wcerr << L"[DEBUG] Sphere mesh counts: Vertices="
-            << sphere->GetMesh()->GetVertexCount()
-            << L", Indices=" << sphere->GetMesh()->GetIndexCount() << std::endl;
-        std::wcerr << (SUCCEEDED(hr)
-            ? L"[DEBUG] Sphere initialized\n"
-            : L"[ERROR] Sphere FAILED to initialize\n");
+        LOG_TO_CONSOLE(L"Sphere mesh counts: Vertices=" + std::to_wstring(sphere->GetMesh()->GetVertexCount()) + L", Indices=" + std::to_wstring(sphere->GetMesh()->GetIndexCount()), L"DEBUG");
+        LOG_TO_CONSOLE(SUCCEEDED(hr) ? L"Sphere initialized" : L"Sphere FAILED to initialize", SUCCEEDED(hr) ? L"DEBUG" : L"ERROR");
         sphere->SetPosition({ 5.0f, 0.0f, 0.0f });
         m_gameObjects.push_back(std::move(sphere));
     }
 
-    std::wcerr << L"[DEBUG] Created total " << m_gameObjects.size() << L" game objects\n";
+    LOG_TO_CONSOLE(L"Created total " + std::to_wstring(m_gameObjects.size()) + L" game objects", L"INFO");
 }

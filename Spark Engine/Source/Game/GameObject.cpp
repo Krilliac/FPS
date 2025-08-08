@@ -24,62 +24,66 @@ GameObject::GameObject()
     , m_id(s_nextID++)
     , m_name("GameObject_" + std::to_string(m_id))
 {
+    std::wcout << L"[INFO] GameObject constructed. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
 }
 
 GameObject::~GameObject()
 {
+    std::wcout << L"[INFO] GameObject destructor called. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
     Shutdown();
 }
 
 HRESULT GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
+    std::wcout << L"[OPERATION] GameObject::Initialize called. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
     ASSERT_MSG(device != nullptr, "GameObject::Initialize - device is null");
     ASSERT_MSG(context != nullptr, "GameObject::Initialize - context is null");
     m_device = device;
     m_context = context;
-
     m_mesh = std::make_unique<Mesh>();
     ASSERT(m_mesh);
     HRESULT hr = m_mesh->Initialize(device, context);
+    std::wcout << L"[INFO] Mesh initialized for GameObject ID=" << m_id << L" Name=" << m_name.c_str() << L" HR=0x" << std::hex << hr << std::dec << std::endl;
     ASSERT_MSG(SUCCEEDED(hr), "Mesh::Initialize failed");
-    if (FAILED(hr))
+    if (FAILED(hr)) {
+        std::wcerr << L"[ERROR] Mesh::Initialize failed for GameObject ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
         return hr;
-
+    }
     CreateMesh();
+    std::wcout << L"[INFO] GameObject::Initialize complete. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
     return S_OK;
 }
 
 void GameObject::Shutdown()
 {
-    if (m_mesh)
-        m_mesh->Shutdown();
+    std::wcout << L"[OPERATION] GameObject::Shutdown called. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
+    if (m_mesh) m_mesh->Shutdown();
     m_mesh.reset();
     m_device = nullptr;
     m_context = nullptr;
+    std::wcout << L"[INFO] GameObject shutdown complete. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
 }
 
-void GameObject::Update(float)
+void GameObject::Update(float dt)
 {
-    if (m_worldMatrixDirty)
-        UpdateWorldMatrix();
+    std::wcout << L"[OPERATION] GameObject::Update called. ID=" << m_id << L" Name=" << m_name.c_str() << L" dt=" << dt << std::endl;
+    if (m_worldMatrixDirty) UpdateWorldMatrix();
 }
 
 void GameObject::Render(const XMMATRIX& view, const XMMATRIX& projection)
 {
+    std::wcout << L"[OPERATION] GameObject::Render called. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
     if (!m_visible || !m_mesh)
     {
-        std::wcerr << L"[GameObject] Render skipped: visible=" << m_visible << L" mesh=" << (m_mesh ? L"OK" : L"NULL") << std::endl;
+        std::wcerr << L"[WARNING] [GameObject] Render skipped: visible=" << m_visible << L" mesh=" << (m_mesh ? L"OK" : L"NULL") << std::endl;
         return;
     }
-
-    if (m_worldMatrixDirty)
-        UpdateWorldMatrix();
-
+    if (m_worldMatrixDirty) UpdateWorldMatrix();
     ASSERT(m_mesh);
     ASSERT_MSG(m_device != nullptr, "GameObject::Render - device is null");
     ASSERT_MSG(m_context != nullptr, "GameObject::Render - context is null");
     ASSERT_MSG(m_mesh->GetVertexCount() > 0 && m_mesh->GetIndexCount() > 0, "Mesh has no vertices or indices to render");
-    std::wcerr << L"[GameObject] Rendering object ID=" << m_id << L" name=" << m_name.c_str() << L" verts=" << m_mesh->GetVertexCount() << L" inds=" << m_mesh->GetIndexCount() << std::endl;
+    std::wcout << L"[INFO] [GameObject] Rendering object ID=" << m_id << L" name=" << m_name.c_str() << L" verts=" << m_mesh->GetVertexCount() << L" inds=" << m_mesh->GetIndexCount() << std::endl;
     m_mesh->Render(m_context);
 }
 
@@ -178,30 +182,35 @@ float GameObject::GetDistanceFrom(const XMFLOAT3& pos) const
 
 void GameObject::CreateMesh()
 {
-    if (m_mesh)
-        m_mesh->CreateCube(1.0f);  // placeholder default
-
-    // Debug logging
-    std::wcerr << L"[DEBUG] GameObject ID " << m_id
-        << L" created mesh: Vertices=" << m_mesh->GetVertexCount()
-        << L", Indices=" << m_mesh->GetIndexCount()
-        << std::endl;
-
-    // Simple null-pointer assert
-    ASSERT(m_mesh);
-
-    // Formatted assert must use ASSERT_MSG and its own comma-separated args
-    ASSERT_MSG(m_mesh->GetVertexCount() > 0 && m_mesh->GetIndexCount() > 0,
-        "Mesh creation failed: verts=%u, inds=%u",
-        m_mesh->GetVertexCount(), m_mesh->GetIndexCount());
-
-    m_worldMatrixDirty = true;  // Ensure world matrix updates
-
+    std::wcout << L"[OPERATION] GameObject::CreateMesh called. ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
+    if (!m_mesh) {
+        m_mesh = std::make_unique<Mesh>();
+        std::wcout << L"[INFO] Mesh created for GameObject ID=" << m_id << L" Name=" << m_name.c_str() << std::endl;
+    }
+    HRESULT hr = m_mesh->Initialize(m_device, m_context);
+    std::wcout << L"[INFO] Mesh initialized for GameObject ID=" << m_id << L" Name=" << m_name.c_str() << L" HR=0x" << std::hex << hr << std::dec << std::endl;
+    ASSERT_MSG(SUCCEEDED(hr), "Mesh initialization failed");
+    bool loaded = false;
+    if (!m_modelPath.empty()) {
+        loaded = m_mesh->LoadFromFile(std::wstring(m_modelPath.begin(), m_modelPath.end()));
+        std::wcout << L"[INFO] Mesh loaded from file for GameObject ID=" << m_id << L" Name=" << m_name.c_str() << L" loaded=" << loaded << std::endl;
+    }
+    if (!loaded) {
+        hr = m_mesh->CreateCube(1.0f);
+        if (FAILED(hr)) {
+            hr = m_mesh->CreateTriangle(1.0f);
+        }
+        if (FAILED(hr)) {
+            hr = m_mesh->CreatePlane(2.0f, 2.0f);
+        }
+        std::wcout << L"[INFO] Procedural mesh created for GameObject ID=" << m_id << L" Name=" << m_name.c_str() << L" HR=0x" << std::hex << hr << std::dec << std::endl;
+        ASSERT_MSG(SUCCEEDED(hr), "Failed to create procedural mesh");
+    }
+    ASSERT_MSG(m_mesh && m_mesh->GetVertexCount() > 0 && m_mesh->GetIndexCount() > 0,
+        "Mesh must have vertices and indices after loading/creation");
+    m_worldMatrixDirty = true;
     m_name = "GameObject_" + std::to_string(m_id);
-    std::cout << "GameObject created with ID: " << m_id
-        << " and name: " << m_name << std::endl;
-
-    // Assertions on other members
+    std::wcout << L"[INFO] GameObject created with ID: " << m_id << L" and name: " << m_name.c_str() << std::endl;
     ASSERT_MSG(!m_name.empty(), "GameObject name unexpected empty");
     ASSERT_MSG(m_device != nullptr, "GameObject device is null");
     ASSERT_MSG(m_context != nullptr, "GameObject context is null");

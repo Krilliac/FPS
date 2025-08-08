@@ -4,6 +4,7 @@
 
 #include <DirectXMath.h>
 #include <cstdio>
+#include <iostream>
 
 using namespace DirectX;
 
@@ -12,86 +13,91 @@ GraphicsEngine::GraphicsEngine()
     : m_windowWidth(1280)
     , m_windowHeight(720)
 {
+    std::wcout << L"[INFO] GraphicsEngine constructed." << std::endl;
 }
 
 GraphicsEngine::~GraphicsEngine()
 {
+    std::wcout << L"[INFO] GraphicsEngine destructor called." << std::endl;
     Shutdown();
 }
 
 // Initialize device, swap chain, RTV/DSV, debug filters
 HRESULT GraphicsEngine::Initialize(HWND hWnd)
 {
+    std::wcout << L"[OPERATION] GraphicsEngine::Initialize called." << std::endl;
     ASSERT(hWnd != nullptr);
-
     RECT rc; GetClientRect(hWnd, &rc);
     m_windowWidth = rc.right - rc.left;
     m_windowHeight = rc.bottom - rc.top;
+    std::wcout << L"[INFO] Window size: " << m_windowWidth << L"x" << m_windowHeight << std::endl;
     ASSERT_MSG(m_windowWidth > 0 && m_windowHeight > 0, "Invalid window size");
-
     HRESULT hr = CreateDeviceAndSwapChain(hWnd);
+    std::wcout << L"[INFO] CreateDeviceAndSwapChain HR=0x" << std::hex << hr << std::dec << std::endl;
     ASSERT_MSG(SUCCEEDED(hr), "CreateDeviceAndSwapChain failed");
     if (FAILED(hr)) return hr;
-
     hr = CreateRenderTargetView();
+    std::wcout << L"[INFO] CreateRenderTargetView HR=0x" << std::hex << hr << std::dec << std::endl;
     ASSERT_MSG(SUCCEEDED(hr), "CreateRenderTargetView failed");
     if (FAILED(hr)) return hr;
-
     hr = CreateDepthStencilView();
+    std::wcout << L"[INFO] CreateDepthStencilView HR=0x" << std::hex << hr << std::dec << std::endl;
     ASSERT_MSG(SUCCEEDED(hr), "CreateDepthStencilView failed");
     if (FAILED(hr)) return hr;
-
     SetViewport();
+    std::wcout << L"[INFO] GraphicsEngine initialization complete." << std::endl;
     return S_OK;
 }
 
 // Release COM resources
 void GraphicsEngine::Shutdown()
 {
+    std::wcout << L"[OPERATION] GraphicsEngine::Shutdown called." << std::endl;
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();
     m_swapChain.Reset();
     m_context.Reset();
     m_device.Reset();
+    std::wcout << L"[INFO] GraphicsEngine shutdown complete." << std::endl;
 }
 
 // Clear and bind render targets
 void GraphicsEngine::BeginFrame()
 {
+    std::wcout << L"[OPERATION] GraphicsEngine::BeginFrame called." << std::endl;
     ASSERT(m_context && m_renderTargetView && m_depthStencilView);
-
     const float clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
     m_context->ClearRenderTargetView(m_renderTargetView.Get(), clearColor);
-    m_context->ClearDepthStencilView(m_depthStencilView.Get(),
-        D3D11_CLEAR_DEPTH, 1.0f, 0);
-    m_context->OMSetRenderTargets(
-        1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
+    m_context->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+    m_context->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
+    std::wcout << L"[INFO] Frame begun and render targets set." << std::endl;
 }
 
 // Present back buffer
 void GraphicsEngine::EndFrame()
 {
+    std::wcout << L"[OPERATION] GraphicsEngine::EndFrame called." << std::endl;
     ASSERT(m_swapChain);
     m_swapChain->Present(1, 0);
+    std::wcout << L"[INFO] Frame presented." << std::endl;
 }
 
 // Handle window resize
 void GraphicsEngine::OnResize(UINT width, UINT height)
 {
+    std::wcout << L"[OPERATION] GraphicsEngine::OnResize called. width=" << width << L" height=" << height << std::endl;
     if (width == 0 || height == 0) return;
     m_windowWidth = width;
     m_windowHeight = height;
-
     m_renderTargetView.Reset();
     m_depthStencilView.Reset();
-
-    HRESULT hr = m_swapChain->ResizeBuffers(
-        0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+    HRESULT hr = m_swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+    std::wcout << L"[INFO] ResizeBuffers HR=0x" << std::hex << hr << std::dec << std::endl;
     ASSERT_MSG(SUCCEEDED(hr), "ResizeBuffers failed");
-
     CreateRenderTargetView();
     CreateDepthStencilView();
     SetViewport();
+    std::wcout << L"[INFO] GraphicsEngine resize complete." << std::endl;
 }
 
 // Create D3D11 device, context, and swap chain

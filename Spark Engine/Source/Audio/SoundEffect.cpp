@@ -4,23 +4,23 @@
 #include <cmath>
 #include <random>
 #include <filesystem>
+#include <iostream>
 
 //──────────────────────────────────────────────────────────────────────────────
 //  SoundEffect implementation
 //──────────────────────────────────────────────────────────────────────────────
-SoundEffect::SoundEffect() : m_audioDataSize(0)
-{
-    ZeroMemory(&m_format, sizeof(m_format));
+SoundEffect::SoundEffect() {
+    std::wcout << L"[INFO] SoundEffect constructed." << std::endl;
 }
-
-SoundEffect::~SoundEffect()
-{
-    Unload();
+SoundEffect::~SoundEffect() {
+    std::wcout << L"[INFO] SoundEffect destructor called." << std::endl;
 }
 
 HRESULT SoundEffect::LoadFromFile(const std::wstring& filename)
 {
     ASSERT_ALWAYS_MSG(!filename.empty(), "SoundEffect::LoadFromFile ‒ empty filename");
+
+    std::wcout << L"[OPERATION] SoundEffect::LoadFromFile called. filename=" << filename << std::endl;
 
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
     if (!file.is_open())
@@ -48,6 +48,7 @@ void SoundEffect::Unload()
     m_audioData.clear();
     m_audioDataSize = 0;
     ZeroMemory(&m_format, sizeof(m_format));
+    std::wcout << L"[INFO] SoundEffect resources unloaded." << std::endl;
 }
 
 float SoundEffect::GetDuration() const
@@ -80,6 +81,7 @@ HRESULT SoundEffect::ParseWAVFile(const BYTE* data, DWORD size)
         return E_FAIL;
 
     m_audioDataSize = dataSize;
+    std::wcout << L"[INFO] WAV file parsed successfully. Audio data size: " << m_audioDataSize << std::endl;
     return S_OK;
 }
 
@@ -151,6 +153,7 @@ SoundEffectFactory::CreateFromSamples(const std::vector<short>& samples, DWORD S
     se->m_format.wBitsPerSample = 16;
     se->m_format.nBlockAlign = se->m_format.nChannels * se->m_format.wBitsPerSample / 8;
     se->m_format.nAvgBytesPerSec = se->m_format.nSamplesPerSec * se->m_format.nBlockAlign;
+    std::wcout << L"[INFO] SoundEffectFactory::CreateFromSamples completed." << std::endl;
     return se;
 }
 

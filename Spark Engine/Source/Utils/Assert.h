@@ -19,8 +19,14 @@
 #  pragma comment(lib, "dbghelp.lib")
 #endif
 
-// Forward declaration
+// Forward declarations
 void TriggerCrashHandler(const char* assertMsg);
+
+// **NEW: Forward declaration for console logging (avoid circular includes)**
+namespace Spark {
+    class ConsoleProcessManager;
+    ConsoleProcessManager& GetConsoleProcessManagerInstance();
+}
 
 namespace Assert
 {
@@ -65,6 +71,21 @@ namespace Assert
         std::fprintf(stderr, "%s", fullMsg);
         std::fflush(stderr);
 
+        // **NEW: Log to external console**
+        try {
+            // Convert to wide string and log to external console
+            int len = MultiByteToWideChar(CP_UTF8, 0, fullMsg, -1, nullptr, 0);
+            if (len > 0) {
+                std::wstring wideMsg(len, L'\0');
+                MultiByteToWideChar(CP_UTF8, 0, fullMsg, -1, &wideMsg[0], len);
+                wideMsg.pop_back(); // Remove null terminator
+                
+                Spark::GetConsoleProcessManagerInstance().Log(wideMsg, L"ASSERT");
+            }
+        } catch (...) {
+            // If console logging fails, continue with normal assertion handling
+        }
+
 #ifdef _WIN32
         // Capture and symbolize backtrace (omitted here for brevity)...
 #endif
@@ -107,6 +128,21 @@ namespace Assert
 
         std::fprintf(stderr, "%s", fullMsg);
         std::fflush(stderr);
+
+        // **NEW: Log to external console**
+        try {
+            // Convert to wide string and log to external console
+            int len = MultiByteToWideChar(CP_UTF8, 0, fullMsg, -1, nullptr, 0);
+            if (len > 0) {
+                std::wstring wideMsg(len, L'\0');
+                MultiByteToWideChar(CP_UTF8, 0, fullMsg, -1, &wideMsg[0], len);
+                wideMsg.pop_back(); // Remove null terminator
+                
+                Spark::GetConsoleProcessManagerInstance().Log(wideMsg, L"ASSERT");
+            }
+        } catch (...) {
+            // If console logging fails, continue with normal assertion handling
+        }
 
         TriggerCrashHandler(fullMsg);
         DEBUG_BREAK();
