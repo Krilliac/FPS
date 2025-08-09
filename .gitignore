@@ -450,6 +450,12 @@ localdev.ps1
 localdev.bat
 localdev.sh
 
+# Documentation system generated files
+docs/output/
+docs/wiki/output/
+docs/.doc_checksums
+docs/.update_lock
+
 # End of SparkEngine .gitignore
 ```
 
