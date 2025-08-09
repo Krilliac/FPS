@@ -9,6 +9,7 @@
 #include <atomic>
 #include <mutex>
 #include <queue>
+#include <thread>
 
 namespace Spark {
 
@@ -20,6 +21,8 @@ class CommandRegistry;
  * The ConsoleProcessManager handles launching the SparkConsole subprocess,
  * redirecting log messages to it, and receiving commands from it.
  * Serves as a replacement for standard output logging.
+ * 
+ * **NEW: Now uses multithreading to prevent blocking the main engine loop**
  */
 class ConsoleProcessManager {
 public:
@@ -41,7 +44,7 @@ public:
     void Shutdown();
     
     /**
-     * @brief Send a log message to the console
+     * @brief Send a log message to the console (thread-safe, non-blocking)
      * @param message Log message to send
      * @param type Log type (INFO, WARNING, ERROR, etc.)
      */
@@ -54,7 +57,7 @@ public:
     void LogCrash(const std::string& crashInfo);
     
     /**
-     * @brief Check for and process pending commands
+     * @brief Check for and process pending commands (non-blocking)
      * Should be called each frame to execute commands from console
      */
     void ProcessCommands();
@@ -87,11 +90,15 @@ private:
     // Launch the console process
     bool LaunchConsoleProcess(const std::wstring& path);
     
-    // Read from console process
+    // Read from console process (blocking - runs in background thread)
     bool ReadFromConsole();
     
-    // Write to console process
+    // Write to console process (blocking - runs in background thread)
     bool WriteToConsole(const std::wstring& message);
+    
+    // **NEW: Background thread methods**
+    void ConsoleThreadMain();
+    void ProcessQueuedMessages();
     
     // Process handles
     HANDLE m_processHandle = NULL;
@@ -109,6 +116,10 @@ private:
     // State
     std::atomic<bool> m_initialized{false};
     std::atomic<bool> m_consoleRunning{false};
+    
+    // **NEW: Multithreading support**
+    std::thread m_consoleThread;
+    std::atomic<bool> m_shouldStopThread{false};
     
     // Thread safety for message queue
     std::mutex m_messageMutex;

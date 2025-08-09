@@ -11,6 +11,7 @@
 #include <cstdio>                     // for swprintf_s
 #include <algorithm>                  // for std::transform
 #include <sstream>                    // for stringstream
+#include <chrono>                     // for timestamp in debug command
 
 #include "../Graphics/GraphicsEngine.h"
 #include "../Game/Game.h"
@@ -18,7 +19,8 @@
 #include "../Utils/Timer.h"
 #include "../Game/Console.h"
 #include "Utils/CrashHandler.h"
-#include "../Utils/ConsoleProcessManager.h"  // Add external console manager
+#include "Utils/D3DUtils.h"
+#include "../Utils/SparkConsole.h"  // **SIMPLE: Use simple console - reliable and works**
 
 // -----------------------------------------------------------------------------
 // Globals & constants
@@ -81,11 +83,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (!InitInstance(hInstance, nCmdShow))
         return -1;
 
-    // 5. Message loop + tick
+    // 5. Message loop + tick (timer is now already initialized in InitInstance)
     HACCEL accel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SparkEngine));
     MSG msg = {};
-    g_timer = std::make_unique<Timer>();
-    ASSERT(g_timer);
+    ASSERT(g_timer);  // Should already be initialized
+
+    // Log that main loop is starting
+    auto& console = Spark::SimpleConsole::GetInstance();
+    console.LogInfo("Starting main engine loop...");
 
     while (msg.message != WM_QUIT)
     {
@@ -107,24 +112,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
+            // Update and render
             float dt = g_timer->GetDeltaTime();
 
-            // Process external console commands
-            Spark::ConsoleProcessManager::GetInstance().ProcessCommands();
-
-            if (g_input)                      g_input->Update();
+            if (g_input) g_input->Update();
             if (g_game && !g_console.IsVisible()) g_game->Update(dt);
 
-            g_graphics->BeginFrame();
-            if (g_game)        g_game->Render();
-            if (g_console.IsVisible())
-                g_console.Render(g_graphics->GetContext());
-            g_graphics->EndFrame();
+            if (g_graphics) {
+                g_graphics->BeginFrame();
+                if (g_game) g_game->Render();
+                if (g_console.IsVisible())
+                    g_console.Render(g_graphics->GetContext());
+                g_graphics->EndFrame();
+            }
+
+            // **SIMPLE: Just update the simple console**
+            console.Update();
         }
     }
 
-    // Shutdown external console
-    Spark::ConsoleProcessManager::GetInstance().Shutdown();
+    // Shutdown console
+    console.LogInfo("Shutting down engine main loop...");
+    console.Shutdown();
 
     return static_cast<int>(msg.wParam);
 }
@@ -172,169 +181,65 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
         return FALSE;
     }
 
-    // 0. Initialize External Console Process Manager
-    auto& consoleManager = Spark::ConsoleProcessManager::GetInstance();
-    if (consoleManager.Initialize()) {
-        // Register default engine commands
-        consoleManager.RegisterCommand("info", 
-            [](const std::vector<std::string>& args) -> std::string {
-                return "Spark Engine v1.0.0 - External Console System Active";
-            },
-            "Show engine information",
-            "info"
-        );
-        
-        consoleManager.RegisterCommand("fps", 
-            [](const std::vector<std::string>& args) -> std::string {
-                if (g_timer) {
-                    float dt = g_timer->GetDeltaTime();
-                    float fps = (dt > 0.0f) ? (1.0f / dt) : 0.0f;
-                    return "FPS: " + std::to_string(fps);
-                }
-                return "Timer not available";
-            },
-            "Show current FPS",
-            "fps"
-        );
-
-        // **NEW: Register assert and crash debugging commands**
-        consoleManager.RegisterCommand("test_assert", 
-            [](const std::vector<std::string>& args) -> std::string {
-                // Trigger a test assertion with custom message
-                std::string msg = "Test assertion triggered from console";
-                if (!args.empty()) {
-                    msg = "Custom assert: " + args[0];
-                }
-                ASSERT_MSG(false, msg.c_str());
-                return "This should not be reached";
-            },
-            "Trigger a test assertion",
-            "test_assert [custom_message]"
-        );
-
-        consoleManager.RegisterCommand("test_null_access", 
-            [](const std::vector<std::string>& args) -> std::string {
-                // Trigger a null pointer access (will cause crash)
-                int* nullPtr = nullptr;
-                return "Value: " + std::to_string(*nullPtr);
-            },
-            "Trigger a null pointer access crash",
-            "test_null_access"
-        );
-
-        consoleManager.RegisterCommand("test_assert_not_null", 
-            [](const std::vector<std::string>& args) -> std::string {
-                // Test the ASSERT_NOT_NULL macro
-                void* nullPtr = nullptr;
-                ASSERT_NOT_NULL(nullPtr);
-                return "This should not be reached";
-            },
-            "Test ASSERT_NOT_NULL with null pointer",
-            "test_assert_not_null"
-        );
-
-        consoleManager.RegisterCommand("test_assert_range", 
-            [](const std::vector<std::string>& args) -> std::string {
-                // Test range assertion
-                int value = 150;
-                if (!args.empty()) {
-                    try {
-                        value = std::stoi(args[0]);
-                    } catch (...) {
-                        return "Invalid number provided";
-                    }
-                }
-                ASSERT_IN_RANGE(value, 0, 100);
-                return "Value " + std::to_string(value) + " is in range [0,100]";
-            },
-            "Test range assertion (expects value 0-100)",
-            "test_assert_range [value]"
-        );
-
-        consoleManager.RegisterCommand("crash_mode", 
-            [](const std::vector<std::string>& args) -> std::string {
-                if (args.empty()) {
-                    return "Usage: crash_mode <on|off>\n"
-                           "Controls whether assertions trigger full crash dumps";
-                }
-                
-                std::string mode = args[0];
-                std::transform(mode.begin(), mode.end(), mode.begin(), ::tolower);
-                
-                if (mode == "on" || mode == "true" || mode == "1") {
-                    SetAssertCrashBehavior(true);
-                    return "Assertion crash dumps ENABLED - assertions will now create dump files";
-                } else if (mode == "off" || mode == "false" || mode == "0") {
-                    SetAssertCrashBehavior(false);
-                    return "Assertion crash dumps DISABLED - assertions will only log to console";
-                } else {
-                    return "Invalid mode. Use: on, off, true, false, 1, or 0";
-                }
-            },
-            "Enable/disable crash dump generation for assertions",
-            "crash_mode <on|off>"
-        );
-
-        consoleManager.RegisterCommand("memory_info", 
-            [](const std::vector<std::string>& args) -> std::string {
-                MEMORYSTATUSEX memInfo;
-                memInfo.dwLength = sizeof(MEMORYSTATUSEX);
-                GlobalMemoryStatusEx(&memInfo);
-                
-                std::stringstream ss;
-                ss << "Memory Information:\n";
-                ss << "  Total Physical: " << (memInfo.ullTotalPhys / 1024 / 1024) << " MB\n";
-                ss << "  Available Physical: " << (memInfo.ullAvailPhys / 1024 / 1024) << " MB\n";
-                ss << "  Memory Load: " << memInfo.dwMemoryLoad << "%\n";
-                ss << "  Total Virtual: " << (memInfo.ullTotalVirtual / 1024 / 1024) << " MB\n";
-                ss << "  Available Virtual: " << (memInfo.ullAvailVirtual / 1024 / 1024) << " MB";
-                
-                return ss.str();
-            },
-            "Show system memory information",
-            "memory_info"
-        );
-        
-        consoleManager.Log(L"External console system initialized successfully", L"INFO");
-        consoleManager.Log(L"Assert and crash logging integrated with external console", L"INFO");
-        consoleManager.Log(L"Use 'help' to see available commands including assertion tests", L"INFO");
-    } else {
-        consoleManager.Log(L"External console not found - using fallback logging", L"WARNING");
-    }
-
-    // 1. Initialize Console
+    // 1. Initialize Console FIRST (before external console)
     g_console.Initialize(1280, 720);
 
-    // 2. Initialize Graphics
+    // 2. Initialize Timer EARLY (needed by console commands)
+    g_timer = std::make_unique<Timer>();
+    ASSERT(g_timer);
+
+    // 3. Initialize Graphics Engine
     g_graphics = std::make_unique<GraphicsEngine>();
     ASSERT(g_graphics);
-    if (FAILED(g_graphics->Initialize(hWnd)))
+    HRESULT hr = g_graphics->Initialize(hWnd);
+    if (FAILED(hr))
     {
-        MessageBoxW(hWnd, L"Graphics init failed", L"Fatal", MB_ICONERROR);
+        wchar_t buf[256];
+        swprintf_s(buf, L"Graphics initialization failed (HR=0x%08X)", static_cast<unsigned>(hr));
+        MessageBoxW(hWnd, buf, L"Fatal Error", MB_ICONERROR);
         return FALSE;
     }
 
-    // 3. Initialize Input
+    // 4. Initialize Input Manager
     g_input = std::make_unique<InputManager>();
     ASSERT(g_input);
     g_input->Initialize(hWnd);
 
-    // 4. Initialize Game
+    // 5. Initialize Game System
     g_game = std::make_unique<Game>();
     ASSERT(g_game);
+    hr = g_game->Initialize(g_graphics.get(), g_input.get());
+    if (FAILED(hr))
     {
-        HRESULT hr = g_game->Initialize(g_graphics.get(), g_input.get());
-        ASSERT_MSG(SUCCEEDED(hr), "Game::Initialize failed");
-        if (FAILED(hr))
-        {
-            MessageBoxW(nullptr, L"Game initialization failed", L"Fatal Error", MB_ICONERROR);
-            return FALSE;
-        }
+        wchar_t buf[256];
+        swprintf_s(buf, L"Game initialization failed (HR=0x%08X)", static_cast<unsigned>(hr));
+        MessageBoxW(nullptr, buf, L"Fatal Error", MB_ICONERROR);
+        return FALSE;
     }
 
-    // 5. Show window
+    // **PROFESSIONAL: Initialize SparkConsole and register comprehensive commands**
+    auto& console = Spark::SimpleConsole::GetInstance();
+    if (console.Initialize()) {
+        console.LogSuccess("Development console initialized");
+        
+        // The console now has comprehensive built-in commands
+        console.LogInfo("Advanced debugging system active");
+        console.LogInfo("Type 'help' for complete command reference");
+    } else {
+        // Fallback to OutputDebugString if console fails
+        OutputDebugStringW(L"Failed to initialize development console\n");
+    }
+
+    // 7. Show window and activate
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+    SetForegroundWindow(hWnd);
+    SetFocus(hWnd);
+
+    // Log successful initialization
+    console.LogSuccess("SparkEngine initialization completed successfully");
+    console.LogInfo("Main window is now visible and ready for interaction");
+    console.LogInfo("Press ` (tilde) key to toggle engine console, or use the separate console window");
 
     return TRUE;
 }

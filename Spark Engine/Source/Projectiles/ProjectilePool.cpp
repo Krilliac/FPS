@@ -1,31 +1,54 @@
 ﻿// ProjectilePool.cpp
 #include "ProjectilePool.h"
+#include "Bullet.h"
+#include "Rocket.h"
+#include "Grenade.h"
 #include "Utils/Assert.h"
 #include "../Utils/ConsoleProcessManager.h"
 #include <iostream>
+#include <memory>
 
 using namespace DirectX;
 
-// Helper macro for logging to external console
-#define LOG_TO_CONSOLE(msg, type) Spark::ConsoleProcessManager::GetInstance().Log(msg, type)
+// **FIXED: Rate-limited logging for ProjectilePool to prevent console spam**
+#define LOG_TO_CONSOLE_RATE_LIMITED(msg, type) \
+    do { \
+        static auto lastLogTime = std::chrono::steady_clock::now(); \
+        static int logCounter = 0; \
+        auto now = std::chrono::steady_clock::now(); \
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastLogTime).count(); \
+        if (elapsed >= 10 || logCounter < 1) { \
+            Spark::ConsoleProcessManager::GetInstance().Log(msg, type); \
+            if (elapsed >= 10) { \
+                lastLogTime = now; \
+                logCounter = 0; \
+            } else { \
+                logCounter++; \
+            } \
+        } \
+    } while(0)
+
+// Use rate-limited logging for most messages, immediate for critical ones
+#define LOG_TO_CONSOLE(msg, type) LOG_TO_CONSOLE_RATE_LIMITED(msg, type)
+#define LOG_TO_CONSOLE_IMMEDIATE(msg, type) Spark::ConsoleProcessManager::GetInstance().Log(msg, type)
 
 ProjectilePool::ProjectilePool(size_t poolSize)
     : m_poolSize(poolSize)
 {
-    LOG_TO_CONSOLE(L"ProjectilePool constructed with size " + std::to_wstring(poolSize), L"INFO");
+    LOG_TO_CONSOLE_IMMEDIATE(L"ProjectilePool constructed with size " + std::to_wstring(poolSize), L"INFO");
     ASSERT_MSG(poolSize > 0, "ProjectilePool size must be positive");
     m_projectiles.reserve(poolSize);
 }
 
 ProjectilePool::~ProjectilePool()
 {
-    LOG_TO_CONSOLE(L"ProjectilePool destructor called.", L"INFO");
+    LOG_TO_CONSOLE_IMMEDIATE(L"ProjectilePool destructor called.", L"INFO");
     Shutdown();
 }
 
 HRESULT ProjectilePool::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-    LOG_TO_CONSOLE(L"ProjectilePool::Initialize called.", L"OPERATION");
+    LOG_TO_CONSOLE_IMMEDIATE(L"ProjectilePool::Initialize called.", L"OPERATION");
     ASSERT(device != nullptr);
     ASSERT(context != nullptr);
 
@@ -57,13 +80,13 @@ HRESULT ProjectilePool::Initialize(ID3D11Device* device, ID3D11DeviceContext* co
 
     ASSERT_MSG(m_projectiles.size() == m_poolSize, "Some projectiles failed to initialize");
 
-    LOG_TO_CONSOLE(L"ProjectilePool created " + std::to_wstring(m_projectiles.size()) + L" projectiles.", L"INFO");
+    LOG_TO_CONSOLE_IMMEDIATE(L"ProjectilePool created " + std::to_wstring(m_projectiles.size()) + L" projectiles.", L"INFO");
     return S_OK;
 }
 
 void ProjectilePool::Update(float deltaTime)
 {
-    LOG_TO_CONSOLE(L"ProjectilePool::Update called. deltaTime=" + std::to_wstring(deltaTime), L"OPERATION");
+    // **FIXED: Remove per-frame logging completely**
     ASSERT_MSG(deltaTime >= 0.0f && std::isfinite(deltaTime), "Invalid deltaTime in ProjectilePool::Update");
 
     for (auto& up : m_projectiles)
@@ -75,33 +98,32 @@ void ProjectilePool::Update(float deltaTime)
                 ReturnProjectile(up.get());
         }
     }
-    LOG_TO_CONSOLE(L"ProjectilePool update complete.", L"INFO");
 }
 
 void ProjectilePool::Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection)
 {
-    LOG_TO_CONSOLE(L"ProjectilePool::Render called.", L"OPERATION");
+    // **FIXED: Remove per-frame logging completely**
     for (auto& up : m_projectiles)
     {
         if (up->IsActive())
             up->Render(view, projection);
     }
-    LOG_TO_CONSOLE(L"ProjectilePool render complete.", L"INFO");
 }
 
 void ProjectilePool::Shutdown()
 {
-    LOG_TO_CONSOLE(L"ProjectilePool::Shutdown called.", L"OPERATION");
+    LOG_TO_CONSOLE_IMMEDIATE(L"ProjectilePool::Shutdown called.", L"OPERATION");
 
     m_projectiles.clear();
     std::queue<Projectile*> empty;
     std::swap(m_availableProjectiles, empty);
 
-    LOG_TO_CONSOLE(L"ProjectilePool shutdown complete.", L"INFO");
+    LOG_TO_CONSOLE_IMMEDIATE(L"ProjectilePool shutdown complete.", L"INFO");
 }
 
 Projectile* ProjectilePool::GetProjectile()
 {
+    // **FIXED: Rate-limited logging for projectile acquisition**
     LOG_TO_CONSOLE(L"ProjectilePool::GetProjectile called.", L"OPERATION");
     if (m_availableProjectiles.empty()) {
         LOG_TO_CONSOLE(L"ProjectilePool: No available projectiles!", L"WARNING");
@@ -109,19 +131,18 @@ Projectile* ProjectilePool::GetProjectile()
     }
     Projectile* p = m_availableProjectiles.front();
     m_availableProjectiles.pop();
-    LOG_TO_CONSOLE(L"ProjectilePool: Got projectile.", L"INFO");
     return p;
 }
 
 void ProjectilePool::ReturnProjectile(Projectile* p)
 {
+    // **FIXED: Rate-limited logging for projectile return**
     LOG_TO_CONSOLE(L"ProjectilePool::ReturnProjectile called.", L"OPERATION");
     ASSERT(p != nullptr);
     if (p)
     {
         p->SetActive(false);
         m_availableProjectiles.push(p);
-        LOG_TO_CONSOLE(L"ProjectilePool: Projectile returned to pool.", L"INFO");
     }
 }
 
@@ -132,7 +153,6 @@ void ProjectilePool::FireBullet(const XMFLOAT3& pos, const XMFLOAT3& dir, float 
     if (auto p = GetProjectile()) {
         p->Fire(pos, dir, speed);
     }
-    LOG_TO_CONSOLE(L"ProjectilePool: Bullet fired.", L"INFO");
 }
 
 void ProjectilePool::FireRocket(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
@@ -142,7 +162,6 @@ void ProjectilePool::FireRocket(const XMFLOAT3& pos, const XMFLOAT3& dir, float 
     if (auto p = GetProjectile()) {
         p->Fire(pos, dir, speed);
     }
-    LOG_TO_CONSOLE(L"ProjectilePool: Rocket fired.", L"INFO");
 }
 
 void ProjectilePool::FireGrenade(const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
@@ -153,37 +172,45 @@ void ProjectilePool::FireGrenade(const XMFLOAT3& pos, const XMFLOAT3& dir, float
         p->SetGravity(true, 1.0f);
         p->Fire(pos, dir, speed);
     }
-    LOG_TO_CONSOLE(L"ProjectilePool: Grenade fired.", L"INFO");
 }
 
 void ProjectilePool::FireProjectile(ProjectileType type, const XMFLOAT3& pos, const XMFLOAT3& dir, float speed)
 {
-    LOG_TO_CONSOLE(L"ProjectilePool::FireProjectile called. type=" + std::to_wstring(static_cast<int>(type)) + L" speed=" + std::to_wstring(speed), L"OPERATION");
+    // **FIXED: Rate-limited logging for weapon firing**
+    static auto lastFireLog = std::chrono::steady_clock::now();
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastFireLog).count();
+    
     switch (type)
     {
     case ProjectileType::BULLET:  FireBullet(pos, dir, speed); break;
     case ProjectileType::ROCKET:  FireRocket(pos, dir, speed); break;
     case ProjectileType::GRENADE: FireGrenade(pos, dir, speed); break;
     default:
-        LOG_TO_CONSOLE(L"Unknown ProjectileType in FireProjectile", L"ERROR");
+        LOG_TO_CONSOLE_IMMEDIATE(L"Unknown ProjectileType in FireProjectile", L"ERROR");
         ASSERT_MSG(false, "Unknown ProjectileType in FireProjectile");
     }
-    LOG_TO_CONSOLE(L"ProjectilePool: Projectile fired.", L"INFO");
+    
+    // Only log firing every 3 seconds to avoid spam
+    if (elapsed >= 3) {
+        LOG_TO_CONSOLE(L"ProjectilePool: Projectile fired.", L"INFO");
+        lastFireLog = now;
+    }
 }
 
 size_t ProjectilePool::GetActiveCount() const
 {
+    // **FIXED: Rate-limited logging for count queries**
     LOG_TO_CONSOLE(L"ProjectilePool::GetActiveCount called.", L"OPERATION");
     size_t count = 0;
     for (const auto& up : m_projectiles)
         if (up->IsActive()) ++count;
-    LOG_TO_CONSOLE(L"ProjectilePool: Active count=" + std::to_wstring(count), L"INFO");
     return count;
 }
 
 size_t ProjectilePool::GetAvailableCount() const
 {
+    // **FIXED: Rate-limited logging for count queries**
     LOG_TO_CONSOLE(L"ProjectilePool::GetAvailableCount called.", L"OPERATION");
-    LOG_TO_CONSOLE(L"ProjectilePool: Available count=" + std::to_wstring(m_availableProjectiles.size()), L"INFO");
     return m_availableProjectiles.size();
 }

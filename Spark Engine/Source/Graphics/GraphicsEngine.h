@@ -123,6 +123,13 @@ public:
      */
     UINT                 GetWindowHeight() const { return m_windowHeight; }
 
+    /**
+     * @brief Get the DXGI swap chain
+     * @return Pointer to the IDXGISwapChain interface
+     * @note Returns nullptr if Initialize() hasn't been called successfully
+     */
+    IDXGISwapChain* GetSwapChain() const { return m_swapChain.Get(); }
+
 private:
     /**
      * @brief Create DirectX device and swap chain

@@ -11,3 +11,8 @@ extern ID3D11DeviceContext* g_D3DContext;
 IDXGISwapChain* GetMainSwapChain();
 ID3D11Device* GetD3DDevice();
 ID3D11DeviceContext* GetD3DContext();
+
+// Setters (for backwards compatibility or manual setup)
+void SetMainSwapChain(IDXGISwapChain* swapChain);
+void SetD3DDevice(ID3D11Device* device);
+void SetD3DContext(ID3D11DeviceContext* context);

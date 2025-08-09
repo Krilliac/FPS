@@ -24,12 +24,14 @@ private:
     
     // Display functions
     void PrintLog(const std::wstring& msg);
+    void PrintEngineLog(const std::wstring& msg);
     void PrintResult(const std::string& result);
     void SetConsoleColor(WORD color);
     
     // Command handling
     void ExecuteCommand(const std::string& cmdLine);
     void RegisterDefaultCommands();
+    bool ShouldForwardToEngine(const std::string& command);
     
     // Command history management
     void AddToHistory(const std::string& cmd);

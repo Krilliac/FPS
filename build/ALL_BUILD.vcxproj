@@ -173,6 +173,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\SparkConsole\SparkConsole.vcxproj">
+      <Project>{F85234BD-8BBC-33C1-8063-8146459A976C}</Project>
+      <Name>SparkConsole</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Spark Engine\SparkEngine\build\SparkEngine.vcxproj">
       <Project>{5191A59A-BF5A-349C-8B7A-C7E12441A3B7}</Project>
       <Name>SparkEngine</Name>

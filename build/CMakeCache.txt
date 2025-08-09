@@ -14,56 +14,23 @@
 # EXTERNAL cache entries
 ########################
 
-//Amalgamate sources into miniz.h/c
-AMALGAMATE_SOURCES:BOOL=OFF
-
-//Build curl executable
-BUILD_CURL_EXE:BOOL=OFF
-
 //Disable docs
 BUILD_DOCS:BOOL=OFF
 
 //Disable all examples
 BUILD_EXAMPLES:BOOL=OFF
 
-//Build fuzz targets
-BUILD_FUZZERS:BOOL=OFF
-
-//Build a header-only version
-BUILD_HEADER_ONLY:BOOL=OFF
-
-//Build libcurl man pages
-BUILD_LIBCURL_DOCS:BOOL=ON
-
-//Build misc man pages (e.g. curl-config and mk-ca-bundle)
-BUILD_MISC_DOCS:BOOL=ON
-
-//OFF
-BUILD_NO_STDIO" Build a without stdio version":BOOL=OFF
-
 //Disable all samples
 BUILD_SAMPLES:BOOL=OFF
 
-//Build shared libraries
-BUILD_SHARED_LIBS:BOOL=OFF
-
-//Build curl executable with static libcurl
-BUILD_STATIC_CURL:BOOL=OFF
-
-//Build static libraries
-BUILD_STATIC_LIBS:BOOL=OFF
-
 //Disable all testing
 BUILD_TESTING:BOOL=OFF
-
-//Build tests
-BUILD_TESTS:BOOL=OFF
 
 //Disable all tools
 BUILD_TOOLS:BOOL=OFF
 
 //Path to a program.
-CMAKE_AR:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
+CMAKE_AR:FILEPATH=D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
 
 //Semicolon separated list of supported configuration types, only
 // supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
@@ -124,59 +91,11 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 //Value Computed by CMake.
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=D:/Spark Engine/SparkEngine/build/CMakeFiles/pkgRedirects
 
-//User executables (bin)
-CMAKE_INSTALL_BINDIR:PATH=bin
-
-//Read-only architecture-independent data (DATAROOTDIR)
-CMAKE_INSTALL_DATADIR:PATH=
-
-//Read-only architecture-independent data root (share)
-CMAKE_INSTALL_DATAROOTDIR:PATH=share
-
-//Documentation root (DATAROOTDIR/doc/PROJECT_NAME)
-CMAKE_INSTALL_DOCDIR:PATH=
-
-//C header files (include)
-CMAKE_INSTALL_INCLUDEDIR:PATH=include
-
-//Info documentation (DATAROOTDIR/info)
-CMAKE_INSTALL_INFODIR:PATH=
-
-//Object code libraries (lib)
-CMAKE_INSTALL_LIBDIR:PATH=lib
-
-//Program executables (libexec)
-CMAKE_INSTALL_LIBEXECDIR:PATH=libexec
-
-//Locale-dependent data (DATAROOTDIR/locale)
-CMAKE_INSTALL_LOCALEDIR:PATH=
-
-//Modifiable single-machine data (var)
-CMAKE_INSTALL_LOCALSTATEDIR:PATH=var
-
-//Man documentation (DATAROOTDIR/man)
-CMAKE_INSTALL_MANDIR:PATH=
-
-//C header files for non-gcc (/usr/include)
-CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
-
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=C:/Program Files/SparkEngine
 
-//Run-time variable data (LOCALSTATEDIR/run)
-CMAKE_INSTALL_RUNSTATEDIR:PATH=
-
-//System admin executables (sbin)
-CMAKE_INSTALL_SBINDIR:PATH=sbin
-
-//Modifiable architecture-independent data (com)
-CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
-
-//Read-only single-machine data (etc)
-CMAKE_INSTALL_SYSCONFDIR:PATH=etc
-
 //Path to a program.
-CMAKE_LINKER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
+CMAKE_LINKER:FILEPATH=D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -199,7 +118,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 
 //Path to a program.
-CMAKE_MT:FILEPATH=CMAKE_MT-NOTFOUND
+CMAKE_MT:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x86/mt.exe
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -210,23 +129,8 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=SparkEngine
 
-//Value Computed by CMake
-CMAKE_PROJECT_VERSION:STATIC=8.16.0
-
-//Value Computed by CMake
-CMAKE_PROJECT_VERSION_MAJOR:STATIC=8
-
-//Value Computed by CMake
-CMAKE_PROJECT_VERSION_MINOR:STATIC=16
-
-//Value Computed by CMake
-CMAKE_PROJECT_VERSION_PATCH:STATIC=0
-
-//Value Computed by CMake
-CMAKE_PROJECT_VERSION_TWEAK:STATIC=
-
 //RC compiler
-CMAKE_RC_COMPILER:FILEPATH=rc
+CMAKE_RC_COMPILER:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x86/rc.exe
 
 //Flags for Windows Resource Compiler during all build types.
 CMAKE_RC_FLAGS:STRING=-DWIN32
@@ -296,274 +200,14 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//Enable to build 7-Zip source packages
-CPACK_SOURCE_7Z:BOOL=ON
-
-//Enable to build ZIP source packages
-CPACK_SOURCE_ZIP:BOOL=ON
-
-//Value Computed by CMake
-CURL_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/ThirdParty/Networking/curl
-
-CURL_BROTLI:BOOL=OFF
-
-//Enable safe CA bundle search (within the curl tool directory)
-// on Windows
-CURL_CA_SEARCH_SAFE:BOOL=OFF
-
-//Run the build through clang-tidy
-CURL_CLANG_TIDY:BOOL=OFF
-
-//Install fish completions
-CURL_COMPLETION_FISH:BOOL=OFF
-
-//Install zsh completions
-CURL_COMPLETION_ZSH:BOOL=OFF
-
-//Disable alt-svc support
-CURL_DISABLE_ALTSVC:BOOL=OFF
-
-//Disable aws-sigv4
-CURL_DISABLE_AWS:BOOL=OFF
-
-//Disable Basic authentication
-CURL_DISABLE_BASIC_AUTH:BOOL=OFF
-
-//Disable Bearer authentication
-CURL_DISABLE_BEARER_AUTH:BOOL=OFF
-
-//Disable local binding support
-CURL_DISABLE_BINDLOCAL:BOOL=OFF
-
-//Disable unsafe CA bundle search in PATH on Windows
-CURL_DISABLE_CA_SEARCH:BOOL=OFF
-
-//Disable cookies support
-CURL_DISABLE_COOKIES:BOOL=OFF
-
-//Disable DICT
-CURL_DISABLE_DICT:BOOL=ON
-
-//Disable Digest authentication
-CURL_DISABLE_DIGEST_AUTH:BOOL=OFF
-
-//Disable DNS-over-HTTPS
-CURL_DISABLE_DOH:BOOL=OFF
-
-//Disable FILE
-CURL_DISABLE_FILE:BOOL=OFF
-
-//Disable form-api
-CURL_DISABLE_FORM_API:BOOL=OFF
-
-//Disable FTP
-CURL_DISABLE_FTP:BOOL=OFF
-
-//Disable curl_easy_options API for existing options to curl_easy_setopt
-CURL_DISABLE_GETOPTIONS:BOOL=OFF
-
-//Disable Gopher
-CURL_DISABLE_GOPHER:BOOL=ON
-
-//Disable headers-api support
-CURL_DISABLE_HEADERS_API:BOOL=OFF
-
-//Disable HSTS support
-CURL_DISABLE_HSTS:BOOL=OFF
-
-//Disable HTTP
-CURL_DISABLE_HTTP:BOOL=OFF
-
-//Disable all HTTP authentication methods
-CURL_DISABLE_HTTP_AUTH:BOOL=OFF
-
-//Disable IMAP
-CURL_DISABLE_IMAP:BOOL=ON
-
-//Disable installation targets
-CURL_DISABLE_INSTALL:BOOL=OFF
-
-//Disable IPFS
-CURL_DISABLE_IPFS:BOOL=OFF
-
-//Disable Kerberos authentication
-CURL_DISABLE_KERBEROS_AUTH:BOOL=OFF
-
-//Disable LDAP
-CURL_DISABLE_LDAP:BOOL=ON
-
-//Disable LDAPS
-CURL_DISABLE_LDAPS:BOOL=ON
-
-//Disable --libcurl option from the curl tool
-CURL_DISABLE_LIBCURL_OPTION:BOOL=OFF
-
-//Disable MIME support
-CURL_DISABLE_MIME:BOOL=OFF
-
-//Disable MQTT
-CURL_DISABLE_MQTT:BOOL=OFF
-
-//Disable negotiate authentication
-CURL_DISABLE_NEGOTIATE_AUTH:BOOL=OFF
-
-//Disable netrc parser
-CURL_DISABLE_NETRC:BOOL=OFF
-
-//Disable NTLM support
-CURL_DISABLE_NTLM:BOOL=OFF
-
-//Disable automatic loading of OpenSSL configuration
-CURL_DISABLE_OPENSSL_AUTO_LOAD_CONFIG:BOOL=OFF
-
-//Disable date parsing
-CURL_DISABLE_PARSEDATE:BOOL=OFF
-
-//Disable POP3
-CURL_DISABLE_POP3:BOOL=ON
-
-//Disable built-in progress meter
-CURL_DISABLE_PROGRESS_METER:BOOL=OFF
-
-//Disable proxy support
-CURL_DISABLE_PROXY:BOOL=OFF
-
-//Disable RTSP
-CURL_DISABLE_RTSP:BOOL=ON
-
-//Disable SHA-512/256 hash algorithm
-CURL_DISABLE_SHA512_256:BOOL=OFF
-
-//Disable shuffle DNS feature
-CURL_DISABLE_SHUFFLE_DNS:BOOL=OFF
-
-//Disable SMB
-CURL_DISABLE_SMB:BOOL=OFF
-
-//Disable SMTP
-CURL_DISABLE_SMTP:BOOL=ON
-
-//Disable use of socketpair for curl_multi_poll
-CURL_DISABLE_SOCKETPAIR:BOOL=OFF
-
-//Disable TLS-SRP support
-CURL_DISABLE_SRP:BOOL=OFF
-
-//Disable Telnet
-CURL_DISABLE_TELNET:BOOL=ON
-
-//Disable TFTP
-CURL_DISABLE_TFTP:BOOL=OFF
-
-//Disable verbose strings
-CURL_DISABLE_VERBOSE_STRINGS:BOOL=OFF
-
-//Disable WebSocket
-CURL_DISABLE_WEBSOCKETS:BOOL=OFF
-
-//Enable CMake export target
-CURL_ENABLE_EXPORT_TARGET:BOOL=ON
-
-//Enable SSL support
-CURL_ENABLE_SSL:BOOL=ON
-
-//Hide libcurl internal symbols (=hide all symbols that are not
-// officially external)
-CURL_HIDDEN_SYMBOLS:BOOL=ON
-
-//Value Computed by CMake
-CURL_IS_TOP_LEVEL:STATIC=OFF
-
-//Enable compiler Link Time Optimizations
-CURL_LTO:BOOL=OFF
-
-//Value Computed by CMake
-CURL_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/ThirdParty/Networking/curl
-
-CURL_STATICLIB:BOOL=ON
-
-//Build libcurl with static CRT with MSVC (/MT)
-CURL_STATIC_CRT:BOOL=OFF
-
-//Minimum target Windows version as hex string
-CURL_TARGET_WINDOWS_VERSION:STRING=
-
-//Enable GnuTLS for SSL/TLS
-CURL_USE_GNUTLS:BOOL=OFF
-
-//Use libgsasl
-CURL_USE_GSASL:BOOL=OFF
-
-//Use GSSAPI implementation
-CURL_USE_GSSAPI:BOOL=OFF
-
-//Use libpsl
-CURL_USE_LIBPSL:BOOL=OFF
-
-//Use libssh
-CURL_USE_LIBSSH:BOOL=OFF
-
-//Use libssh2
-CURL_USE_LIBSSH2:BOOL=ON
-
-//Use libuv for event-based tests
-CURL_USE_LIBUV:BOOL=OFF
-
-//Enable mbedTLS for SSL/TLS
-CURL_USE_MBEDTLS:BOOL=OFF
-
-//Enable OpenSSL for SSL/TLS
-CURL_USE_OPENSSL:BOOL=OFF
-
-//Enable pkg-config to detect dependencies
-CURL_USE_PKGCONFIG:BOOL=OFF
-
-//Enable Rustls for SSL/TLS
-CURL_USE_RUSTLS:BOOL=OFF
-
-//Enable Windows native SSL/TLS (Schannel)
-CURL_USE_SCHANNEL:BOOL=ON
-
-//Use wolfSSH
-CURL_USE_WOLFSSH:BOOL=OFF
-
-//Enable wolfSSL for SSL/TLS
-CURL_USE_WOLFSSL:BOOL=OFF
-
-//Turn compiler warnings into errors
-CURL_WERROR:BOOL=OFF
-
-//Enable SSPI on Windows
-CURL_WINDOWS_SSPI:BOOL=ON
-
-//Build curl with ZLIB support (AUTO, ON or OFF)
-CURL_ZLIB:STRING=AUTO
-
-CURL_ZSTD:BOOL=OFF
-
-//Path to a program.
-CYGWIN_BAT:FILEPATH=CYGWIN_BAT-NOTFOUND
-
 //Enable advanced input features
 ENABLE_ADVANCED_INPUT:BOOL=ON
-
-//Enable c-ares support
-ENABLE_ARES:BOOL=OFF
 
 //Enable asset streaming
 ENABLE_ASSET_STREAMING:BOOL=ON
 
 //Enable collaborative features
 ENABLE_COLLABORATIVE:BOOL=ON
-
-//Enable TrackMemory debug feature
-ENABLE_CURLDEBUG:BOOL=OFF
-
-//Build the man page for curl and enable its -M/--manual option
-ENABLE_CURL_MANUAL:BOOL=ON
-
-//Enable curl debug features (for developing curl itself)
-ENABLE_DEBUG:BOOL=OFF
 
 //Enable editor features
 ENABLE_EDITOR:BOOL=ON
@@ -573,9 +217,6 @@ ENABLE_GRAPHICS:BOOL=ON
 
 //Enable hot reload functionality
 ENABLE_HOT_RELOAD:BOOL=ON
-
-//Enable IPv6 support
-ENABLE_IPV6:BOOL=ON
 
 //Enable advanced lighting
 ENABLE_LIGHTING_SYSTEM:BOOL=ON
@@ -598,52 +239,6 @@ ENABLE_PROFILING:BOOL=ON
 //Enable terrain system
 ENABLE_TERRAIN_SYSTEM:BOOL=ON
 
-//Enable threaded DNS lookup
-ENABLE_THREADED_RESOLVER:BOOL=ON
-
-//Use the Unicode version of the Windows API functions
-ENABLE_UNICODE:BOOL=OFF
-
-//Enable Unix domain sockets support
-ENABLE_UNIX_SOCKETS:BOOL=ON
-
-//Disable all protocols except HTTP (This overrides all CURL_DISABLE_*
-// options)
-HTTP_ONLY:BOOL=ON
-
-//Install project
-INSTALL_PROJECT:BOOL=OFF
-
-//Basename of the curl library
-LIBCURL_OUTPUT_NAME:STRING=libcurl
-
-//Path to a file.
-LIBIDN2_INCLUDE_DIR:PATH=LIBIDN2_INCLUDE_DIR-NOTFOUND
-
-//Path to a library.
-LIBIDN2_LIBRARY:FILEPATH=LIBIDN2_LIBRARY-NOTFOUND
-
-//Path to a file.
-LIBSSH2_INCLUDE_DIR:PATH=LIBSSH2_INCLUDE_DIR-NOTFOUND
-
-//Path to a library.
-LIBSSH2_LIBRARY:FILEPATH=LIBSSH2_LIBRARY-NOTFOUND
-
-//Path to a program.
-MSYS_CMD:FILEPATH=MSYS_CMD-NOTFOUND
-
-//Path to a file.
-NGHTTP2_INCLUDE_DIR:PATH=NGHTTP2_INCLUDE_DIR-NOTFOUND
-
-//Path to a library.
-NGHTTP2_LIBRARY:FILEPATH=NGHTTP2_LIBRARY-NOTFOUND
-
-//Path to a program.
-PERL_EXECUTABLE:FILEPATH=PERL_EXECUTABLE-NOTFOUND
-
-//Enable picky compiler options
-PICKY_COMPILER:BOOL=ON
-
 //Value Computed by CMake
 SparkConsole_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/SparkConsole
 
@@ -654,15 +249,6 @@ SparkConsole_IS_TOP_LEVEL:STATIC=OFF
 SparkConsole_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/SparkConsole
 
 //Value Computed by CMake
-SparkEngineComplete_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build
-
-//Value Computed by CMake
-SparkEngineComplete_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-SparkEngineComplete_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine
-
-//Value Computed by CMake
 SparkEngine_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build
 
 //Value Computed by CMake
@@ -670,57 +256,6 @@ SparkEngine_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 SparkEngine_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine
-
-//Enable ECH support
-USE_ECH:BOOL=OFF
-
-//Enable HTTPS RR support
-USE_HTTPSRR:BOOL=OFF
-
-//Use libidn2 for IDN support
-USE_LIBIDN2:BOOL=ON
-
-//Enable librtmp from rtmpdump
-USE_LIBRTMP:BOOL=OFF
-
-//Use nghttp2 library
-USE_NGHTTP2:BOOL=ON
-
-//Use ngtcp2 and nghttp3 libraries for HTTP/3 support
-USE_NGTCP2:BOOL=OFF
-
-//Use OpenSSL and nghttp3 libraries for HTTP/3 support
-USE_OPENSSL_QUIC:BOOL=OFF
-
-//Use quiche library for HTTP/3 support
-USE_QUICHE:BOOL=OFF
-
-//Enable SSL session export support
-USE_SSLS_EXPORT:BOOL=OFF
-
-//Use WinIDN for IDN support
-USE_WIN32_IDN:BOOL=OFF
-
-//Path to a file.
-ZLIB_INCLUDE_DIR:PATH=ZLIB_INCLUDE_DIR-NOTFOUND
-
-//Path to a library.
-ZLIB_LIBRARY_DEBUG:FILEPATH=ZLIB_LIBRARY_DEBUG-NOTFOUND
-
-//Path to a library.
-ZLIB_LIBRARY_RELEASE:FILEPATH=ZLIB_LIBRARY_RELEASE-NOTFOUND
-
-//Fast-track known feature detection results (Windows, some Apple)
-_CURL_PREFILL:BOOL=ON
-
-//Value Computed by CMake
-miniz_BINARY_DIR:STATIC=D:/Spark Engine/SparkEngine/build/ThirdParty/Utils/miniz
-
-//Value Computed by CMake
-miniz_IS_TOP_LEVEL:STATIC=OFF
-
-//Value Computed by CMake
-miniz_SOURCE_DIR:STATIC=D:/Spark Engine/SparkEngine/ThirdParty/Utils/miniz
 
 
 ########################
@@ -784,46 +319,14 @@ CMAKE_EXTRA_GENERATOR:INTERNAL=
 //Name of generator.
 CMAKE_GENERATOR:INTERNAL=Visual Studio 17 2022
 //Generator instance identifier.
-CMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools
+CMAKE_GENERATOR_INSTANCE:INTERNAL=D:/Program Files/Microsoft Visual Studio/2022/Community
 //Name of generator platform.
-CMAKE_GENERATOR_PLATFORM:INTERNAL=x64
+CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=D:/Spark Engine/SparkEngine
-//ADVANCED property for variable: CMAKE_INSTALL_BINDIR
-CMAKE_INSTALL_BINDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_DATADIR
-CMAKE_INSTALL_DATADIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_DATAROOTDIR
-CMAKE_INSTALL_DATAROOTDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_DOCDIR
-CMAKE_INSTALL_DOCDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_INCLUDEDIR
-CMAKE_INSTALL_INCLUDEDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_INFODIR
-CMAKE_INSTALL_INFODIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_LIBDIR
-CMAKE_INSTALL_LIBDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_LIBEXECDIR
-CMAKE_INSTALL_LIBEXECDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_LOCALEDIR
-CMAKE_INSTALL_LOCALEDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_LOCALSTATEDIR
-CMAKE_INSTALL_LOCALSTATEDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_MANDIR
-CMAKE_INSTALL_MANDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_OLDINCLUDEDIR
-CMAKE_INSTALL_OLDINCLUDEDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_RUNSTATEDIR
-CMAKE_INSTALL_RUNSTATEDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_SBINDIR
-CMAKE_INSTALL_SBINDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_SHAREDSTATEDIR
-CMAKE_INSTALL_SHAREDSTATEDIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_INSTALL_SYSCONFDIR
-CMAKE_INSTALL_SYSCONFDIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MODULE_LINKER_FLAGS
@@ -885,164 +388,4 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
-//Test COMPILER_HAS_DEPRECATED
-COMPILER_HAS_DEPRECATED:INTERNAL=1
-//Test COMPILER_HAS_DEPRECATED_ATTR
-COMPILER_HAS_DEPRECATED_ATTR:INTERNAL=
-//ADVANCED property for variable: CPACK_SOURCE_7Z
-CPACK_SOURCE_7Z-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CPACK_SOURCE_ZIP
-CPACK_SOURCE_ZIP-ADVANCED:INTERNAL=1
-//STRINGS property for variable: CURL_BROTLI
-CURL_BROTLI-STRINGS:INTERNAL=AUTO;ON;OFF
-//ADVANCED property for variable: CURL_DISABLE_ALTSVC
-CURL_DISABLE_ALTSVC-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_AWS
-CURL_DISABLE_AWS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_BASIC_AUTH
-CURL_DISABLE_BASIC_AUTH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_BEARER_AUTH
-CURL_DISABLE_BEARER_AUTH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_BINDLOCAL
-CURL_DISABLE_BINDLOCAL-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_COOKIES
-CURL_DISABLE_COOKIES-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_DICT
-CURL_DISABLE_DICT-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_DIGEST_AUTH
-CURL_DISABLE_DIGEST_AUTH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_DOH
-CURL_DISABLE_DOH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_FILE
-CURL_DISABLE_FILE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_FORM_API
-CURL_DISABLE_FORM_API-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_FTP
-CURL_DISABLE_FTP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_GETOPTIONS
-CURL_DISABLE_GETOPTIONS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_GOPHER
-CURL_DISABLE_GOPHER-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_HEADERS_API
-CURL_DISABLE_HEADERS_API-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_HSTS
-CURL_DISABLE_HSTS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_HTTP
-CURL_DISABLE_HTTP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_HTTP_AUTH
-CURL_DISABLE_HTTP_AUTH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_IMAP
-CURL_DISABLE_IMAP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_IPFS
-CURL_DISABLE_IPFS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_KERBEROS_AUTH
-CURL_DISABLE_KERBEROS_AUTH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_LDAP
-CURL_DISABLE_LDAP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_LDAPS
-CURL_DISABLE_LDAPS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_LIBCURL_OPTION
-CURL_DISABLE_LIBCURL_OPTION-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_MIME
-CURL_DISABLE_MIME-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_MQTT
-CURL_DISABLE_MQTT-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_NEGOTIATE_AUTH
-CURL_DISABLE_NEGOTIATE_AUTH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_NETRC
-CURL_DISABLE_NETRC-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_NTLM
-CURL_DISABLE_NTLM-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_PARSEDATE
-CURL_DISABLE_PARSEDATE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_POP3
-CURL_DISABLE_POP3-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_PROGRESS_METER
-CURL_DISABLE_PROGRESS_METER-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_PROXY
-CURL_DISABLE_PROXY-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_RTSP
-CURL_DISABLE_RTSP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_SHA512_256
-CURL_DISABLE_SHA512_256-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_SHUFFLE_DNS
-CURL_DISABLE_SHUFFLE_DNS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_SMB
-CURL_DISABLE_SMB-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_SMTP
-CURL_DISABLE_SMTP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_SOCKETPAIR
-CURL_DISABLE_SOCKETPAIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_SRP
-CURL_DISABLE_SRP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_TELNET
-CURL_DISABLE_TELNET-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_TFTP
-CURL_DISABLE_TFTP-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_VERBOSE_STRINGS
-CURL_DISABLE_VERBOSE_STRINGS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_DISABLE_WEBSOCKETS
-CURL_DISABLE_WEBSOCKETS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_ENABLE_EXPORT_TARGET
-CURL_ENABLE_EXPORT_TARGET-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_HIDDEN_SYMBOLS
-CURL_HIDDEN_SYMBOLS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_USE_GSASL
-CURL_USE_GSASL-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_USE_GSSAPI
-CURL_USE_GSSAPI-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_USE_LIBPSL
-CURL_USE_LIBPSL-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_USE_LIBSSH
-CURL_USE_LIBSSH-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_USE_LIBSSH2
-CURL_USE_LIBSSH2-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CURL_USE_WOLFSSH
-CURL_USE_WOLFSSH-ADVANCED:INTERNAL=1
-//STRINGS property for variable: CURL_ZLIB
-CURL_ZLIB-STRINGS:INTERNAL=AUTO;ON;OFF
-//STRINGS property for variable: CURL_ZSTD
-CURL_ZSTD-STRINGS:INTERNAL=AUTO;ON;OFF
-//ADVANCED property for variable: CYGWIN_BAT
-CYGWIN_BAT-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: ENABLE_IPV6
-ENABLE_IPV6-ADVANCED:INTERNAL=1
-//Result of TRY_COMPILE
-HAVE_SIZEOF_CURL_SOCKET_T:INTERNAL=TRUE
-//Result of TRY_COMPILE
-HAVE_SIZEOF_SIZE_T:INTERNAL=TRUE
-//Result of TRY_COMPILE
-HAVE_SIZEOF_TIME_T:INTERNAL=TRUE
-//ADVANCED property for variable: HTTP_ONLY
-HTTP_ONLY-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: LIBIDN2_INCLUDE_DIR
-LIBIDN2_INCLUDE_DIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: LIBIDN2_LIBRARY
-LIBIDN2_LIBRARY-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: LIBSSH2_INCLUDE_DIR
-LIBSSH2_INCLUDE_DIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: LIBSSH2_LIBRARY
-LIBSSH2_LIBRARY-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: MSYS_CMD
-MSYS_CMD-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: NGHTTP2_INCLUDE_DIR
-NGHTTP2_INCLUDE_DIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: NGHTTP2_LIBRARY
-NGHTTP2_LIBRARY-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: PERL_EXECUTABLE
-PERL_EXECUTABLE-ADVANCED:INTERNAL=1
-//CHECK_TYPE_SIZE: sizeof(curl_socket_t)
-SIZEOF_CURL_SOCKET_T:INTERNAL=8
-//CHECK_TYPE_SIZE: sizeof(size_t)
-SIZEOF_SIZE_T:INTERNAL=8
-//CHECK_TYPE_SIZE: sizeof(time_t)
-SIZEOF_TIME_T:INTERNAL=8
-//ADVANCED property for variable: ZLIB_INCLUDE_DIR
-ZLIB_INCLUDE_DIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: ZLIB_LIBRARY_DEBUG
-ZLIB_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: ZLIB_LIBRARY_RELEASE
-ZLIB_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
-//CMAKE_INSTALL_PREFIX during last run
-_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files/SparkEngine
 

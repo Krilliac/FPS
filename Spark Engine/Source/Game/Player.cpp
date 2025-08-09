@@ -15,15 +15,34 @@
 using namespace DirectX;
 extern Console g_console;
 
-// Helper macro for logging to external console
-#define LOG_TO_CONSOLE(msg, type) Spark::ConsoleProcessManager::GetInstance().Log(msg, type)
+// **FIXED: Rate-limited logging for Player to prevent console spam**
+#define LOG_TO_CONSOLE_RATE_LIMITED(msg, type) \
+    do { \
+        static auto lastLogTime = std::chrono::steady_clock::now(); \
+        static int logCounter = 0; \
+        auto now = std::chrono::steady_clock::now(); \
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastLogTime).count(); \
+        if (elapsed >= 5 || logCounter < 2) { \
+            Spark::ConsoleProcessManager::GetInstance().Log(msg, type); \
+            if (elapsed >= 5) { \
+                lastLogTime = now; \
+                logCounter = 0; \
+            } else { \
+                logCounter++; \
+            } \
+        } \
+    } while(0)
+
+// Use rate-limited logging for most messages, immediate for critical ones
+#define LOG_TO_CONSOLE(msg, type) LOG_TO_CONSOLE_RATE_LIMITED(msg, type)
+#define LOG_TO_CONSOLE_IMMEDIATE(msg, type) Spark::ConsoleProcessManager::GetInstance().Log(msg, type)
 
 // Constructor
 Player::Player()
     : m_currentWeapon(GetWeaponStats(WeaponType::PISTOL))
     , m_collisionSphere(GetPosition(), 0.5f)
 {
-    LOG_TO_CONSOLE(L"Player constructed.", L"INFO");
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player constructed.", L"INFO");
     SetName("Player");
     m_currentAmmo = m_currentWeapon.MagazineSize;
     ASSERT_MSG(m_currentAmmo > 0, "Initial ammo must be positive");
@@ -35,7 +54,7 @@ HRESULT Player::Initialize(ID3D11Device* device,
     SparkEngineCamera* camera,
     InputManager* input)
 {
-    LOG_TO_CONSOLE(L"Player::Initialize called.", L"OPERATION");
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player::Initialize called.", L"OPERATION");
     ASSERT_NOT_NULL(device);
     ASSERT_NOT_NULL(context);
     ASSERT_NOT_NULL(camera);
@@ -50,18 +69,18 @@ HRESULT Player::Initialize(ID3D11Device* device,
         m_projectilePool = new ProjectilePool(50);
         ASSERT_NOT_NULL(m_projectilePool);
         HRESULT hr = m_projectilePool->Initialize(device, context);
-        LOG_TO_CONSOLE(L"Player projectile pool initialized. HR=0x" + std::to_wstring(hr), L"INFO");
+        LOG_TO_CONSOLE_IMMEDIATE(L"Player projectile pool initialized. HR=0x" + std::to_wstring(hr), L"INFO");
         ASSERT_MSG(SUCCEEDED(hr), "ProjectilePool::Initialize failed");
         if (FAILED(hr)) return hr;
     }
-    LOG_TO_CONSOLE(L"Player initialization complete.", L"INFO");
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player initialization complete.", L"INFO");
     return GameObject::Initialize(device, context);
 }
 
-// Per-frame update
+// Per-frame update - **REMOVED PER-FRAME LOGGING**
 void Player::Update(float dt)
 {
-    LOG_TO_CONSOLE(L"Player::Update called. dt=" + std::to_wstring(dt), L"OPERATION");
+    // **FIXED: No per-frame logging to prevent console spam**
     ASSERT_MSG(dt >= 0.0f && std::isfinite(dt), "Delta time must be non-negative and finite");
     if (!IsAlive()) return;
 
@@ -72,13 +91,12 @@ void Player::Update(float dt)
     UpdateAnimation(dt);
     UpdateCollision();
     GameObject::Update(dt);
-    LOG_TO_CONSOLE(L"Player update complete.", L"INFO");
 }
 
 // No mesh rendering for first-person
 void Player::Render(const XMMATRIX&, const XMMATRIX&)
 {
-    LOG_TO_CONSOLE(L"Player::Render called (no mesh rendering for first-person).", L"OPERATION");
+    // **FIXED: No per-frame logging**
 }
 
 // Damage & healing
@@ -138,7 +156,11 @@ void Player::StartReload()
 
 void Player::Fire()
 {
-    LOG_TO_CONSOLE(L"Player::Fire called.", L"OPERATION");
+    // **FIXED: Rate-limited firing logs to prevent spam when holding mouse button**
+    static auto lastFireLog = std::chrono::steady_clock::now();
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastFireLog).count();
+    
     if (m_isReloading || m_currentAmmo <= 0 || m_fireTimer > 0.0f) return;
     ASSERT_NOT_NULL(m_projectilePool);
 
@@ -158,7 +180,12 @@ void Player::Fire()
     --m_currentAmmo;
     m_fireTimer = 60.0f / m_currentWeapon.FireRate;
     m_isFiring = true;
-    LOG_TO_CONSOLE(L"Player fired weapon. Ammo=" + std::to_wstring(m_currentAmmo), L"INFO");
+    
+    // Only log weapon firing every 2 seconds
+    if (elapsed >= 2) {
+        LOG_TO_CONSOLE(L"Player fired weapon. Ammo=" + std::to_wstring(m_currentAmmo), L"INFO");
+        lastFireLog = now;
+    }
 }
 
 void Player::ChangeWeapon(WeaponType t)
@@ -189,10 +216,10 @@ void Player::OnHitWorld(const XMFLOAT3& hitPoint, const XMFLOAT3& normal)
     LOG_TO_CONSOLE(L"Player hit world.", L"INFO");
 }
 
-// Input handling
+// Input handling - **REMOVED PER-FRAME LOGGING**
 void Player::HandleInput(float)
 {
-    LOG_TO_CONSOLE(L"Player::HandleInput called.", L"OPERATION");
+    // **FIXED: No per-frame logging**
     if (!m_input) return;
     if (m_input->WasKeyPressed('R')) StartReload();
     if (m_input->IsMouseButtonDown(0)) Fire();
@@ -206,13 +233,12 @@ void Player::HandleInput(float)
     if (m_input->WasKeyPressed('3')) ChangeWeapon(WeaponType::SHOTGUN);
     if (m_input->WasKeyPressed('4')) ChangeWeapon(WeaponType::ROCKET_LAUNCHER);
     if (m_input->WasKeyPressed('5')) ChangeWeapon(WeaponType::GRENADE_LAUNCHER);
-    LOG_TO_CONSOLE(L"Player input handled.", L"INFO");
 }
 
-// Movement logic
+// Movement logic - **REMOVED PER-FRAME LOGGING**
 void Player::UpdateMovement(float dt)
 {
-    LOG_TO_CONSOLE(L"Player::UpdateMovement called. dt=" + std::to_wstring(dt), L"OPERATION");
+    // **FIXED: No per-frame logging**
     if (!m_camera || !m_input) return;
     float speed = m_speed;
     if (m_isRunning && m_stamina > 0.0f)
@@ -234,13 +260,12 @@ void Player::UpdateMovement(float dt)
         m_stamina = std::min(m_maxStamina, m_stamina + 50.0f * dt);
 
     SetPosition(m_camera->GetPosition());
-    LOG_TO_CONSOLE(L"Player movement updated.", L"INFO");
 }
 
-// Combat timers
+// Combat timers - **REMOVED PER-FRAME LOGGING**
 void Player::UpdateCombat(float dt)
 {
-    LOG_TO_CONSOLE(L"Player::UpdateCombat called. dt=" + std::to_wstring(dt), L"OPERATION");
+    // **FIXED: No per-frame logging**
     if (m_fireTimer > 0.0f) { m_fireTimer -= dt; if (m_fireTimer < 0) m_fireTimer = 0; }
     if (m_isReloading)
     {
@@ -251,13 +276,12 @@ void Player::UpdateCombat(float dt)
             m_isReloading = false;
         }
     }
-    LOG_TO_CONSOLE(L"Player combat updated.", L"INFO");
 }
 
-// Physics & gravity
+// Physics & gravity - **REMOVED PER-FRAME LOGGING**
 void Player::UpdatePhysics(float dt)
 {
-    LOG_TO_CONSOLE(L"Player::UpdatePhysics called. dt=" + std::to_wstring(dt), L"OPERATION");
+    // **FIXED: No per-frame logging**
     if (!m_isGrounded) ApplyGravity(dt);
     CheckGroundCollision();
 
@@ -270,43 +294,39 @@ void Player::UpdatePhysics(float dt)
 
     m_velocity.x *= 0.9f;
     m_velocity.z *= 0.9f;
-    LOG_TO_CONSOLE(L"Player physics updated.", L"INFO");
 }
 
-// Animation (head bob & footsteps)
+// Animation (head bob & footsteps) - **REMOVED PER-FRAME LOGGING**
 void Player::UpdateAnimation(float dt)
 {
-    LOG_TO_CONSOLE(L"Player::UpdateAnimation called. dt=" + std::to_wstring(dt), L"OPERATION");
+    // **FIXED: No per-frame logging**
     if (m_input && (m_input->IsKeyDown('W') || m_input->IsKeyDown('A') ||
         m_input->IsKeyDown('S') || m_input->IsKeyDown('D')))
     {
         m_bobTimer += dt * 8.0f;
         HandleFootsteps(dt);
     }
-    LOG_TO_CONSOLE(L"Player animation updated.", L"INFO");
 }
 
-// Collision sphere update
+// Collision sphere update - **REMOVED PER-FRAME LOGGING**
 void Player::UpdateCollision()
 {
-    LOG_TO_CONSOLE(L"Player::UpdateCollision called.", L"OPERATION");
+    // **FIXED: No per-frame logging**
     m_collisionSphere.Center = GetPosition();
-    LOG_TO_CONSOLE(L"Player collision updated.", L"INFO");
 }
 
-// Apply gravity
+// Apply gravity - **REMOVED PER-FRAME LOGGING**
 void Player::ApplyGravity(float dt)
 {
-    LOG_TO_CONSOLE(L"Player::ApplyGravity called. dt=" + std::to_wstring(dt), L"OPERATION");
+    // **FIXED: No per-frame logging**
     m_velocity.y += -20.0f * dt;
     if (m_velocity.y < -50.0f) m_velocity.y = -50.0f;
-    LOG_TO_CONSOLE(L"Player gravity applied.", L"INFO");
 }
 
-// Ground check
+// Ground check - **REMOVED PER-FRAME LOGGING**
 void Player::CheckGroundCollision()
 {
-    LOG_TO_CONSOLE(L"Player::CheckGroundCollision called.", L"OPERATION");
+    // **FIXED: No per-frame logging**
     XMFLOAT3 pos = GetPosition();
     if (pos.y <= 0.0f && m_velocity.y <= 0.0f)
     {
@@ -315,13 +335,12 @@ void Player::CheckGroundCollision()
         m_isGrounded = true; m_isJumping = false;
         if (m_camera) m_camera->SetPosition(pos);
     }
-    LOG_TO_CONSOLE(L"Player ground collision checked.", L"INFO");
 }
 
-// Footsteps
+// Footsteps - **REMOVED PER-FRAME LOGGING**
 void Player::HandleFootsteps(float dt)
 {
-    LOG_TO_CONSOLE(L"Player::HandleFootsteps called. dt=" + std::to_wstring(dt), L"OPERATION");
+    // **FIXED: No per-frame logging**
     m_footstepTimer += dt;
     float interval = m_isRunning ? 0.3f : 0.6f;
     if (m_footstepTimer >= interval)
@@ -329,7 +348,6 @@ void Player::HandleFootsteps(float dt)
         // footstep SFX
         m_footstepTimer = 0.0f;
     }
-    LOG_TO_CONSOLE(L"Player footsteps handled.", L"INFO");
 }
 
 // Weapon defaults lookup

@@ -1,10 +1,11 @@
 #include "ConsoleApp.h"
 #include <iostream>
 #include <windows.h>
+#include <conio.h> // For _getch()
 
 int main() {
     // Set console title and properties
-    SetConsoleTitle(L"Spark Engine Debug Console");
+    SetConsoleTitleW(L"Spark Engine Debug Console");
     SetConsoleOutputCP(CP_UTF8);
     
     // Configure console buffer size for lots of scrollback
@@ -30,8 +31,12 @@ int main() {
         app.Run();
     } catch (const std::exception& e) {
         std::cerr << "Console error: " << e.what() << std::endl;
+        std::wcout << L"Press any key to continue..." << std::endl;
+        _getch();
         return 1;
     }
     
+    std::wcout << L"Console application finished. Press any key to exit..." << std::endl;
+    _getch();
     return 0;
 }
