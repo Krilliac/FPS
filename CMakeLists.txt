@@ -195,6 +195,20 @@ if(TARGET SparkConsole)
 endif()
 
 # ---------------------------------------------------------------------
+# 9.5) Build SparkEditor if enabled and exists
+# ---------------------------------------------------------------------
+if(ENABLE_EDITOR AND EXISTS "${CMAKE_SOURCE_DIR}/SparkEditor/CMakeLists.txt")
+    message(STATUS "Adding SparkEditor to build...")
+    add_subdirectory(SparkEditor)
+    
+    # Ensure SparkEditor is built after SparkEngine
+    if(TARGET SparkEngine AND TARGET SparkEditor)
+        add_dependencies(SparkEditor SparkEngine)
+        message(STATUS "SparkEditor will be built after SparkEngine")
+    endif()
+endif()
+
+# ---------------------------------------------------------------------
 # 10) COMPLETE ASSET MANAGEMENT - COPY ALL ASSETS TO BUILD OUTPUT
 # ---------------------------------------------------------------------
 function(copy_assets_to_build)

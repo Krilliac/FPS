@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files/SparkEngine")
+  set(CMAKE_INSTALL_PREFIX "D:/Spark Engine/SparkEngine/build/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -35,6 +35,11 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("D:/Spark Engine/SparkEngine/build/SparkConsole/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/Spark Engine/SparkEngine/build/SparkEditor/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

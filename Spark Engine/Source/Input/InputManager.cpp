@@ -1,9 +1,14 @@
 ﻿// InputManager.cpp
 #include "InputManager.h"
 #include "Utils/Assert.h"
+#include "../Utils/SparkConsole.h"
 #include <Windows.h>
 #include <cstring>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
+#include <unordered_map>
 
 InputManager::InputManager()
     : m_mouseX(0), m_mouseY(0)
@@ -11,15 +16,28 @@ InputManager::InputManager()
     , m_mouseDeltaX(0), m_mouseDeltaY(0)
     , m_hwnd(nullptr)
     , m_mouseCaptured(false)
+    , m_mouseSensitivity(1.0f)
+    , m_mouseDeadZone(0.0f)
+    , m_mouseAcceleration(false)
+    , m_invertMouseY(false)
+    , m_rawMouseInput(false)
+    , m_inputLogging(false)
+    , m_keyPressCount(0)
+    , m_mousePressCount(0)
+    , m_totalMouseDistance(0.0f)
 {
     ZeroMemory(m_mouseButtons, sizeof(m_mouseButtons));
     ZeroMemory(m_prevMouseButtons, sizeof(m_prevMouseButtons));
-    std::wcout << L"[INFO] InputManager constructed." << std::endl;
+    
+    // Reserve space for recent events
+    m_recentInputEvents.reserve(100);
+    
+    Spark::SimpleConsole::GetInstance().Log("InputManager constructed with console integration.", "INFO");
 }
 
 InputManager::~InputManager()
 {
-    std::wcout << L"[INFO] InputManager destructor called." << std::endl;
+    Spark::SimpleConsole::GetInstance().Log("InputManager destructor called.", "INFO");
     if (m_mouseCaptured)
         CaptureMouse(false);
 }
@@ -37,11 +55,18 @@ void InputManager::Initialize(HWND hwnd)
 
     m_mouseX = m_prevMouseX = center.x;
     m_mouseY = m_prevMouseY = center.y;
+    
+    Spark::SimpleConsole::GetInstance().Log("InputManager initialized with console integration.", "SUCCESS");
 }
 
 void InputManager::Update()
 {
-    std::wcout << L"[OPERATION] InputManager::Update called." << std::endl;
+    static bool firstFrame = true;
+    if (firstFrame) {
+        Spark::SimpleConsole::GetInstance().Log("InputManager::Update - First frame started with console integration", "INFO");
+        firstFrame = false;
+    }
+    
     ASSERT_MSG(m_hwnd != nullptr, "InputManager::Update - hwnd not initialized");
 
     m_prevKeyStates = m_keyStates;
@@ -59,6 +84,9 @@ void InputManager::Update()
         m_mouseDeltaX = cursor.x - m_prevMouseX;
         m_mouseDeltaY = cursor.y - m_prevMouseY;
 
+        // Apply console-controlled processing
+        ProcessMouseDelta(m_mouseDeltaX, m_mouseDeltaY);
+
         RECT rect;
         GetClientRect(m_hwnd, &rect);
         POINT center = { (rect.right - rect.left) / 2, (rect.bottom - rect.top) / 2 };
@@ -67,13 +95,17 @@ void InputManager::Update()
 
         m_mouseX = center.x;
         m_mouseY = center.y;
+        
+        // Track total mouse movement for metrics
+        float distance = sqrtf(static_cast<float>(m_mouseDeltaX * m_mouseDeltaX + m_mouseDeltaY * m_mouseDeltaY));
+        m_totalMouseDistance += distance;
     }
     else
     {
         m_mouseDeltaX = m_mouseX - m_prevMouseX;
         m_mouseDeltaY = m_mouseY - m_prevMouseY;
+        ProcessMouseDelta(m_mouseDeltaX, m_mouseDeltaY);
     }
-    std::wcout << L"[INFO] InputManager update complete." << std::endl;
 }
 
 void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
@@ -82,28 +114,56 @@ void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_KEYDOWN:
         UpdateKeyState(static_cast<int>(wParam), true);
+        if (m_inputLogging) {
+            LogInputEvent(static_cast<int>(wParam), true);
+        }
+        m_keyPressCount++;
         break;
     case WM_KEYUP:
         UpdateKeyState(static_cast<int>(wParam), false);
+        if (m_inputLogging) {
+            LogInputEvent(static_cast<int>(wParam), false);
+        }
         break;
     case WM_LBUTTONDOWN:
         UpdateMouseButton(0, true);
+        if (m_inputLogging) {
+            LogInputEvent(1000, true); // Use 1000+ for mouse buttons
+        }
+        m_mousePressCount++;
         if (!m_mouseCaptured) CaptureMouse(true);
         break;
     case WM_LBUTTONUP:
         UpdateMouseButton(0, false);
+        if (m_inputLogging) {
+            LogInputEvent(1000, false);
+        }
         break;
     case WM_RBUTTONDOWN:
         UpdateMouseButton(1, true);
+        if (m_inputLogging) {
+            LogInputEvent(1001, true);
+        }
+        m_mousePressCount++;
         break;
     case WM_RBUTTONUP:
         UpdateMouseButton(1, false);
+        if (m_inputLogging) {
+            LogInputEvent(1001, false);
+        }
         break;
     case WM_MBUTTONDOWN:
         UpdateMouseButton(2, true);
+        if (m_inputLogging) {
+            LogInputEvent(1002, true);
+        }
+        m_mousePressCount++;
         break;
     case WM_MBUTTONUP:
         UpdateMouseButton(2, false);
+        if (m_inputLogging) {
+            LogInputEvent(1002, false);
+        }
         break;
     case WM_MOUSEMOVE:
         if (!m_mouseCaptured)
@@ -116,12 +176,9 @@ void InputManager::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
 
 bool InputManager::IsKeyDown(int key) const
 {
-    std::wcout << L"[OPERATION] InputManager::IsKeyDown called. key=" << key << std::endl;
     ASSERT_MSG(key >= 0, "IsKeyDown - invalid key code");
     auto it = m_keyStates.find(key);
-    bool result = it != m_keyStates.end() && it->second;
-    std::wcout << L"[INFO] InputManager::IsKeyDown result=" << result << std::endl;
-    return result;
+    return it != m_keyStates.end() && it->second;
 }
 
 bool InputManager::IsKeyUp(int key) const
@@ -131,13 +188,10 @@ bool InputManager::IsKeyUp(int key) const
 
 bool InputManager::WasKeyPressed(int key) const
 {
-    std::wcout << L"[OPERATION] InputManager::WasKeyPressed called. key=" << key << std::endl;
     ASSERT_MSG(key >= 0, "WasKeyPressed - invalid key code");
     bool curr = IsKeyDown(key);
     bool prev = m_prevKeyStates.count(key) ? m_prevKeyStates.at(key) : false;
-    bool result = curr && !prev;
-    std::wcout << L"[INFO] InputManager::WasKeyPressed result=" << result << std::endl;
-    return result;
+    return curr && !prev;
 }
 
 bool InputManager::WasKeyReleased(int key) const
@@ -150,20 +204,14 @@ bool InputManager::WasKeyReleased(int key) const
 
 bool InputManager::IsMouseButtonDown(int button) const
 {
-    std::wcout << L"[OPERATION] InputManager::IsMouseButtonDown called. button=" << button << std::endl;
     ASSERT_MSG(button >= 0 && button < 3, "IsMouseButtonDown - invalid button");
-    bool result = m_mouseButtons[button];
-    std::wcout << L"[INFO] InputManager::IsMouseButtonDown result=" << result << std::endl;
-    return result;
+    return m_mouseButtons[button];
 }
 
 bool InputManager::WasMouseButtonPressed(int button) const
 {
-    std::wcout << L"[OPERATION] InputManager::WasMouseButtonPressed called. button=" << button << std::endl;
     ASSERT_MSG(button >= 0 && button < 3, "WasMouseButtonPressed - invalid button");
-    bool result = m_mouseButtons[button] && !m_prevMouseButtons[button];
-    std::wcout << L"[INFO] InputManager::WasMouseButtonPressed result=" << result << std::endl;
-    return result;
+    return m_mouseButtons[button] && !m_prevMouseButtons[button];
 }
 
 bool InputManager::WasMouseButtonReleased(int button) const
@@ -174,12 +222,9 @@ bool InputManager::WasMouseButtonReleased(int button) const
 
 bool InputManager::GetMouseDelta(int& deltaX, int& deltaY) const
 {
-    std::wcout << L"[OPERATION] InputManager::GetMouseDelta called." << std::endl;
     deltaX = m_mouseDeltaX;
     deltaY = m_mouseDeltaY;
-    bool result = (m_mouseDeltaX != 0 || m_mouseDeltaY != 0);
-    std::wcout << L"[INFO] InputManager::GetMouseDelta result=" << result << std::endl;
-    return result;
+    return (m_mouseDeltaX != 0 || m_mouseDeltaY != 0);
 }
 
 void InputManager::GetMousePosition(int& x, int& y) const
@@ -192,21 +237,299 @@ void InputManager::CaptureMouse(bool capture)
 {
     if (capture)
     {
-        ASSERT_MSG(!m_mouseCaptured, "CaptureMouse: already captured");
-        SetCapture(m_hwnd);
-        ShowCursor(FALSE);
-        m_mouseCaptured = true;
-        std::wcout << L"[INFO] Mouse captured." << std::endl;
+        if (!m_mouseCaptured) {
+            SetCapture(m_hwnd);
+            ShowCursor(FALSE);
+            m_mouseCaptured = true;
+            Spark::SimpleConsole::GetInstance().Log("Mouse captured.", "INFO");
+        }
     }
     else
     {
-        ASSERT_MSG(m_mouseCaptured, "CaptureMouse: not captured");
-        ReleaseCapture();
-        ShowCursor(TRUE);
-        m_mouseCaptured = false;
-        std::wcout << L"[INFO] Mouse capture released." << std::endl;
+        if (m_mouseCaptured) {
+            ReleaseCapture();
+            ShowCursor(TRUE);
+            m_mouseCaptured = false;
+            Spark::SimpleConsole::GetInstance().Log("Mouse capture released.", "INFO");
+        }
     }
 }
+
+// ============================================================================
+// CONSOLE INTEGRATION IMPLEMENTATIONS
+// ============================================================================
+
+void InputManager::Console_SetMouseSensitivity(float sensitivity) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    if (sensitivity >= 0.1f && sensitivity <= 10.0f) {
+        m_mouseSensitivity = sensitivity;
+        NotifyStateChange();
+        Spark::SimpleConsole::GetInstance().Log("Mouse sensitivity set to " + std::to_string(sensitivity) + " via console", "SUCCESS");
+    } else {
+        Spark::SimpleConsole::GetInstance().Log("Invalid mouse sensitivity. Must be between 0.1 and 10.0", "ERROR");
+    }
+}
+
+void InputManager::Console_SetMouseDeadZone(float deadZone) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    if (deadZone >= 0.0f && deadZone <= 10.0f) {
+        m_mouseDeadZone = deadZone;
+        NotifyStateChange();
+        Spark::SimpleConsole::GetInstance().Log("Mouse dead zone set to " + std::to_string(deadZone) + " via console", "SUCCESS");
+    } else {
+        Spark::SimpleConsole::GetInstance().Log("Invalid mouse dead zone. Must be between 0.0 and 10.0", "ERROR");
+    }
+}
+
+void InputManager::Console_SetMouseAcceleration(bool enabled) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    m_mouseAcceleration = enabled;
+    NotifyStateChange();
+    Spark::SimpleConsole::GetInstance().Log("Mouse acceleration " + std::string(enabled ? "enabled" : "disabled") + " via console", "SUCCESS");
+}
+
+void InputManager::Console_SetInvertMouseY(bool enabled) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    m_invertMouseY = enabled;
+    NotifyStateChange();
+    Spark::SimpleConsole::GetInstance().Log("Mouse Y inversion " + std::string(enabled ? "enabled" : "disabled") + " via console", "SUCCESS");
+}
+
+void InputManager::Console_SetRawMouseInput(bool enabled) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    m_rawMouseInput = enabled;
+    NotifyStateChange();
+    Spark::SimpleConsole::GetInstance().Log("Raw mouse input " + std::string(enabled ? "enabled" : "disabled") + " via console", "SUCCESS");
+}
+
+void InputManager::Console_SetInputLogging(bool enabled) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    m_inputLogging = enabled;
+    if (enabled) {
+        m_recentInputEvents.clear();
+    }
+    NotifyStateChange();
+    Spark::SimpleConsole::GetInstance().Log("Input logging " + std::string(enabled ? "enabled" : "disabled") + " via console", "SUCCESS");
+}
+
+bool InputManager::Console_BindKey(const std::string& action, const std::string& keyName) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    int virtualKey = KeyNameToVirtualKey(keyName);
+    if (virtualKey == 0) {
+        Spark::SimpleConsole::GetInstance().Log("Invalid key name: " + keyName, "ERROR");
+        return false;
+    }
+    
+    // Remove any existing binding for this action
+    auto existingIt = m_keyBindings.find(action);
+    if (existingIt != m_keyBindings.end()) {
+        m_reverseBindings.erase(existingIt->second);
+    }
+    
+    // Add new binding
+    m_keyBindings[action] = virtualKey;
+    m_reverseBindings[virtualKey] = action;
+    
+    NotifyStateChange();
+    Spark::SimpleConsole::GetInstance().Log("Key '" + keyName + "' bound to action '" + action + "' via console", "SUCCESS");
+    return true;
+}
+
+void InputManager::Console_UnbindKey(const std::string& action) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    auto it = m_keyBindings.find(action);
+    if (it != m_keyBindings.end()) {
+        m_reverseBindings.erase(it->second);
+        m_keyBindings.erase(it);
+        NotifyStateChange();
+        Spark::SimpleConsole::GetInstance().Log("Action '" + action + "' unbound via console", "SUCCESS");
+    } else {
+        Spark::SimpleConsole::GetInstance().Log("Action '" + action + "' not found", "ERROR");
+    }
+}
+
+std::string InputManager::Console_ListKeyBindings() const {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    std::stringstream ss;
+    ss << "Key Bindings (" << m_keyBindings.size() << " total):\n";
+    ss << "==========================================\n";
+    
+    for (const auto& pair : m_keyBindings) {
+        std::string keyName = VirtualKeyToKeyName(pair.second);
+        ss << "  " << std::left << std::setw(20) << pair.first 
+           << " -> " << keyName << " (" << pair.second << ")\n";
+    }
+    
+    if (m_keyBindings.empty()) {
+        ss << "  No key bindings configured\n";
+        ss << "\nExample usage:\n";
+        ss << "  input_bind move_forward W\n";
+        ss << "  input_bind jump Space\n";
+        ss << "  input_bind pause Escape\n";
+    }
+    
+    return ss.str();
+}
+
+void InputManager::Console_SimulateKeyPress(const std::string& keyName, int duration) {
+    int virtualKey = KeyNameToVirtualKey(keyName);
+    if (virtualKey == 0) {
+        Spark::SimpleConsole::GetInstance().Log("Invalid key name: " + keyName, "ERROR");
+        return;
+    }
+    
+    // Simulate key press immediately
+    UpdateKeyState(virtualKey, true);
+    if (m_inputLogging) {
+        LogInputEvent(virtualKey, true);
+    }
+    
+    if (duration == 0) {
+        // Single press - immediately release
+        UpdateKeyState(virtualKey, false);
+        if (m_inputLogging) {
+            LogInputEvent(virtualKey, false);
+        }
+        Spark::SimpleConsole::GetInstance().Log("Simulated single key press: " + keyName, "SUCCESS");
+    } else {
+        // TODO: Implement timed release for sustained press
+        Spark::SimpleConsole::GetInstance().Log("Simulated key press: " + keyName + " (duration: " + std::to_string(duration) + "ms)", "SUCCESS");
+    }
+}
+
+void InputManager::Console_ClearInputStates() {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    m_keyStates.clear();
+    m_prevKeyStates.clear();
+    ZeroMemory(m_mouseButtons, sizeof(m_mouseButtons));
+    ZeroMemory(m_prevMouseButtons, sizeof(m_prevMouseButtons));
+    m_recentInputEvents.clear();
+    
+    Spark::SimpleConsole::GetInstance().Log("All input states cleared via console", "SUCCESS");
+}
+
+std::string InputManager::Console_GetRecentEvents(int count) const {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    std::stringstream ss;
+    ss << "Recent Input Events (last " << std::min(count, static_cast<int>(m_recentInputEvents.size())) << "):\n";
+    ss << "==========================================\n";
+    
+    int startIndex = std::max(0, static_cast<int>(m_recentInputEvents.size()) - count);
+    for (int i = startIndex; i < static_cast<int>(m_recentInputEvents.size()); ++i) {
+        const auto& event = m_recentInputEvents[i];
+        std::string keyName;
+        
+        if (event.first >= 1000) {
+            // Mouse button
+            int mouseButton = event.first - 1000;
+            keyName = "Mouse" + std::to_string(mouseButton);
+        } else {
+            keyName = VirtualKeyToKeyName(event.first);
+        }
+        
+        ss << "  " << std::setw(3) << (i + 1) << ": " << keyName 
+           << " " << (event.second ? "PRESSED" : "RELEASED") << "\n";
+    }
+    
+    if (m_recentInputEvents.empty()) {
+        ss << "  No input events recorded\n";
+        ss << "  Enable input logging with: input_logging on\n";
+    }
+    
+    return ss.str();
+}
+
+bool InputManager::Console_IsActionActive(const std::string& action) const {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    auto it = m_keyBindings.find(action);
+    if (it != m_keyBindings.end()) {
+        return IsKeyDown(it->second);
+    }
+    
+    return false;
+}
+
+InputManager::InputMetrics InputManager::Console_GetMetrics() const {
+    return GetMetricsThreadSafe();
+}
+
+InputManager::InputSettings InputManager::Console_GetSettings() const {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    InputSettings settings;
+    settings.mouseSensitivity = m_mouseSensitivity;
+    settings.mouseDeadZone = m_mouseDeadZone;
+    settings.mouseAcceleration = m_mouseAcceleration;
+    settings.invertMouseY = m_invertMouseY;
+    settings.rawMouseInput = m_rawMouseInput;
+    settings.inputLogging = m_inputLogging;
+    settings.keyBindings = m_keyBindings;
+    
+    return settings;
+}
+
+void InputManager::Console_ApplySettings(const InputSettings& settings) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    m_mouseSensitivity = settings.mouseSensitivity;
+    m_mouseDeadZone = settings.mouseDeadZone;
+    m_mouseAcceleration = settings.mouseAcceleration;
+    m_invertMouseY = settings.invertMouseY;
+    m_rawMouseInput = settings.rawMouseInput;
+    m_inputLogging = settings.inputLogging;
+    m_keyBindings = settings.keyBindings;
+    
+    // Rebuild reverse bindings
+    m_reverseBindings.clear();
+    for (const auto& pair : m_keyBindings) {
+        m_reverseBindings[pair.second] = pair.first;
+    }
+    
+    NotifyStateChange();
+    Spark::SimpleConsole::GetInstance().Log("Input settings applied via console", "SUCCESS");
+}
+
+void InputManager::Console_ResetToDefaults() {
+    Console_SetMouseSensitivity(1.0f);
+    Console_SetMouseDeadZone(0.0f);
+    Console_SetMouseAcceleration(false);
+    Console_SetInvertMouseY(false);
+    Console_SetRawMouseInput(false);
+    Console_SetInputLogging(false);
+    
+    {
+        std::lock_guard<std::mutex> lock(m_inputMutex);
+        m_keyBindings.clear();
+        m_reverseBindings.clear();
+    }
+    
+    Spark::SimpleConsole::GetInstance().Log("Input settings reset to defaults via console", "SUCCESS");
+}
+
+void InputManager::Console_RegisterStateCallback(std::function<void()> callback) {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    m_stateCallback = callback;
+    Spark::SimpleConsole::GetInstance().Log("Input state callback registered", "INFO");
+}
+
+void InputManager::Console_RefreshInput() {
+    Spark::SimpleConsole::GetInstance().Log("Input system refresh requested via console", "INFO");
+    
+    // Force input state update
+    Update();
+    
+    Spark::SimpleConsole::GetInstance().Log("Input system refresh complete", "SUCCESS");
+}
+
+// ============================================================================
+// PRIVATE HELPER METHODS
+// ============================================================================
 
 void InputManager::UpdateKeyState(int key, bool isDown)
 {
@@ -226,4 +549,120 @@ void InputManager::UpdateMousePosition(int x, int y)
 {
     m_mouseX = x;
     m_mouseY = y;
+}
+
+void InputManager::ProcessMouseDelta(int& deltaX, int& deltaY) const {
+    // Apply dead zone
+    float distance = sqrtf(static_cast<float>(deltaX * deltaX + deltaY * deltaY));
+    if (distance < m_mouseDeadZone) {
+        deltaX = deltaY = 0;
+        return;
+    }
+    
+    // Apply sensitivity
+    deltaX = static_cast<int>(deltaX * m_mouseSensitivity);
+    deltaY = static_cast<int>(deltaY * m_mouseSensitivity);
+    
+    // Apply Y inversion
+    if (m_invertMouseY) {
+        deltaY = -deltaY;
+    }
+    
+    // Apply acceleration (simplified)
+    if (m_mouseAcceleration && distance > 5.0f) {
+        float accelFactor = 1.0f + (distance - 5.0f) * 0.01f;
+        deltaX = static_cast<int>(deltaX * accelFactor);
+        deltaY = static_cast<int>(deltaY * accelFactor);
+    }
+}
+
+int InputManager::KeyNameToVirtualKey(const std::string& keyName) const {
+    // Create a mapping of common key names to virtual key codes
+    static std::unordered_map<std::string, int> keyMapping = {
+        {"A", 'A'}, {"B", 'B'}, {"C", 'C'}, {"D", 'D'}, {"E", 'E'}, {"F", 'F'},
+        {"G", 'G'}, {"H", 'H'}, {"I", 'I'}, {"J", 'J'}, {"K", 'K'}, {"L", 'L'},
+        {"M", 'M'}, {"N", 'N'}, {"O", 'O'}, {"P", 'P'}, {"Q", 'Q'}, {"R", 'R'},
+        {"S", 'S'}, {"T", 'T'}, {"U", 'U'}, {"V", 'V'}, {"W", 'W'}, {"X", 'X'},
+        {"Y", 'Y'}, {"Z", 'Z'},
+        {"0", '0'}, {"1", '1'}, {"2", '2'}, {"3", '3'}, {"4", '4'}, {"5", '5'},
+        {"6", '6'}, {"7", '7'}, {"8", '8'}, {"9", '9'},
+        {"Space", VK_SPACE}, {"Enter", VK_RETURN}, {"Escape", VK_ESCAPE},
+        {"Tab", VK_TAB}, {"Shift", VK_SHIFT}, {"Ctrl", VK_CONTROL}, {"Alt", VK_MENU},
+        {"F1", VK_F1}, {"F2", VK_F2}, {"F3", VK_F3}, {"F4", VK_F4},
+        {"F5", VK_F5}, {"F6", VK_F6}, {"F7", VK_F7}, {"F8", VK_F8},
+        {"F9", VK_F9}, {"F10", VK_F10}, {"F11", VK_F11}, {"F12", VK_F12},
+        {"Up", VK_UP}, {"Down", VK_DOWN}, {"Left", VK_LEFT}, {"Right", VK_RIGHT}
+    };
+    
+    std::string upperKeyName = keyName;
+    std::transform(upperKeyName.begin(), upperKeyName.end(), upperKeyName.begin(), ::toupper);
+    
+    auto it = keyMapping.find(upperKeyName);
+    return (it != keyMapping.end()) ? it->second : 0;
+}
+
+std::string InputManager::VirtualKeyToKeyName(int virtualKey) const {
+    // Reverse mapping from virtual key codes to names
+    static std::unordered_map<int, std::string> reverseMapping = {
+        {'A', "A"}, {'B', "B"}, {'C', "C"}, {'D', "D"}, {'E', "E"}, {'F', "F"},
+        {'G', "G"}, {'H', "H"}, {'I', "I"}, {'J', "J"}, {'K', "K"}, {'L', "L"},
+        {'M', "M"}, {'N', "N"}, {'O', "O"}, {'P', "P"}, {'Q', "Q"}, {'R', "R"},
+        {'S', "S"}, {'T', "T"}, {'U', "U"}, {'V', "V"}, {'W', "W"}, {'X', "X"},
+        {'Y', "Y"}, {'Z', "Z"},
+        {'0', "0"}, {'1', "1"}, {'2', "2"}, {'3', "3"}, {'4', "4"}, {'5', "5"},
+        {'6', "6"}, {'7', "7"}, {'8', "8"}, {'9', "9"},
+        {VK_SPACE, "Space"}, {VK_RETURN, "Enter"}, {VK_ESCAPE, "Escape"},
+        {VK_TAB, "Tab"}, {VK_SHIFT, "Shift"}, {VK_CONTROL, "Ctrl"}, {VK_MENU, "Alt"},
+        {VK_F1, "F1"}, {VK_F2, "F2"}, {VK_F3, "F3"}, {VK_F4, "F4"},
+        {VK_F5, "F5"}, {VK_F6, "F6"}, {VK_F7, "F7"}, {VK_F8, "F8"},
+        {VK_F9, "F9"}, {VK_F10, "F10"}, {VK_F11, "F11"}, {VK_F12, "F12"},
+        {VK_UP, "Up"}, {VK_DOWN, "Down"}, {VK_LEFT, "Left"}, {VK_RIGHT, "Right"}
+    };
+    
+    auto it = reverseMapping.find(virtualKey);
+    return (it != reverseMapping.end()) ? it->second : "Unknown(" + std::to_string(virtualKey) + ")";
+}
+
+void InputManager::LogInputEvent(int key, bool isPressed) {
+    if (m_recentInputEvents.size() >= 100) {
+        m_recentInputEvents.erase(m_recentInputEvents.begin());
+    }
+    m_recentInputEvents.emplace_back(key, isPressed);
+}
+
+void InputManager::NotifyStateChange() {
+    if (m_stateCallback) {
+        m_stateCallback();
+    }
+}
+
+InputManager::InputMetrics InputManager::GetMetricsThreadSafe() const {
+    std::lock_guard<std::mutex> lock(m_inputMutex);
+    
+    InputMetrics metrics;
+    metrics.keyPressCount = m_keyPressCount;
+    metrics.mousePressCount = m_mousePressCount;
+    metrics.totalMouseDistance = m_totalMouseDistance;
+    
+    // Count active inputs
+    metrics.activeKeys = 0;
+    for (const auto& pair : m_keyStates) {
+        if (pair.second) metrics.activeKeys++;
+    }
+    
+    metrics.activeMouseButtons = 0;
+    for (int i = 0; i < 3; ++i) {
+        if (m_mouseButtons[i]) metrics.activeMouseButtons++;
+    }
+    
+    metrics.mouseCaptured = m_mouseCaptured;
+    metrics.mouseSensitivity = m_mouseSensitivity;
+    metrics.mouseDeadZone = m_mouseDeadZone;
+    metrics.mouseAcceleration = m_mouseAcceleration;
+    metrics.invertMouseY = m_invertMouseY;
+    metrics.rawMouseInput = m_rawMouseInput;
+    metrics.inputLogging = m_inputLogging;
+    metrics.totalKeyBindings = m_keyBindings.size();
+    
+    return metrics;
 }

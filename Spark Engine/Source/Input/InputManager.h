@@ -1,14 +1,13 @@
 ﻿/**
  * @file InputManager.h
- * @brief Comprehensive input handling system for keyboard and mouse
+ * @brief Comprehensive input handling system with console integration
  * @author Spark Engine Team
  * @date 2025
  * 
  * The InputManager class provides a complete input handling system that processes
  * keyboard and mouse input events, tracks button states, calculates mouse movement
- * deltas, and provides convenient query methods for input state. It supports
- * mouse capture for first-person camera controls and maintains both current and
- * previous frame states for edge detection.
+ * deltas, provides convenient query methods for input state, and includes
+ * comprehensive console integration for real-time input debugging and configuration.
  */
 
 #pragma once
@@ -16,14 +15,18 @@
 #include "Utils/Assert.h"
 #include "..\Core\framework.h"
 #include <unordered_map>
+#include <functional>
+#include <mutex>
+#include <string>
+#include <vector>
 
 /**
- * @brief Input management system for keyboard and mouse
+ * @brief Input management system with comprehensive console integration
  * 
  * The InputManager class handles all user input processing for the Spark Engine.
  * It processes Windows messages for keyboard and mouse events, maintains state
- * tracking for input queries, and provides mouse capture functionality for
- * first-person controls.
+ * tracking for input queries, provides mouse capture functionality for
+ * first-person controls, and includes full console integration for debugging.
  * 
  * Features include:
  * - Keyboard state tracking with press/release detection
@@ -32,6 +35,10 @@
  * - Mouse capture/release for camera controls
  * - Frame-based state management for edge detection
  * - Windows message handling integration
+ * - Real-time console integration for debugging
+ * - Input sensitivity and dead zone configuration
+ * - Key binding and remapping system
+ * - Input event logging and analysis
  * 
  * @note Input states are updated once per frame via Update()
  * @warning Initialize() must be called with a valid window handle before use
@@ -51,6 +58,27 @@ private:
 
     HWND m_hwnd;           ///< Window handle for mouse capture
     bool m_mouseCaptured;  ///< Whether mouse is currently captured
+
+    // Console integration state
+    float m_mouseSensitivity;          ///< Mouse sensitivity multiplier
+    float m_mouseDeadZone;             ///< Mouse dead zone for small movements
+    bool m_mouseAcceleration;          ///< Enable/disable mouse acceleration
+    bool m_invertMouseY;               ///< Invert Y-axis for mouse movement
+    bool m_rawMouseInput;              ///< Use raw mouse input instead of system cursor
+    bool m_inputLogging;               ///< Enable input event logging
+    
+    // Key binding system
+    std::unordered_map<std::string, int> m_keyBindings;  ///< Action name to key mappings
+    std::unordered_map<int, std::string> m_reverseBindings; ///< Key to action name mappings
+    
+    // Input metrics and monitoring
+    size_t m_keyPressCount;            ///< Total key press count this session
+    size_t m_mousePressCount;          ///< Total mouse press count this session
+    float m_totalMouseDistance;        ///< Total mouse movement distance
+    std::vector<std::pair<int, bool>> m_recentInputEvents; ///< Recent input events for debugging
+    
+    mutable std::mutex m_inputMutex;   ///< Thread safety for input access
+    std::function<void()> m_stateCallback; ///< Callback for state changes
 
 public:
     /**
@@ -176,7 +204,7 @@ public:
      * @brief Get mouse movement delta since last frame
      * 
      * Returns the pixel delta movement of the mouse cursor since the last frame.
-     * Useful for camera controls and mouse look functionality.
+     * Applies sensitivity, dead zone, and acceleration settings.
      * 
      * @param deltaX Output parameter for horizontal mouse movement
      * @param deltaY Output parameter for vertical mouse movement
@@ -212,6 +240,158 @@ public:
      */
     bool IsMouseCaptured() const { return m_mouseCaptured; }
 
+    // =========================================================================
+    // CONSOLE INTEGRATION METHODS - Input System Control
+    // ========================================================================
+
+    /**
+     * @brief Input metrics structure for console integration
+     */
+    struct InputMetrics {
+        size_t keyPressCount;           ///< Total key presses this session
+        size_t mousePressCount;         ///< Total mouse presses this session
+        float totalMouseDistance;       ///< Total mouse movement distance
+        size_t activeKeys;              ///< Number of currently pressed keys
+        size_t activeMouseButtons;      ///< Number of currently pressed mouse buttons
+        bool mouseCaptured;             ///< Whether mouse is captured
+        float mouseSensitivity;         ///< Current mouse sensitivity
+        float mouseDeadZone;            ///< Current mouse dead zone
+        bool mouseAcceleration;         ///< Mouse acceleration state
+        bool invertMouseY;              ///< Y-axis inversion state
+        bool rawMouseInput;             ///< Raw mouse input state
+        bool inputLogging;              ///< Input logging state
+        size_t totalKeyBindings;        ///< Number of active key bindings
+    };
+
+    /**
+     * @brief Input settings structure for console control
+     */
+    struct InputSettings {
+        float mouseSensitivity;         ///< Mouse sensitivity multiplier (0.1-10.0)
+        float mouseDeadZone;            ///< Mouse dead zone threshold (0.0-10.0)
+        bool mouseAcceleration;         ///< Enable mouse acceleration
+        bool invertMouseY;              ///< Invert Y-axis for mouse movement
+        bool rawMouseInput;             ///< Use raw mouse input
+        bool inputLogging;              ///< Enable input event logging
+        std::unordered_map<std::string, int> keyBindings; ///< Action to key mappings
+    };
+
+    /**
+     * @brief Set mouse sensitivity via console
+     * @param sensitivity Mouse sensitivity multiplier (0.1-10.0)
+     */
+    void Console_SetMouseSensitivity(float sensitivity);
+
+    /**
+     * @brief Set mouse dead zone via console
+     * @param deadZone Dead zone threshold (0.0-10.0)
+     */
+    void Console_SetMouseDeadZone(float deadZone);
+
+    /**
+     * @brief Enable/disable mouse acceleration via console
+     * @param enabled true to enable acceleration, false to disable
+     */
+    void Console_SetMouseAcceleration(bool enabled);
+
+    /**
+     * @brief Enable/disable Y-axis inversion via console
+     * @param enabled true to invert Y-axis, false for normal
+     */
+    void Console_SetInvertMouseY(bool enabled);
+
+    /**
+     * @brief Enable/disable raw mouse input via console
+     * @param enabled true for raw input, false for system cursor
+     */
+    void Console_SetRawMouseInput(bool enabled);
+
+    /**
+     * @brief Enable/disable input logging via console
+     * @param enabled true to enable logging, false to disable
+     */
+    void Console_SetInputLogging(bool enabled);
+
+    /**
+     * @brief Bind a key to an action via console
+     * @param action Action name to bind
+     * @param keyName Key name or code to bind to action
+     * @return true if binding was successful
+     */
+    bool Console_BindKey(const std::string& action, const std::string& keyName);
+
+    /**
+     * @brief Unbind a key action via console
+     * @param action Action name to unbind
+     */
+    void Console_UnbindKey(const std::string& action);
+
+    /**
+     * @brief Get list of current key bindings via console
+     * @return String containing all current key bindings
+     */
+    std::string Console_ListKeyBindings() const;
+
+    /**
+     * @brief Simulate a key press via console
+     * @param keyName Key name or code to simulate
+     * @param duration Duration to hold key in milliseconds (0 = single press)
+     */
+    void Console_SimulateKeyPress(const std::string& keyName, int duration = 0);
+
+    /**
+     * @brief Clear all input states via console
+     */
+    void Console_ClearInputStates();
+
+    /**
+     * @brief Get recent input events via console
+     * @param count Number of recent events to retrieve
+     * @return String containing recent input event information
+     */
+    std::string Console_GetRecentEvents(int count = 10) const;
+
+    /**
+     * @brief Check if a specific action is currently active via console
+     * @param action Action name to check
+     * @return true if action is currently active
+     */
+    bool Console_IsActionActive(const std::string& action) const;
+
+    /**
+     * @brief Get comprehensive input metrics (console integration)
+     * @return InputMetrics structure with current input data
+     */
+    InputMetrics Console_GetMetrics() const;
+
+    /**
+     * @brief Get current input settings (console integration)
+     * @return InputSettings structure with current settings
+     */
+    InputSettings Console_GetSettings() const;
+
+    /**
+     * @brief Apply input settings from console
+     * @param settings InputSettings structure with new settings
+     */
+    void Console_ApplySettings(const InputSettings& settings);
+
+    /**
+     * @brief Reset input settings to defaults via console
+     */
+    void Console_ResetToDefaults();
+
+    /**
+     * @brief Register console state change callback
+     * @param callback Function to call when input state changes
+     */
+    void Console_RegisterStateCallback(std::function<void()> callback);
+
+    /**
+     * @brief Force input system refresh via console
+     */
+    void Console_RefreshInput();
+
 private:
     /**
      * @brief Update the state of a specific key
@@ -237,10 +417,52 @@ private:
      * @brief Update mouse position and calculate delta
      * 
      * Internal method for updating mouse position from Windows messages
-     * and calculating movement delta.
+     * and calculating movement delta with sensitivity and dead zone applied.
      * 
      * @param x New horizontal mouse position
      * @param y New vertical mouse position
      */
     void UpdateMousePosition(int x, int y);
+
+    /**
+     * @brief Apply mouse processing settings
+     * 
+     * Applies sensitivity, dead zone, acceleration, and Y-inversion to mouse delta.
+     * 
+     * @param deltaX Horizontal mouse delta to process
+     * @param deltaY Vertical mouse delta to process
+     */
+    void ProcessMouseDelta(int& deltaX, int& deltaY) const;
+
+    /**
+     * @brief Convert key name to virtual key code
+     * @param keyName Key name to convert
+     * @return Virtual key code, or 0 if invalid
+     */
+    int KeyNameToVirtualKey(const std::string& keyName) const;
+
+    /**
+     * @brief Convert virtual key code to key name
+     * @param virtualKey Virtual key code to convert
+     * @return Key name string
+     */
+    std::string VirtualKeyToKeyName(int virtualKey) const;
+
+    /**
+     * @brief Add input event to recent events log
+     * @param key Key code
+     * @param isPressed true for press, false for release
+     */
+    void LogInputEvent(int key, bool isPressed);
+
+    /**
+     * @brief Notify console of state changes
+     */
+    void NotifyStateChange();
+
+    /**
+     * @brief Thread-safe metrics access helper
+     * @return Current input metrics with thread safety
+     */
+    InputMetrics GetMetricsThreadSafe() const;
 };

@@ -143,3 +143,63 @@ if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
   file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
 endif()
+
+# SPARK_EDITOR_SOURCES at SparkEditor/CMakeLists.txt:98 (file)
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/SparkEditor/Source/*.cpp")
+set(OLD_GLOB
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/AssetBrowser/AssetDatabase.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Communication/EngineInterface.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorApplication.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorPanel.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorTheme.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorUI.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/ProjectManager.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/SceneSystem/SceneManager.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/main.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
+endif()
+
+# SPARK_EDITOR_SOURCES at SparkEditor/CMakeLists.txt:98 (file)
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/SparkEditor/Source/*.h")
+set(OLD_GLOB
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Animation/AnimationTimeline.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/AssetBrowser/AssetDatabase.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/AssetPipeline/AdvancedAssetPipeline.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/BuildSystem/BuildDeploymentSystem.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Communication/EngineInterface.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorApplication.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorPanel.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorTheme.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorUI.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/ProjectManager.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Gizmos/GizmoSystem.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Integration/SparkEngineIntegration.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/LevelStreaming/LevelStreamingSystem.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Lighting/LightingTools.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/MaterialEditor/MaterialEditor.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Panels/HierarchyPanel.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Profiler/PerformanceProfiler.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Reflection/ComponentReflection.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/SceneSystem/SceneFile.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/SceneSystem/SceneManager.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/SceneSystem/SceneSerializer.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Terrain/TerrainEditor.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/VersionControl/VersionControlSystem.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/VisualScripting/VisualScriptingSystem.h"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
+endif()
+
+# SPARK_EDITOR_SOURCES at SparkEditor/CMakeLists.txt:98 (file)
+file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/SparkEditor/Source/*.hpp")
+set(OLD_GLOB
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "D:/Spark Engine/SparkEngine/build/CMakeFiles/cmake.verify_globs")
+endif()

@@ -1,1 +1,1 @@
-D:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Microsoft/VC/v170
+C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Microsoft/VC/v170

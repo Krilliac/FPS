@@ -127,75 +127,39 @@ public:
     bool IsPaused() const { return m_isPaused; }
 
     // ============================================================================
-    // CONSOLE INTEGRATION ACCESSORS - Real Cross-Hook System Integration
+    // ENHANCED CONSOLE INTEGRATION METHODS - Full Cross-Code Hooking
     // ============================================================================
     
     /**
-     * @brief Get the player instance for console integration
-     * @return Pointer to the player object, nullptr if not initialized
-     */
-    Player* GetPlayer() const { return m_player.get(); }
-    
-    /**
-     * @brief Get the camera instance for console integration
-     * @return Pointer to the camera object, nullptr if not initialized
-     */
-    SparkEngineCamera* GetCamera() const { return m_camera.get(); }
-    
-    /**
-     * @brief Get the projectile pool for console integration
-     * @return Pointer to the projectile pool, nullptr if not initialized
-     */
-    ProjectilePool* GetProjectilePool() const { return m_projectilePool.get(); }
-    
-    /**
-     * @brief Get the scene manager for console integration
-     * @return Pointer to the scene manager, nullptr if not initialized
-     */
-    SceneManager* GetSceneManager() const { return m_sceneManager.get(); }
-    
-    /**
-     * @brief Get all game objects in the scene
-     * @return Const reference to the game objects vector
-     */
-    const std::vector<std::unique_ptr<GameObject>>& GetGameObjects() const { return m_gameObjects; }
-    
-    /**
-     * @brief Get mutable access to game objects for console commands
-     * @return Reference to the game objects vector
-     */
-    std::vector<std::unique_ptr<GameObject>>& GetGameObjectsMutable() { return m_gameObjects; }
-    
-    /**
-     * @brief Apply console-driven physics settings in real-time
-     * @param gravity New gravity value
-     * @param playerSpeed New player movement speed
-     * @param jumpHeight New player jump height
-     * @param friction New physics friction coefficient
+     * @brief Apply physics settings from console to game systems
+     * @param gravity Gravity force to apply
+     * @param playerSpeed Player movement speed multiplier
+     * @param jumpHeight Player jump height
+     * @param friction Movement friction coefficient
      */
     void ApplyPhysicsSettings(float gravity, float playerSpeed, float jumpHeight, float friction);
     
     /**
-     * @brief Apply console-driven camera settings in real-time
-     * @param fov New field of view in degrees
-     * @param sensitivity New mouse sensitivity
-     * @param invertY Whether to invert Y-axis
+     * @brief Apply camera settings from console to camera system
+     * @param fov Field of view in degrees
+     * @param sensitivity Mouse sensitivity multiplier
+     * @param invertY Whether to invert Y-axis for mouse look
      */
     void ApplyCameraSettings(float fov, float sensitivity, bool invertY);
     
     /**
-     * @brief Apply console-driven debug settings
-     * @param godMode Enable/disable god mode
-     * @param noclip Enable/disable collision
-     * @param infiniteAmmo Enable/disable infinite ammunition
+     * @brief Apply debug settings from console to game systems
+     * @param godMode Enable god mode (invincibility)
+     * @param noclip Enable noclip (disable collision)
+     * @param infiniteAmmo Enable infinite ammunition
      */
     void ApplyDebugSettings(bool godMode, bool noclip, bool infiniteAmmo);
     
     /**
-     * @brief Get current performance statistics for console display
-     * @param outDrawCalls Number of draw calls this frame
-     * @param outTriangles Number of triangles rendered
-     * @param outActiveObjects Number of active objects in scene
+     * @brief Get performance statistics for console display
+     * @param outDrawCalls Reference to store current draw call count
+     * @param outTriangles Reference to store current triangle count
+     * @param outActiveObjects Reference to store active object count
      */
     void GetPerformanceStats(int& outDrawCalls, int& outTriangles, int& outActiveObjects) const;
     
@@ -241,6 +205,104 @@ public:
      * @return Current time scale multiplier
      */
     float GetTimeScale() const { return m_timeScale; }
+    
+    // ============================================================================
+    // ENHANCED ACCESSOR METHODS - Full System Integration
+    // ============================================================================
+    
+    /**
+     * @brief Get player instance for console integration
+     * @return Pointer to player object (may be null)
+     */
+    Player* GetPlayer() const { return m_player.get(); }
+    
+    /**
+     * @brief Get camera instance for console integration
+     * @return Pointer to camera object (may be null)
+     */
+    SparkEngineCamera* GetCamera() const { return m_camera.get(); }
+    
+    /**
+     * @brief Get scene manager instance for console integration
+     * @return Pointer to scene manager object (may be null)
+     */
+    SceneManager* GetSceneManager() const { return m_sceneManager.get(); }
+    
+    /**
+     * @brief Get projectile pool instance for console integration
+     * @return Pointer to projectile pool object (may be null)
+     */
+    ProjectilePool* GetProjectilePool() const { return m_projectilePool.get(); }
+    
+    /**
+     * @brief Get current scene object count
+     * @return Number of active game objects in scene
+     */
+    size_t GetSceneObjectCount() const { return m_gameObjects.size(); }
+    
+    /**
+     * @brief Get game object by index for console manipulation
+     * @param index Index of object to retrieve
+     * @return Pointer to game object (null if index invalid)
+     */
+    GameObject* GetGameObject(size_t index) const {
+        return (index < m_gameObjects.size()) ? m_gameObjects[index].get() : nullptr;
+    }
+
+    // ============================================================================
+    // ENHANCED GRAPHICS INTEGRATION METHODS
+    // ============================================================================
+    
+    /**
+     * @brief Apply graphics settings from console
+     * @param wireframe Enable wireframe rendering mode
+     * @param vsync Enable vertical synchronization
+     * @param showFPS Display FPS counter
+     */
+    void ApplyGraphicsSettings(bool wireframe, bool vsync, bool showFPS);
+    
+    /**
+     * @brief Get current graphics performance metrics
+     * @param outFrameTime Reference to store frame time in milliseconds
+     * @param outRenderTime Reference to store render time in milliseconds
+     * @param outUpdateTime Reference to store update time in milliseconds
+     */
+    void GetGraphicsPerformance(float& outFrameTime, float& outRenderTime, float& outUpdateTime) const;
+    
+    /**
+     * @brief Force graphics engine refresh with new settings
+     */
+    void RefreshGraphicsSettings();
+
+    // ============================================================================
+    // ENHANCED SCENE MANAGEMENT METHODS
+    // ============================================================================
+    
+    /**
+     * @brief Load a scene file via console
+     * @param scenePath Path to scene file to load
+     * @return True if scene loaded successfully
+     */
+    bool LoadScene(const std::string& scenePath);
+    
+    /**
+     * @brief Save current scene to file via console
+     * @param scenePath Path where to save scene file
+     * @return True if scene saved successfully
+     */
+    bool SaveScene(const std::string& scenePath);
+    
+    /**
+     * @brief Get list of available scenes
+     * @return Vector of scene file paths
+     */
+    std::vector<std::string> GetAvailableScenes() const;
+    
+    /**
+     * @brief Create a test scene with predefined objects
+     * @param sceneType Type of test scene to create
+     */
+    void CreateTestScene(const std::string& sceneType);
 
 private:
     /**

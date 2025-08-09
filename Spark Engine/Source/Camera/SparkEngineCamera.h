@@ -1,13 +1,13 @@
 ﻿/**
  * @file SparkEngineCamera.h
- * @brief First-person camera system with smooth movement and controls
+ * @brief First-person camera system with smooth movement and console integration
  * @author Spark Engine Team
  * @date 2025
  * 
  * This class provides a comprehensive first-person camera implementation with
- * smooth movement, mouse look controls, zoom functionality, and proper matrix
- * calculations for 3D rendering. The camera supports WASD movement, mouse look,
- * vertical movement, and dynamic field of view adjustment.
+ * smooth movement, mouse look controls, zoom functionality, proper matrix
+ * calculations for 3D rendering, and full console integration for real-time
+ * camera parameter adjustment and debugging.
  */
 
 #pragma once
@@ -19,18 +19,19 @@
 #include <windows.h>
 #include <DirectXMath.h>
 #include <algorithm>           // std::clamp
+#include <functional>          // std::function
+#include <mutex>               // std::mutex
 #include "Utils/Assert.h"      // custom assert
 
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
 
 /**
- * @brief First-person camera controller for 3D navigation
+ * @brief First-person camera controller with console integration
  * 
  * The SparkEngineCamera class provides a complete first-person camera system
- * with smooth movement, mouse look controls, and configurable parameters.
- * It handles view and projection matrix calculations, movement input processing,
- * and provides zoom functionality for gameplay mechanics.
+ * with smooth movement, mouse look controls, configurable parameters, and
+ * comprehensive console integration for real-time debugging and tuning.
  * 
  * Features include:
  * - Smooth first-person movement (forward, right, up)
@@ -39,6 +40,9 @@ using DirectX::XMMATRIX;
  * - Zoom functionality with different FOV settings
  * - Automatic view matrix updates
  * - Pitch clamping to prevent over-rotation
+ * - Real-time console parameter adjustment
+ * - Live camera state monitoring
+ * - Thread-safe parameter access
  * 
  * @note Camera uses right-handed coordinate system with Y-up
  * @warning Initialize() must be called before any movement or matrix operations
@@ -59,6 +63,18 @@ private:
     float m_rotationSpeed{ 2.0f };     ///< Rotation speed multiplier
     float m_defaultFov{ DirectX::XM_PIDIV2 };      ///< Default field of view (90 degrees)
     float m_zoomedFov{ DirectX::XM_PIDIV2 / 2.0f }; ///< Zoomed field of view (45 degrees)
+    float m_aspectRatio{ 16.0f / 9.0f }; ///< Screen aspect ratio
+    
+    // Console integration state
+    float m_mouseSensitivity{ 1.0f };   ///< Mouse sensitivity multiplier
+    bool m_invertY{ false };            ///< Invert Y-axis for mouse look
+    bool m_smoothMovement{ true };      ///< Enable smooth movement interpolation
+    float m_nearPlane{ 0.1f };          ///< Near clipping plane distance
+    float m_farPlane{ 1000.0f };        ///< Far clipping plane distance
+    
+    // Console callback system
+    mutable std::mutex m_stateMutex;    ///< Thread safety for state access
+    std::function<void()> m_stateCallback; ///< Callback for state changes
 
 public:
     /**
@@ -177,8 +193,10 @@ public:
      */
     void SetPosition(const XMFLOAT3& pos)
     {
+        std::lock_guard<std::mutex> lock(m_stateMutex);
         m_position = pos;
         UpdateViewMatrix();
+        NotifyStateChange();
     }
 
     /**
@@ -197,13 +215,132 @@ public:
      * @brief Get the current camera position
      * @return Position vector in world coordinates
      */
-    const XMFLOAT3& GetPosition()         const { return m_position; }
+    const XMFLOAT3& GetPosition()         const { 
+        std::lock_guard<std::mutex> lock(m_stateMutex);
+        return m_position; 
+    }
 
     /**
      * @brief Get the current camera forward direction
      * @return Normalized forward direction vector
      */
-    const XMFLOAT3& GetForward()          const { return m_forward; }
+    const XMFLOAT3& GetForward()          const { 
+        std::lock_guard<std::mutex> lock(m_stateMutex);
+        return m_forward; 
+    }
+
+    /**
+     * @brief Get the current camera rotation (pitch, yaw, roll)
+     * @return Rotation vector in radians
+     */
+    XMFLOAT3 GetRotation() const {
+        std::lock_guard<std::mutex> lock(m_stateMutex);
+        return XMFLOAT3(m_pitch, m_yaw, m_roll);
+    }
+
+    // ============================================================================
+    // CONSOLE INTEGRATION METHODS - Full Cross-Code Hooking
+    // ============================================================================
+
+    /**
+     * @brief Camera state structure for console integration
+     */
+    struct CameraState {
+        XMFLOAT3 position;
+        XMFLOAT3 rotation;
+        XMFLOAT3 forward, right, up;
+        float moveSpeed, rotationSpeed, mouseSensitivity;
+        float defaultFov, zoomedFov, currentFov;
+        float aspectRatio, nearPlane, farPlane;
+        bool invertY, smoothMovement, isZoomed;
+    };
+
+    /**
+     * @brief Set field of view (console integration)
+     * @param fovDegrees New FOV in degrees (10-170)
+     */
+    void Console_SetFOV(float fovDegrees);
+
+    /**
+     * @brief Set mouse sensitivity (console integration)
+     * @param sensitivity New sensitivity multiplier (0.1-10.0)
+     */
+    void Console_SetMouseSensitivity(float sensitivity);
+
+    /**
+     * @brief Set Y-axis inversion (console integration)
+     * @param invert true to invert Y-axis, false for normal
+     */
+    void Console_SetInvertY(bool invert);
+
+    /**
+     * @brief Set movement speed (console integration)
+     * @param speed New movement speed (0.1-100.0)
+     */
+    void Console_SetMoveSpeed(float speed);
+
+    /**
+     * @brief Set rotation speed (console integration)
+     * @param speed New rotation speed multiplier (0.1-10.0)
+     */
+    void Console_SetRotationSpeed(float speed);
+
+    /**
+     * @brief Set camera position directly (console integration)
+     * @param x New X coordinate
+     * @param y New Y coordinate
+     * @param z New Z coordinate
+     */
+    void Console_SetPosition(float x, float y, float z);
+
+    /**
+     * @brief Set camera rotation directly (console integration)
+     * @param pitch New pitch in degrees
+     * @param yaw New yaw in degrees
+     * @param roll New roll in degrees
+     */
+    void Console_SetRotation(float pitch, float yaw, float roll);
+
+    /**
+     * @brief Set near and far clipping planes (console integration)
+     * @param nearPlane Near clipping distance (0.01-10.0)
+     * @param farPlane Far clipping distance (100-10000)
+     */
+    void Console_SetClippingPlanes(float nearPlane, float farPlane);
+
+    /**
+     * @brief Reset camera to default settings (console integration)
+     */
+    void Console_ResetToDefaults();
+
+    /**
+     * @brief Get comprehensive camera state (console integration)
+     * @return CameraState structure with all current values
+     */
+    CameraState Console_GetState() const;
+
+    /**
+     * @brief Register console state change callback
+     * @param callback Function to call when camera state changes
+     */
+    void Console_RegisterStateCallback(std::function<void()> callback);
+
+    /**
+     * @brief Look at a specific point (console integration)
+     * @param targetX Target X coordinate
+     * @param targetY Target Y coordinate
+     * @param targetZ Target Z coordinate
+     */
+    void Console_LookAt(float targetX, float targetY, float targetZ);
+
+    /**
+     * @brief Smooth transition to position (console integration)
+     * @param targetX Target X coordinate
+     * @param targetY Target Y coordinate
+     * @param targetZ Target Z coordinate
+     * @param duration Transition time in seconds
+     */
+    void Console_SmoothMoveTo(float targetX, float targetY, float targetZ, float duration);
 
 private:
     /**
@@ -213,4 +350,23 @@ private:
      * Called automatically when transform properties change.
      */
     void UpdateViewMatrix();
+
+    /**
+     * @brief Recalculate the projection matrix
+     * 
+     * Updates the cached projection matrix based on current FOV, aspect ratio,
+     * and clipping plane settings.
+     */
+    void UpdateProjectionMatrix();
+
+    /**
+     * @brief Notify console of state change
+     */
+    void NotifyStateChange();
+
+    /**
+     * @brief Thread-safe state access helper
+     * @return Current camera state with thread safety
+     */
+    CameraState GetStateThreadSafe() const;
 };

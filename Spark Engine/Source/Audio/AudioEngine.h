@@ -1,13 +1,13 @@
 ﻿/**
  * @file AudioEngine.h
- * @brief XAudio2-based audio engine with 3D spatial audio support
+ * @brief XAudio2-based audio engine with comprehensive console integration
  * @author Spark Engine Team
  * @date 2025
  * 
  * This class provides a comprehensive audio system built on XAudio2, supporting
  * both 2D and 3D audio playback, sound effect management, volume controls, and
- * an object pool system for efficient audio source management. The engine handles
- * loading, playing, and managing multiple simultaneous audio sources.
+ * an object pool system for efficient audio source management. Enhanced with
+ * full console integration for real-time audio debugging and parameter adjustment.
  */
 
 #pragma once
@@ -20,6 +20,8 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <functional>
+#include <mutex>
 
 using DirectX::XMFLOAT3;
 using DirectX::XMMATRIX;
@@ -42,6 +44,7 @@ struct AudioSource
     bool     IsLooping;            ///< Whether the sound should loop continuously
     bool     IsPlaying;            ///< Whether the source is currently playing
     SoundEffect* Sound;            ///< Pointer to the associated sound effect
+    uint32_t SourceID;             ///< Unique identifier for console tracking
 
     /**
      * @brief Default constructor with safe initial values
@@ -58,16 +61,18 @@ struct AudioSource
         , IsLooping(false)
         , IsPlaying(false)
         , Sound(nullptr)
+        , SourceID(0)
     {
     }
 };
 
 /**
- * @brief Main audio engine class providing comprehensive audio functionality
+ * @brief Main audio engine class with comprehensive console integration
  * 
  * The AudioEngine class manages all audio operations for the Spark Engine using
  * XAudio2 as the underlying audio API. It provides sound loading, 3D spatial audio,
- * volume controls, and efficient audio source management through object pooling.
+ * volume controls, efficient audio source management through object pooling, and
+ * comprehensive console integration for real-time debugging and tuning.
  * 
  * Features include:
  * - XAudio2-based audio playback with hardware acceleration
@@ -77,6 +82,9 @@ struct AudioSource
  * - Audio source pooling for performance
  * - Looping and one-shot audio playback
  * - Pitch and volume controls per source
+ * - Real-time console integration for debugging
+ * - Live audio parameter adjustment
+ * - Performance monitoring and analysis
  * 
  * @note The engine uses an object pool to efficiently reuse audio sources
  * @warning Initialize() must be called before any audio operations
@@ -264,6 +272,170 @@ public:
      */
     size_t GetActiveSourceCount() const;
 
+    // ============================================================================
+    // CONSOLE INTEGRATION METHODS - Audio Engine Control
+    // ============================================================================
+
+    /**
+     * @brief Audio metrics structure for console integration
+     */
+    struct AudioMetrics {
+        size_t activeSources;         ///< Number of currently active audio sources
+        size_t totalSources;          ///< Total number of available audio sources
+        size_t loadedSounds;          ///< Number of loaded sound effects
+        float masterVolume;           ///< Current master volume level
+        float sfxVolume;              ///< Current SFX volume level
+        float musicVolume;            ///< Current music volume level
+        float cpuUsage;               ///< Audio CPU usage percentage
+        size_t memoryUsage;           ///< Audio memory usage in bytes
+        bool is3DEnabled;             ///< Whether 3D audio is enabled
+        XMFLOAT3 listenerPosition;    ///< Current listener position
+        XMFLOAT3 listenerVelocity;    ///< Current listener velocity
+        float dopplerScale;           ///< Doppler effect scale factor
+        float distanceScale;          ///< Distance attenuation scale factor
+    };
+
+    /**
+     * @brief Audio settings structure for console control
+     */
+    struct AudioSettings {
+        float masterVolume;           ///< Master volume level (0.0-1.0)
+        float sfxVolume;              ///< SFX volume level (0.0-1.0)
+        float musicVolume;            ///< Music volume level (0.0-1.0)
+        float dopplerScale;           ///< Doppler effect scale (0.0-2.0)
+        float distanceScale;          ///< Distance attenuation scale (0.1-10.0)
+        bool enable3D;                ///< Enable/disable 3D audio processing
+        bool enableReverb;            ///< Enable/disable reverb effects
+        bool enableEAX;               ///< Enable/disable EAX environmental audio
+        int maxSources;               ///< Maximum simultaneous audio sources
+        XMFLOAT3 listenerPosition;    ///< 3D listener position
+        XMFLOAT3 listenerVelocity;    ///< 3D listener velocity
+        XMFLOAT3 listenerForward;     ///< 3D listener forward direction
+        XMFLOAT3 listenerUp;          ///< 3D listener up direction
+    };
+
+    /**
+     * @brief Set master volume via console
+     * @param volume Master volume level (0.0-1.0)
+     */
+    void Console_SetMasterVolume(float volume);
+
+    /**
+     * @brief Set SFX volume via console
+     * @param volume SFX volume level (0.0-1.0)
+     */
+    void Console_SetSFXVolume(float volume);
+
+    /**
+     * @brief Set music volume via console
+     * @param volume Music volume level (0.0-1.0)
+     */
+    void Console_SetMusicVolume(float volume);
+
+    /**
+     * @brief Set 3D listener position via console
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     */
+    void Console_SetListenerPosition(float x, float y, float z);
+
+    /**
+     * @brief Set 3D listener orientation via console
+     * @param forwardX Forward vector X component
+     * @param forwardY Forward vector Y component
+     * @param forwardZ Forward vector Z component
+     * @param upX Up vector X component
+     * @param upY Up vector Y component
+     * @param upZ Up vector Z component
+     */
+    void Console_SetListenerOrientation(float forwardX, float forwardY, float forwardZ,
+                                       float upX, float upY, float upZ);
+
+    /**
+     * @brief Set Doppler effect scale via console
+     * @param scale Doppler scale factor (0.0-2.0)
+     */
+    void Console_SetDopplerScale(float scale);
+
+    /**
+     * @brief Set distance attenuation scale via console
+     * @param scale Distance attenuation scale (0.1-10.0)
+     */
+    void Console_SetDistanceScale(float scale);
+
+    /**
+     * @brief Enable/disable 3D audio processing via console
+     * @param enabled true to enable 3D audio, false to disable
+     */
+    void Console_Set3DAudio(bool enabled);
+
+    /**
+     * @brief Play a test sound via console
+     * @param soundName Name of sound to play
+     * @param is3D Whether to play as 3D sound
+     * @return ID of the playing sound source
+     */
+    uint32_t Console_PlayTestSound(const std::string& soundName, bool is3D = false);
+
+    /**
+     * @brief Stop a specific sound source via console
+     * @param sourceID ID of the sound source to stop
+     */
+    void Console_StopSound(uint32_t sourceID);
+
+    /**
+     * @brief Stop all playing sounds via console
+     */
+    void Console_StopAllSounds();
+
+    /**
+     * @brief List all loaded sounds via console
+     * @return String containing list of all loaded sounds
+     */
+    std::string Console_ListSounds() const;
+
+    /**
+     * @brief Get comprehensive audio metrics (console integration)
+     * @return AudioMetrics structure with current audio data
+     */
+    AudioMetrics Console_GetMetrics() const;
+
+    /**
+     * @brief Get current audio settings (console integration)
+     * @return AudioSettings structure with current settings
+     */
+    AudioSettings Console_GetSettings() const;
+
+    /**
+     * @brief Apply audio settings from console
+     * @param settings AudioSettings structure with new settings
+     */
+    void Console_ApplySettings(const AudioSettings& settings);
+
+    /**
+     * @brief Reset audio settings to defaults via console
+     */
+    void Console_ResetToDefaults();
+
+    /**
+     * @brief Register console state change callback
+     * @param callback Function to call when audio state changes
+     */
+    void Console_RegisterStateCallback(std::function<void()> callback);
+
+    /**
+     * @brief Force audio system refresh via console
+     */
+    void Console_RefreshAudio();
+
+    /**
+     * @brief Get audio source information via console
+     * @param sourceID ID of the audio source
+     * @return String containing source information
+     */
+    std::string Console_GetSourceInfo(uint32_t sourceID) const;
+
 private:
     /**
      * @brief Create an XAudio2 source voice for audio playback
@@ -303,6 +475,32 @@ private:
      */
     void ReturnSource(AudioSource* source);
 
+    /**
+     * @brief Apply 3D audio calculations to a specific source
+     * 
+     * Calculates distance attenuation, stereo panning, and Doppler effects
+     * for a 3D positioned audio source.
+     * 
+     * @param source Pointer to the AudioSource to apply 3D calculations to
+     */
+    void Apply3DAudioToSource(AudioSource* source);
+
+    /**
+     * @brief Update 3D audio calculations
+     */
+    void Update3DAudio();
+
+    /**
+     * @brief Notify console of state changes
+     */
+    void NotifyStateChange();
+
+    /**
+     * @brief Thread-safe metrics access helper
+     * @return Current audio metrics with thread safety
+     */
+    AudioMetrics GetMetricsThreadSafe() const;
+
     IXAudio2* m_xAudio2;                        ///< Main XAudio2 engine interface
     IXAudio2MasteringVoice* m_masterVoice;      ///< XAudio2 mastering voice for final output
     float                               m_masterVolume;  ///< Current master volume level
@@ -313,4 +511,19 @@ private:
     std::vector<std::unique_ptr<AudioSource>> m_audioSources;     ///< Pool of all audio sources
     std::vector<AudioSource*>                m_availableSources;  ///< Pool of available sources
     std::unordered_map<std::string, std::unique_ptr<SoundEffect>> m_soundEffects; ///< Loaded sound effects by name
+
+    // Console integration state
+    AudioSettings m_settings;                  ///< Current audio settings
+    mutable std::mutex m_metricsMutex;         ///< Thread safety for metrics access
+    std::function<void()> m_stateCallback;     ///< Callback for state changes
+    uint32_t m_nextSourceID;                   ///< Next unique source ID
+    
+    // 3D Audio state
+    XMFLOAT3 m_listenerPosition;              ///< Current listener position
+    XMFLOAT3 m_listenerVelocity;              ///< Current listener velocity
+    XMFLOAT3 m_listenerForward;               ///< Current listener forward direction
+    XMFLOAT3 m_listenerUp;                    ///< Current listener up direction
+    float m_dopplerScale;                      ///< Doppler effect scale factor
+    float m_distanceScale;                     ///< Distance attenuation scale
+    bool m_3DEnabled;                          ///< Whether 3D audio is enabled
 };

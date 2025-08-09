@@ -104,12 +104,23 @@ void Player::TakeDamage(float dmg)
 {
     LOG_TO_CONSOLE(L"Player::TakeDamage called. dmg=" + std::to_wstring(dmg), L"OPERATION");
     ASSERT_MSG(dmg >= 0.0f, "Damage must be non-negative");
+    
+    // Check god mode from console integration
+    if (m_godModeEnabled) {
+        LOG_TO_CONSOLE(L"Damage blocked by god mode", L"INFO");
+        return;
+    }
+    
     if (!IsAlive()) return;
 
     float absorbed = std::min(dmg * 0.5f, m_armor);
     m_armor -= absorbed;
     m_health = std::max(0.0f, m_health - (dmg - absorbed));
     if (m_health <= 0.0f) SetActive(false);
+    
+    // Notify console of state change
+    NotifyStateChange();
+    
     LOG_TO_CONSOLE(L"Player took damage. Health=" + std::to_wstring(m_health) + L" Armor=" + std::to_wstring(m_armor), L"INFO");
 }
 
@@ -161,7 +172,11 @@ void Player::Fire()
     auto now = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastFireLog).count();
     
-    if (m_isReloading || m_currentAmmo <= 0 || m_fireTimer > 0.0f) return;
+    if (m_isReloading || m_fireTimer > 0.0f) return;
+    
+    // **ENHANCED: Check infinite ammo from console integration**
+    if (!m_infiniteAmmoEnabled && m_currentAmmo <= 0) return;
+    
     ASSERT_NOT_NULL(m_projectilePool);
 
     XMFLOAT3 pos = m_camera->GetPosition();
@@ -177,9 +192,16 @@ void Player::Fire()
 
     m_projectilePool->FireProjectile(type, pos, dir, m_currentWeapon.MuzzleVelocity);
 
-    --m_currentAmmo;
+    // Only consume ammo if infinite ammo is disabled
+    if (!m_infiniteAmmoEnabled) {
+        --m_currentAmmo;
+    }
+    
     m_fireTimer = 60.0f / m_currentWeapon.FireRate;
     m_isFiring = true;
+    
+    // Notify console of state change
+    NotifyStateChange();
     
     // Only log weapon firing every 2 seconds
     if (elapsed >= 2) {
@@ -278,12 +300,18 @@ void Player::UpdateCombat(float dt)
     }
 }
 
-// Physics & gravity - **REMOVED PER-FRAME LOGGING**
+// Physics & gravity - Enhanced with console settings
 void Player::UpdatePhysics(float dt)
 {
-    // **FIXED: No per-frame logging**
-    if (!m_isGrounded) ApplyGravity(dt);
-    CheckGroundCollision();
+    // **ENHANCED: Apply console-controlled physics settings**
+    if (!m_isGrounded && !m_noclipEnabled) {
+        ApplyGravity(dt);
+    }
+    
+    // Skip collision in noclip mode
+    if (!m_noclipEnabled) {
+        CheckGroundCollision();
+    }
 
     XMFLOAT3 pos = GetPosition();
     pos.x += m_velocity.x * dt;
@@ -292,8 +320,9 @@ void Player::UpdatePhysics(float dt)
     SetPosition(pos);
     if (m_camera) m_camera->SetPosition(pos);
 
-    m_velocity.x *= 0.9f;
-    m_velocity.z *= 0.9f;
+    // Apply console-controlled friction
+    m_velocity.x *= m_frictionCoeff;
+    m_velocity.z *= m_frictionCoeff;
 }
 
 // Animation (head bob & footsteps) - **REMOVED PER-FRAME LOGGING**
@@ -318,8 +347,8 @@ void Player::UpdateCollision()
 // Apply gravity - **REMOVED PER-FRAME LOGGING**
 void Player::ApplyGravity(float dt)
 {
-    // **FIXED: No per-frame logging**
-    m_velocity.y += -20.0f * dt;
+    // **ENHANCED: Use console-controlled gravity force**
+    m_velocity.y += m_gravityForce * dt;
     if (m_velocity.y < -50.0f) m_velocity.y = -50.0f;
 }
 
@@ -370,4 +399,196 @@ XMFLOAT3 Player::CalculateFireDirection()
         XMStoreFloat3(&f, v);
     }
     return f;
+}
+
+// ============================================================================
+// CONSOLE INTEGRATION IMPLEMENTATIONS - Full Cross-Code Hooking
+// ============================================================================
+
+void Player::Console_SetHealth(float health)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    m_health = std::max(0.0f, std::min(m_maxHealth, health));
+    if (m_health <= 0.0f) {
+        SetActive(false);
+    } else if (!IsActive()) {
+        SetActive(true); // Resurrect if health is restored
+    }
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player health set to " + std::to_wstring(m_health) + L" via console", L"SUCCESS");
+}
+
+void Player::Console_SetArmor(float armor)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    m_armor = std::max(0.0f, std::min(m_maxArmor, armor));
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player armor set to " + std::to_wstring(m_armor) + L" via console", L"SUCCESS");
+}
+
+void Player::Console_SetMaxHealth(float maxHealth)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    if (maxHealth > 0.0f && maxHealth <= 9999.0f) {
+        m_maxHealth = maxHealth;
+        // Ensure current health doesn't exceed new maximum
+        if (m_health > m_maxHealth) {
+            m_health = m_maxHealth;
+        }
+        NotifyStateChange();
+        LOG_TO_CONSOLE_IMMEDIATE(L"Player max health set to " + std::to_wstring(m_maxHealth) + L" via console", L"SUCCESS");
+    } else {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Invalid max health value. Must be between 1 and 9999", L"ERROR");
+    }
+}
+
+void Player::Console_SetSpeed(float speed)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    if (speed > 0.0f && speed <= 100.0f) {
+        m_speed = speed;
+        NotifyStateChange();
+        LOG_TO_CONSOLE_IMMEDIATE(L"Player speed set to " + std::to_wstring(m_speed) + L" via console", L"SUCCESS");
+    } else {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Invalid speed value. Must be between 0.1 and 100", L"ERROR");
+    }
+}
+
+void Player::Console_SetJumpHeight(float height)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    if (height > 0.0f && height <= 50.0f) {
+        m_jumpHeight = height;
+        NotifyStateChange();
+        LOG_TO_CONSOLE_IMMEDIATE(L"Player jump height set to " + std::to_wstring(m_jumpHeight) + L" via console", L"SUCCESS");
+    } else {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Invalid jump height. Must be between 0.1 and 50", L"ERROR");
+    }
+}
+
+void Player::Console_SetPosition(float x, float y, float z)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    DirectX::XMFLOAT3 newPos = { x, y, z };
+    SetPosition(newPos);
+    
+    // Update camera position to match
+    if (m_camera) {
+        m_camera->SetPosition(newPos);
+    }
+    
+    // Reset velocity on teleport
+    m_velocity = { 0.0f, 0.0f, 0.0f };
+    
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player teleported to (" + std::to_wstring(x) + L", " + 
+                            std::to_wstring(y) + L", " + std::to_wstring(z) + L") via console", L"SUCCESS");
+}
+
+void Player::Console_SetGodMode(bool enabled)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    m_godModeEnabled = enabled;
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player god mode " + std::wstring(enabled ? L"enabled" : L"disabled") + L" via console", L"SUCCESS");
+}
+
+void Player::Console_SetNoclip(bool enabled)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    m_noclipEnabled = enabled;
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player noclip " + std::wstring(enabled ? L"enabled" : L"disabled") + L" via console", L"SUCCESS");
+}
+
+void Player::Console_SetInfiniteAmmo(bool enabled)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    m_infiniteAmmoEnabled = enabled;
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player infinite ammo " + std::wstring(enabled ? L"enabled" : L"disabled") + L" via console", L"SUCCESS");
+}
+
+void Player::Console_GiveAmmo(int amount)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    if (amount > 0 && amount <= 9999) {
+        m_currentAmmo = std::min(m_currentWeapon.MagazineSize, m_currentAmmo + amount);
+        NotifyStateChange();
+        LOG_TO_CONSOLE_IMMEDIATE(L"Player given " + std::to_wstring(amount) + L" ammo. Current: " + 
+                                std::to_wstring(m_currentAmmo) + L" via console", L"SUCCESS");
+    } else {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Invalid ammo amount. Must be between 1 and 9999", L"ERROR");
+    }
+}
+
+void Player::Console_ChangeWeapon(WeaponType weaponType)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    ChangeWeapon(weaponType);
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player weapon changed via console", L"SUCCESS");
+}
+
+Player::PlayerState Player::Console_GetState() const
+{
+    return GetStateThreadSafe();
+}
+
+void Player::Console_RegisterStateCallback(std::function<void(const PlayerState&)> callback)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    m_stateCallback = callback;
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player state callback registered", L"INFO");
+}
+
+void Player::Console_ApplyPhysicsSettings(float gravity, float friction)
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    if (gravity >= -100.0f && gravity <= 100.0f) {
+        m_gravityForce = gravity;
+    }
+    if (friction >= 0.0f && friction <= 1.0f) {
+        m_frictionCoeff = friction;
+    }
+    NotifyStateChange();
+    LOG_TO_CONSOLE_IMMEDIATE(L"Player physics settings updated - Gravity: " + std::to_wstring(m_gravityForce) + 
+                            L", Friction: " + std::to_wstring(m_frictionCoeff) + L" via console", L"SUCCESS");
+}
+
+void Player::NotifyStateChange()
+{
+    if (m_stateCallback) {
+        m_stateCallback(GetStateThreadSafe());
+    }
+}
+
+Player::PlayerState Player::GetStateThreadSafe() const
+{
+    std::lock_guard<std::mutex> lock(m_stateMutex);
+    PlayerState state;
+    state.health = m_health;
+    state.maxHealth = m_maxHealth;
+    state.armor = m_armor;
+    state.maxArmor = m_maxArmor;
+    state.stamina = m_stamina;
+    state.maxStamina = m_maxStamina;
+    state.position = GetPosition();
+    state.velocity = m_velocity;
+    state.currentWeapon = m_currentWeapon.Type;
+    state.currentAmmo = m_currentAmmo;
+    state.maxAmmo = m_currentWeapon.MagazineSize;
+    state.isAlive = IsAlive();
+    state.isGrounded = m_isGrounded;
+    state.isReloading = m_isReloading;
+    state.isRunning = m_isRunning;
+    state.isCrouching = m_isCrouching;
+    state.godMode = m_godModeEnabled;
+    state.noclip = m_noclipEnabled;
+    state.infiniteAmmo = m_infiniteAmmoEnabled;
+    state.fireTimer = m_fireTimer;
+    state.reloadTimer = m_reloadTimer;
+    state.speed = m_speed;
+    state.jumpHeight = m_jumpHeight;
+    return state;
 }

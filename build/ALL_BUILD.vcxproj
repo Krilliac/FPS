@@ -177,9 +177,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{F85234BD-8BBC-33C1-8063-8146459A976C}</Project>
       <Name>SparkConsole</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\SparkEditor\SparkEditor.vcxproj">
+      <Project>{1F636189-84B0-3699-89EA-0217715B23ED}</Project>
+      <Name>SparkEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Spark Engine\SparkEngine\build\SparkEngine.vcxproj">
       <Project>{5191A59A-BF5A-349C-8B7A-C7E12441A3B7}</Project>
       <Name>SparkEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\SparkEditor\imgui.vcxproj">
+      <Project>{DC42F323-6AC1-367A-9673-86B2F2F4D7D2}</Project>
+      <Name>imgui</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
