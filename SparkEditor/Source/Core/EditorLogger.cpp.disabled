@@ -1,0 +1,690 @@
+/**
+ * @file EditorLogger.cpp
+ * @brief Implementation of the advanced logging system for Spark Engine Editor
+ * @author Spark Engine Team
+ * @date 2025
+ */
+
+#include "EditorLogger.h"
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <filesystem>
+#include <Windows.h>
+#ifdef ERROR
+#undef ERROR
+#endif
+
+namespace SparkEditor {
+
+//==============================================================================
+// Helper Functions
+//==============================================================================
+
+const char* LogLevelToString(LogLevel level) {
+    switch (level) {
+        case LogLevel::TRACE:    return "TRACE";
+        case LogLevel::DEBUG:    return "DEBUG";
+        case LogLevel::INFO:     return "INFO";
+        case LogLevel::WARNING:  return "WARNING";
+        case LogLevel::ERROR_:   return "ERROR";
+        case LogLevel::CRITICAL: return "CRITICAL";
+        case LogLevel::FATAL:    return "FATAL";
+        default:                 return "UNKNOWN";
+    }
+}
+
+const char* LogCategoryToString(LogCategory category) {
+    switch (category) {
+        case LogCategory::GENERAL:     return "GENERAL";
+        case LogCategory::ASSET:       return "ASSET";
+        case LogCategory::RENDERING:   return "RENDERING";
+        case LogCategory::ENGINE:      return "ENGINE";
+        case LogCategory::UI:          return "UI";
+        case LogCategory::SCRIPTING:   return "SCRIPTING";
+        case LogCategory::PHYSICS:     return "PHYSICS";
+        case LogCategory::AUDIO:       return "AUDIO";
+        case LogCategory::NETWORKING:  return "NETWORKING";
+        case LogCategory::PROFILING:   return "PROFILING";
+        case LogCategory::CRASH:       return "CRASH";
+        default:                       return "UNKNOWN";
+    }
+}
+
+LogLevel StringToLogLevel(const std::string& str) {
+    if (str == "TRACE") return LogLevel::TRACE;
+    if (str == "DEBUG") return LogLevel::DEBUG;
+    if (str == "INFO") return LogLevel::INFO;
+    if (str == "WARNING") return LogLevel::WARNING;
+    if (str == "ERROR") return LogLevel::ERROR_;
+    if (str == "CRITICAL") return LogLevel::CRITICAL;
+    if (str == "FATAL") return LogLevel::FATAL;
+    return LogLevel::INFO; // Default
+}
+
+LogCategory StringToLogCategory(const std::string& str) {
+    if (str == "GENERAL") return LogCategory::GENERAL;
+    if (str == "ASSET") return LogCategory::ASSET;
+    if (str == "RENDERING") return LogCategory::RENDERING;
+    if (str == "ENGINE") return LogCategory::ENGINE;
+    if (str == "UI") return LogCategory::UI;
+    if (str == "SCRIPTING") return LogCategory::SCRIPTING;
+    if (str == "PHYSICS" ) return LogCategory::PHYSICS;
+    if (str == "AUDIO") return LogCategory::AUDIO;
+    if (str == "NETWORKING") return LogCategory::NETWORKING;
+    if (str == "PROFILING") return LogCategory::PROFILING;
+    if (str == "CRASH") return LogCategory::CRASH;
+    return LogCategory::GENERAL; // Default
+}
+
+//==============================================================================
+// DebugConsoleOutput Implementation
+//==============================================================================
+
+DebugConsoleOutput::DebugConsoleOutput() {
+    // Constructor
+}
+
+void DebugConsoleOutput::Write(const LogEntry& entry) {
+    if (!m_enabled) return;
+    
+    std::lock_guard<std::mutex> lock(m_mutex);
+    
+    // Format timestamp
+    auto time_t = std::chrono::system_clock::to_time_t(entry.timestamp);
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+        entry.timestamp.time_since_epoch()) % 1000;
+    
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&time_t), "%H:%M:%S");
+    ss << "." << std::setfill('0') << std::setw(3) << ms.count();
+    
+    // Create colored output for different levels
+    std::string levelIcon;
+    switch (entry.level) {
+        case LogLevel::TRACE:    levelIcon = "??"; break;
+        case LogLevel::DEBUG:    levelIcon = "??"; break;
+        case LogLevel::INFO:     levelIcon = "??"; break;
+        case LogLevel::WARNING:  levelIcon = "??"; break;
+        case LogLevel::ERROR_:   levelIcon = "?"; break;
+        case LogLevel::CRITICAL: levelIcon = "??"; break;
+        case LogLevel::FATAL:    levelIcon = "??"; break;
+    }
+    
+    std::string categoryIcon;
+    switch (entry.category) {
+        case LogCategory::ASSET:     categoryIcon = "??"; break;
+        case LogCategory::RENDERING: categoryIcon = "??"; break;
+        case LogCategory::ENGINE:    categoryIcon = "?"; break;
+        case LogCategory::UI:        categoryIcon = "???"; break;
+        case LogCategory::SCRIPTING: categoryIcon = "??"; break;
+        case LogCategory::PHYSICS:   categoryIcon = "??"; break;
+        case LogCategory::AUDIO:     categoryIcon = "??"; break;
+        case LogCategory::NETWORKING:categoryIcon = "??"; break;
+        case LogCategory::PROFILING: categoryIcon = "??"; break;
+        case LogCategory::CRASH:     categoryIcon = "??"; break;
+        default:                     categoryIcon = "??"; break;
+    }
+    
+    // Format the complete message
+    std::stringstream output;
+    output << "[" << ss.str() << "] "
+           << levelIcon << " " << LogLevelToString(entry.level) << " "
+           << categoryIcon << " " << LogCategoryToString(entry.category) << " "
+           << "| " << entry.message;
+    
+    if (entry.level >= LogLevel::WARNING) {
+        output << " (" << std::filesystem::path(entry.file).filename().string() 
+               << ":" << entry.line << ")";
+    }
+    
+    output << "\n";
+    
+    // Output to Visual Studio debug console
+    OutputDebugStringA(output.str().c_str());
+    
+    // Also output to stderr for console applications
+    std::cerr << output.str();
+}
+
+void DebugConsoleOutput::Flush() {
+    std::cerr.flush();
+}
+
+//==============================================================================
+// FileOutput Implementation
+//==============================================================================
+
+FileOutput::FileOutput(const std::string& filePath, bool append) 
+    : m_filePath(filePath) {
+    
+    // Create directory if it doesn't exist
+    std::filesystem::path path(filePath);
+    std::filesystem::create_directories(path.parent_path());
+    
+    // Open file
+    auto flags = std::ios::out;
+    if (append) {
+        flags |= std::ios::app;
+    } else {
+        flags |= std::ios::trunc;
+    }
+    
+    m_file.open(filePath, flags);
+    
+    if (m_file.is_open() && !append) {
+        // Write header for new files
+        m_file << "# Spark Engine Editor Log\n";
+        m_file << "# Started: ";
+        auto now = std::chrono::system_clock::now();
+        auto time_t = std::chrono::system_clock::to_time_t(now);
+        m_file << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S") << "\n";
+        m_file << "# Format: [Timestamp] Level Category | Message (File:Line)\n";
+        m_file << "# ================================================================\n\n";
+        m_file.flush();
+    }
+}
+
+FileOutput::~FileOutput() {
+    if (m_file.is_open()) {
+        m_file.close();
+    }
+}
+
+void FileOutput::Write(const LogEntry& entry) {
+    if (!m_enabled || !m_file.is_open()) return;
+    
+    std::lock_guard<std::mutex> lock(m_mutex);
+    
+    // Format timestamp
+    auto time_t = std::chrono::system_clock::to_time_t(entry.timestamp);
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+        entry.timestamp.time_since_epoch()) % 1000;
+    
+    m_file << std::put_time(std::localtime(&time_t), "[%Y-%m-%d %H:%M:%S");
+    m_file << "." << std::setfill('0') << std::setw(3) << ms.count() << "] ";
+    m_file << LogLevelToString(entry.level) << " ";
+    m_file << LogCategoryToString(entry.category) << " | ";
+    m_file << entry.message;
+    
+    if (entry.level >= LogLevel::WARNING) {
+        m_file << " (" << std::filesystem::path(entry.file).filename().string() 
+               << ":" << entry.line << ")";
+    }
+    
+    // Add metadata if present
+    if (!entry.metadata.empty()) {
+        m_file << " [";
+        bool first = true;
+        for (const auto& [key, value] : entry.metadata) {
+            if (!first) m_file << ", ";
+            m_file << key << "=" << value;
+            first = false;
+        }
+        m_file << "]";
+    }
+    
+    m_file << "\n";
+    
+    // Update current size and check for rotation
+    m_currentSize += m_file.tellp();
+    CheckRotation();
+}
+
+void FileOutput::Flush() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    if (m_file.is_open()) {
+        m_file.flush();
+    }
+}
+
+void FileOutput::SetEnabled(bool enabled) {
+    m_enabled = enabled;
+    if (enabled && !m_file.is_open()) {
+        m_file.open(m_filePath, std::ios::out | std::ios::app);
+    } else if (!enabled && m_file.is_open()) {
+        m_file.close();
+    }
+}
+
+void FileOutput::CheckRotation() {
+    if (m_currentSize > m_maxFileSize) {
+        RotateFiles();
+        m_currentSize = 0;
+    }
+}
+
+void FileOutput::RotateFiles() {
+    if (!m_file.is_open()) return;
+    
+    m_file.close();
+    
+    // Rotate existing files
+    std::filesystem::path basePath(m_filePath);
+    std::string baseName = basePath.stem().string();
+    std::string extension = basePath.extension().string();
+    std::string directory = basePath.parent_path().string();
+    
+    for (int i = m_rotationCount - 1; i > 0; --i) {
+        std::string oldFile = directory + "/" + baseName + "." + std::to_string(i) + extension;
+        std::string newFile = directory + "/" + baseName + "." + std::to_string(i + 1) + extension;
+        
+        if (std::filesystem::exists(oldFile)) {
+            std::filesystem::rename(oldFile, newFile);
+        }
+    }
+    
+    // Move current file to .1
+    std::string rotatedFile = directory + "/" + baseName + ".1" + extension;
+    if (std::filesystem::exists(m_filePath)) {
+        std::filesystem::rename(m_filePath, rotatedFile);
+    }
+    
+    // Reopen with new file
+    m_file.open(m_filePath, std::ios::out | std::ios::trunc);
+}
+
+//==============================================================================
+// ExternalConsoleOutput Implementation
+//==============================================================================
+
+ExternalConsoleOutput::ExternalConsoleOutput() {
+    // Constructor
+}
+
+void ExternalConsoleOutput::Write(const LogEntry& entry) {
+    if (!m_enabled) return;
+    
+    // Format message for engine console (simplified since engine console may not be available)
+    std::stringstream ss;
+    ss << "[EDITOR] " << LogLevelToString(entry.level) << " "
+       << LogCategoryToString(entry.category) << ": " << entry.message;
+    
+    // For now, just output to debug console as fallback
+    OutputDebugStringA(ss.str().c_str());
+}
+
+void ExternalConsoleOutput::Flush() {
+    // External console handles its own flushing
+}
+
+//==============================================================================
+// MemoryBufferOutput Implementation
+//==============================================================================
+
+MemoryBufferOutput::MemoryBufferOutput(size_t maxEntries) 
+    : m_maxEntries(maxEntries) {
+    m_entries.reserve(maxEntries);
+}
+
+void MemoryBufferOutput::Write(const LogEntry& entry) {
+    if (!m_enabled) return;
+    
+    std::lock_guard<std::mutex> lock(m_mutex);
+    
+    if (m_entries.size() < m_maxEntries) {
+        m_entries.push_back(entry);
+    } else {
+        // Circular buffer behavior
+        m_entries[m_writeIndex] = entry;
+        m_writeIndex = (m_writeIndex + 1) % m_maxEntries;
+    }
+}
+
+std::vector<LogEntry> MemoryBufferOutput::GetEntries(LogLevel minLevel, LogCategory category, size_t maxCount) const {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    
+    std::vector<LogEntry> result;
+    result.reserve(std::min(m_entries.size(), maxCount));
+    
+    for (const auto& entry : m_entries) {
+        if (entry.level >= minLevel) {
+            if (category == LogCategory::GENERAL || entry.category == category) {
+                result.push_back(entry);
+                if (result.size() >= maxCount) {
+                    break;
+                }
+            }
+        }
+    }
+    
+    return result;
+}
+
+void MemoryBufferOutput::Clear() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_entries.clear();
+    m_writeIndex = 0;
+}
+
+size_t MemoryBufferOutput::GetEntryCount() const {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_entries.size();
+}
+
+//==============================================================================
+// EditorLogger Implementation
+//==============================================================================
+
+EditorLogger& EditorLogger::GetInstance() {
+    static EditorLogger instance;
+    return instance;
+}
+
+bool EditorLogger::Initialize(const std::string& logDirectory, bool enableExternalConsole) {
+    if (m_initialized.exchange(true)) {
+        return true; // Already initialized
+    }
+    
+    // Create log directory
+    std::filesystem::create_directories(logDirectory);
+    
+    // Add debug console output
+    AddOutput(std::make_unique<DebugConsoleOutput>());
+    
+    // Add file output
+    std::string logFile = logDirectory + "/SparkEditor.log";
+    AddOutput(std::make_unique<FileOutput>(logFile, false)); // Start fresh
+    
+    // Add external console output if requested
+    if (enableExternalConsole) {
+        AddOutput(std::make_unique<ExternalConsoleOutput>());
+    }
+    
+    // Add memory buffer for UI display
+    auto memoryBuffer = std::make_unique<MemoryBufferOutput>(10000);
+    m_memoryBuffer = memoryBuffer.get();
+    AddOutput(std::move(memoryBuffer));
+    
+    // Set default filter
+    m_filter.minLevel = LogLevel::DEBUG;
+    m_filter.enableAllCategories = true;
+    
+    // Start async thread if needed
+    if (m_asyncMode) {
+        m_shouldStop = false;
+        m_asyncThread = std::thread(&EditorLogger::ProcessAsyncQueue, this);
+    }
+    
+    // Log initialization
+    Log(LogLevel::INFO, LogCategory::GENERAL, "Spark Engine Editor Logger initialized");
+    Log(LogLevel::INFO, LogCategory::GENERAL, "Log directory: " + logDirectory);
+    Log(LogLevel::INFO, LogCategory::GENERAL, "External console: " + std::string(enableExternalConsole ? "enabled" : "disabled"));
+    
+    return true;
+}
+
+void EditorLogger::Shutdown() {
+    if (!m_initialized.exchange(false)) {
+        return; // Not initialized
+    }
+    
+    Log(LogLevel::INFO, LogCategory::GENERAL, "Shutting down Spark Engine Editor Logger");
+    
+    // Stop async thread
+    if (m_asyncThread.joinable()) {
+        m_shouldStop = true;
+        m_asyncCondition.notify_all();
+        m_asyncThread.join();
+    }
+    
+    // Flush and clear outputs
+    Flush();
+    
+    std::lock_guard<std::mutex> lock(m_outputsMutex);
+    m_outputs.clear();
+    m_memoryBuffer = nullptr;
+}
+
+void EditorLogger::Log(LogLevel level, LogCategory category, const std::string& message,
+                      const char* file, int line, const char* function) {
+    
+    if (!m_initialized || !IsLevelEnabled(level) || !IsCategoryEnabled(category)) {
+        return;
+    }
+    
+    LogEntry entry;
+    entry.timestamp = std::chrono::system_clock::now();
+    entry.level = level;
+    entry.category = category;
+    entry.message = message;
+    entry.file = file ? file : "";
+    entry.line = line;
+    entry.function = function ? function : "";
+    entry.threadId = std::this_thread::get_id();
+    entry.frameNumber = m_frameNumber.load();
+    
+    if (!PassesFilter(entry)) {
+        return;
+    }
+    
+    if (m_asyncMode) {
+        std::lock_guard<std::mutex> lock(m_asyncMutex);
+        m_asyncQueue.push(entry);
+        m_asyncCondition.notify_one();
+    } else {
+        WriteToOutputs(entry);
+    }
+}
+
+void EditorLogger::LogWithMetadata(LogLevel level, LogCategory category, const std::string& message,
+                                  const std::unordered_map<std::string, std::string>& metadata,
+                                  const char* file, int line, const char* function) {
+    
+    if (!m_initialized || !IsLevelEnabled(level) || !IsCategoryEnabled(category)) {
+        return;
+    }
+    
+    LogEntry entry;
+    entry.timestamp = std::chrono::system_clock::now();
+    entry.level = level;
+    entry.category = category;
+    entry.message = message;
+    entry.file = file ? file : "";
+    entry.line = line;
+    entry.function = function ? function : "";
+    entry.threadId = std::this_thread::get_id();
+    entry.frameNumber = m_frameNumber.load();
+    entry.metadata = metadata;
+    
+    if (!PassesFilter(entry)) {
+        return;
+    }
+    
+    if (m_asyncMode) {
+        std::lock_guard<std::mutex> lock(m_asyncMutex);
+        m_asyncQueue.push(entry);
+        m_asyncCondition.notify_one();
+    } else {
+        WriteToOutputs(entry);
+    }
+}
+
+void EditorLogger::AddOutput(std::unique_ptr<ILogOutput> output) {
+    std::lock_guard<std::mutex> lock(m_outputsMutex);
+    m_outputs.push_back(std::move(output));
+}
+
+template<typename T>
+void EditorLogger::RemoveOutput() {
+    std::lock_guard<std::mutex> lock(m_outputsMutex);
+    m_outputs.erase(
+        std::remove_if(m_outputs.begin(), m_outputs.end(),
+            [](const std::unique_ptr<ILogOutput>& output) {
+                return dynamic_cast<T*>(output.get()) != nullptr;
+            }),
+        m_outputs.end()
+    );
+}
+
+void EditorLogger::SetFilter(const LogFilter& filter) {
+    std::lock_guard<std::mutex> lock(m_filterMutex);
+    m_filter = filter;
+}
+
+void EditorLogger::Flush() {
+    std::lock_guard<std::mutex> lock(m_outputsMutex);
+    for (auto& output : m_outputs) {
+        output->Flush();
+    }
+}
+
+void EditorLogger::SetAsyncMode(bool enabled) {
+    if (m_asyncMode == enabled) {
+        return;
+    }
+    
+    m_asyncMode = enabled;
+    
+    if (enabled && m_initialized) {
+        m_shouldStop = false;
+        m_asyncThread = std::thread(&EditorLogger::ProcessAsyncQueue, this);
+    } else if (!enabled && m_asyncThread.joinable()) {
+        m_shouldStop = true;
+        m_asyncCondition.notify_all();
+        m_asyncThread.join();
+    }
+}
+
+bool EditorLogger::IsLevelEnabled(LogLevel level) const {
+    std::lock_guard<std::mutex> lock(m_filterMutex);
+    return level >= m_filter.minLevel;
+}
+
+bool EditorLogger::IsCategoryEnabled(LogCategory category) const {
+    std::lock_guard<std::mutex> lock(m_filterMutex);
+    
+    if (m_filter.enableAllCategories) {
+        return true;
+    }
+    
+    return std::find(m_filter.enabledCategories.begin(), 
+                    m_filter.enabledCategories.end(), 
+                    category) != m_filter.enabledCategories.end();
+}
+
+void EditorLogger::LogCrash(const std::string& crashInfo, const std::string& stackTrace) {
+    LogEntry entry;
+    entry.timestamp = std::chrono::system_clock::now();
+    entry.level = LogLevel::FATAL;
+    entry.category = LogCategory::CRASH;
+    entry.message = crashInfo;
+    entry.file = "CRASH_HANDLER";
+    entry.line = 0;
+    entry.function = "CrashHandler";
+    entry.threadId = std::this_thread::get_id();
+    entry.frameNumber = m_frameNumber.load();
+    
+    if (!stackTrace.empty()) {
+        entry.metadata["stackTrace"] = stackTrace;
+    }
+    
+    // Always write crash logs immediately, bypassing filters and async
+    WriteToOutputs(entry);
+    Flush();
+}
+
+void EditorLogger::LogAssertion(const std::string& expression, const std::string& message,
+                               const char* file, int line, const char* function) {
+    
+    std::string fullMessage = "Assertion failed: " + expression;
+    if (!message.empty()) {
+        fullMessage += " - " + message;
+    }
+    
+    LogEntry entry;
+    entry.timestamp = std::chrono::system_clock::now();
+    entry.level = LogLevel::FATAL;
+    entry.category = LogCategory::CRASH;
+    entry.message = fullMessage;
+    entry.file = file ? file : "";
+    entry.line = line;
+    entry.function = function ? function : "";
+    entry.threadId = std::this_thread::get_id();
+    entry.frameNumber = m_frameNumber.load();
+    entry.metadata["assertion"] = expression;
+    
+    // Always write assertion logs immediately
+    WriteToOutputs(entry);
+    Flush();
+}
+
+void EditorLogger::WriteToOutputs(const LogEntry& entry) {
+    std::lock_guard<std::mutex> lock(m_outputsMutex);
+    for (auto& output : m_outputs) {
+        if (output && output->IsEnabled()) {
+            try {
+                output->Write(entry);
+            } catch (...) {
+                // Ignore output errors to prevent logging recursion
+            }
+        }
+    }
+}
+
+void EditorLogger::ProcessAsyncQueue() {
+    while (!m_shouldStop) {
+        std::unique_lock<std::mutex> lock(m_asyncMutex);
+        m_asyncCondition.wait(lock, [this] { return !m_asyncQueue.empty() || m_shouldStop; });
+        
+        while (!m_asyncQueue.empty()) {
+            LogEntry entry = m_asyncQueue.front();
+            m_asyncQueue.pop();
+            lock.unlock();
+            
+            WriteToOutputs(entry);
+            
+            lock.lock();
+        }
+    }
+}
+
+bool EditorLogger::PassesFilter(const LogEntry& entry) const {
+    std::lock_guard<std::mutex> lock(m_filterMutex);
+    
+    // Check include patterns
+    if (!m_filter.includePatterns.empty()) {
+        bool found = false;
+        for (const auto& pattern : m_filter.includePatterns) {
+            if (entry.message.find(pattern) != std::string::npos) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) return false;
+    }
+    
+    // Check exclude patterns
+    for (const auto& pattern : m_filter.excludePatterns) {
+        if (entry.message.find(pattern) != std::string::npos) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+std::string EditorLogger::FormatEntry(const LogEntry& entry) const {
+    std::stringstream ss;
+    
+    // Timestamp
+    auto time_t = std::chrono::system_clock::to_time_t(entry.timestamp);
+    ss << std::put_time(std::localtime(&time_t), "%H:%M:%S");
+    
+    // Level and category
+    ss << " [" << LogLevelToString(entry.level) << "] ";
+    ss << "[" << LogCategoryToString(entry.category) << "] ";
+    
+    // Message
+    ss << entry.message;
+    
+    return ss.str();
+}
+
+// Explicit template instantiations for common types
+template void EditorLogger::RemoveOutput<DebugConsoleOutput>();
+template void EditorLogger::RemoveOutput<FileOutput>();
+template void EditorLogger::RemoveOutput<ExternalConsoleOutput>();
+template void EditorLogger::RemoveOutput<MemoryBufferOutput>();
+
+} // namespace SparkEditor

@@ -117,6 +117,46 @@ public:
     void SetClosable(bool closable) { m_isClosable = closable; }
 
     /**
+     * @brief Check if panel has unsaved changes
+     */
+    virtual bool IsModified() const { return m_isModified; }
+
+    /**
+     * @brief Set modified state
+     */
+    void SetModified(bool modified) { m_isModified = modified; }
+
+    /**
+     * @brief Get panel type name
+     */
+    virtual std::string GetTypeName() const { return "EditorPanel"; }
+
+    /**
+     * @brief Check if panel can be reset
+     */
+    virtual bool CanReset() const { return false; }
+
+    /**
+     * @brief Save panel state to string
+     */
+    virtual std::string SaveState() const { return "{}"; }
+
+    /**
+     * @brief Load panel state from string
+     */
+    virtual bool LoadState(const std::string& state) { return true; }
+
+    /**
+     * @brief Check if panel is visible in view menu
+     */
+    bool IsVisibleInMenu() const { return m_visibleInMenu; }
+
+    /**
+     * @brief Set visibility in view menu
+     */
+    void SetVisibleInMenu(bool visible) { m_visibleInMenu = visible; }
+
+    /**
      * @brief Get panel size in pixels
      * @param width Output parameter for panel width
      * @param height Output parameter for panel height
@@ -207,6 +247,9 @@ protected:
     float m_height = 400.0f;                            ///< Panel height in pixels
     float m_posX = 0.0f;                                ///< Panel X position
     float m_posY = 0.0f;                                ///< Panel Y position
+    
+    bool m_isModified = false;                          ///< Panel modification state
+    bool m_visibleInMenu = true;                        ///< Visibility in view menu
     
     std::function<void(EditorPanel*)> m_stateChangeCallback; ///< State change callback
 };

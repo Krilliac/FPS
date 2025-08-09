@@ -147,14 +147,11 @@ endif()
 # SPARK_EDITOR_SOURCES at SparkEditor/CMakeLists.txt:98 (file)
 file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/SparkEditor/Source/*.cpp")
 set(OLD_GLOB
-  "D:/Spark Engine/SparkEngine/SparkEditor/Source/AssetBrowser/AssetDatabase.cpp"
-  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Communication/EngineInterface.cpp"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorApplication.cpp"
-  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorPanel.cpp"
-  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorTheme.cpp"
-  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorUI.cpp"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/ProjectManager.cpp"
-  "D:/Spark Engine/SparkEngine/SparkEditor/Source/SceneSystem/SceneManager.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Examples/DockingSystemTest.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Examples/EditorUIExample.cpp"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/build/CMakeFiles/3.25.2/CompilerIdCXX/CMakeCXXCompilerId.cpp"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/main.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
@@ -165,21 +162,36 @@ endif()
 # SPARK_EDITOR_SOURCES at SparkEditor/CMakeLists.txt:98 (file)
 file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "D:/Spark Engine/SparkEngine/SparkEditor/Source/*.h")
 set(OLD_GLOB
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/AI/SparkAILayout.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/AI/SparkAILayout_stub.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Animation/AnimationTimeline.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/AssetBrowser/AssetDatabase.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/AssetPipeline/AdvancedAssetPipeline.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/BuildSystem/BuildDeploymentSystem.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Cloud/SparkCloudSync.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Cloud/SparkCloudSync_stub.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Communication/EngineInterface.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/DockPosition.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorApplication.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorCrashHandler.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorLayoutManager.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorLogger.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorPanel.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorTheme.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/EditorUI.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/ProjectManager.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Core/namespace_fix.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Docking/Spark3DDocking.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Docking/Spark3DDocking_stub.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Docking/SparkDockingSystem.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Gizmos/GizmoSystem.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Integration/SparkEngineIntegration.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Integration/SparkFutureIntegration.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Integration/SparkFutureIntegration_stub.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/LevelStreaming/LevelStreamingSystem.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Lighting/LightingTools.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/MaterialEditor/MaterialEditor.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/Panels/ConsolePanel.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Panels/HierarchyPanel.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Profiler/PerformanceProfiler.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Reflection/ComponentReflection.h"
@@ -187,8 +199,15 @@ set(OLD_GLOB
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/SceneSystem/SceneManager.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/SceneSystem/SceneSerializer.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/Terrain/TerrainEditor.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/VR/SparkVRInterface.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/VR/SparkVRInterface_stub.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/VersionControl/VersionControlSystem.h"
   "D:/Spark Engine/SparkEngine/SparkEditor/Source/VisualScripting/VisualScriptingSystem.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/build_fix.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/comprehensive_build_fix.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/final_build_fix.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/hackfix_EditorApplication.h"
+  "D:/Spark Engine/SparkEngine/SparkEditor/Source/ultra_build_fix.h"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
