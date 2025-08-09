@@ -106,11 +106,11 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -122,7 +122,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>Copying SparkConsole.exe to SparkEngine output directory	Copying shaders from D:/Spark Engine/SparkEngine/Spark Engine/Shaders	Copying assets from D:/Spark Engine/SparkEngine/Assets	Copying Models from D:/Spark Engine/SparkEngine/Assets/Models	Copying Scripts from D:/Spark Engine/SparkEngine/Assets/Scripts	Creating asset directory structure</Message>
+      <Message>Copying SparkConsole to SparkEngine output directory	Creating asset directory structure</Message>
       <Command>setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_if_different "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe" "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe"
 if %errorlevel% neq 0 goto :cmEnd
@@ -133,51 +133,9 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Spark Engine/Shaders" "D:/Spark Engine/SparkEngine/build/bin/Shaders"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets" "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Models" "D:/Spark Engine/SparkEngine/build/bin/Models"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Scripts" "D:/Spark Engine/SparkEngine/build/bin/Scripts"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders"
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders/HLSL"
-if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Models"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Scenes"
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Models"
 if %errorlevel% neq 0 goto :cmEnd
@@ -226,13 +184,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -244,7 +202,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>Copying SparkConsole.exe to SparkEngine output directory	Copying shaders from D:/Spark Engine/SparkEngine/Spark Engine/Shaders	Copying assets from D:/Spark Engine/SparkEngine/Assets	Copying Models from D:/Spark Engine/SparkEngine/Assets/Models	Copying Scripts from D:/Spark Engine/SparkEngine/Assets/Scripts	Creating asset directory structure</Message>
+      <Message>Copying SparkConsole to SparkEngine output directory	Creating asset directory structure</Message>
       <Command>setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_if_different "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe" "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe"
 if %errorlevel% neq 0 goto :cmEnd
@@ -255,51 +213,9 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Spark Engine/Shaders" "D:/Spark Engine/SparkEngine/build/bin/Shaders"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets" "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Models" "D:/Spark Engine/SparkEngine/build/bin/Models"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Scripts" "D:/Spark Engine/SparkEngine/build/bin/Scripts"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders"
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders/HLSL"
-if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Models"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Scenes"
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Models"
 if %errorlevel% neq 0 goto :cmEnd
@@ -348,13 +264,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -366,7 +282,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>Copying SparkConsole.exe to SparkEngine output directory	Copying shaders from D:/Spark Engine/SparkEngine/Spark Engine/Shaders	Copying assets from D:/Spark Engine/SparkEngine/Assets	Copying Models from D:/Spark Engine/SparkEngine/Assets/Models	Copying Scripts from D:/Spark Engine/SparkEngine/Assets/Scripts	Creating asset directory structure</Message>
+      <Message>Copying SparkConsole to SparkEngine output directory	Creating asset directory structure</Message>
       <Command>setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_if_different "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe" "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe"
 if %errorlevel% neq 0 goto :cmEnd
@@ -377,51 +293,9 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Spark Engine/Shaders" "D:/Spark Engine/SparkEngine/build/bin/Shaders"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets" "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Models" "D:/Spark Engine/SparkEngine/build/bin/Models"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Scripts" "D:/Spark Engine/SparkEngine/build/bin/Scripts"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders"
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders/HLSL"
-if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Models"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Scenes"
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Models"
 if %errorlevel% neq 0 goto :cmEnd
@@ -471,11 +345,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;NETWORKING_ENABLED;CURL_STATICLIB;EDITOR_ENABLED;GRAPHICS_ENABLED;COLLABORATIVE_ENABLED;PROFILING_ENABLED;ASSET_STREAMING_ENABLED;HOT_RELOAD_ENABLED;TERRAIN_SYSTEM_ENABLED;POST_PROCESSING_ENABLED;LIGHTING_SYSTEM_ENABLED;ADVANCED_INPUT_ENABLED;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;TINYOBJLOADER_IMPLEMENTATION;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Spark Engine\SparkEngine\Spark Engine\Source;D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\include;D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz;D:\Spark Engine\SparkEngine\ThirdParty\Utils\tinyobjloader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -487,7 +361,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>Copying SparkConsole.exe to SparkEngine output directory	Copying shaders from D:/Spark Engine/SparkEngine/Spark Engine/Shaders	Copying assets from D:/Spark Engine/SparkEngine/Assets	Copying Models from D:/Spark Engine/SparkEngine/Assets/Models	Copying Scripts from D:/Spark Engine/SparkEngine/Assets/Scripts	Creating asset directory structure</Message>
+      <Message>Copying SparkConsole to SparkEngine output directory	Creating asset directory structure</Message>
       <Command>setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_if_different "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe" "D:/Spark Engine/SparkEngine/build/bin/SparkConsole.exe"
 if %errorlevel% neq 0 goto :cmEnd
@@ -498,51 +372,9 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd
 setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Spark Engine/Shaders" "D:/Spark Engine/SparkEngine/build/bin/Shaders"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets" "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Models" "D:/Spark Engine/SparkEngine/build/bin/Models"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E copy_directory "D:/Spark Engine/SparkEngine/Assets/Scripts" "D:/Spark Engine/SparkEngine/build/bin/Scripts"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders"
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Shaders/HLSL"
-if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Models"
-if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Assets/Scenes"
 if %errorlevel% neq 0 goto :cmEnd
 "C:\Program Files (x86)\CMake\bin\cmake.exe" -E make_directory "D:/Spark Engine/SparkEngine/build/bin/Models"
 if %errorlevel% neq 0 goto :cmEnd
@@ -1068,7 +900,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\vtls\x509asn1.h" />
     <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ws.c" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ws.h" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\mprintf_impl.cpp" />
     <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz.c" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz.h" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz_common.h" />
@@ -1079,7 +910,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz_tinfl.h" />
     <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz_zip.c" />
     <ClInclude Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz_zip.h" />
-    <ClCompile Include="D:\Spark Engine\SparkEngine\build\tinyobj_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\Spark Engine\SparkEngine\build\ZERO_CHECK.vcxproj">

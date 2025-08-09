@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+﻿cmake_minimum_required(VERSION 3.16)
 
 # ---------------------------------------------------------------------
 # SparkEditor Project Configuration
@@ -14,46 +14,34 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Third-party Dependencies
 # ---------------------------------------------------------------------
 
-# Find Dear ImGui
-set(IMGUI_DIR "${CMAKE_SOURCE_DIR}/ThirdParty/imgui")
-if(NOT EXISTS "${IMGUI_DIR}")
-    # Try alternative locations
-    foreach(ALT_PATH IN ITEMS
+# Proper ImGui dependency management
+find_path(IMGUI_INCLUDE_DIR 
+    NAMES imgui.h
+    PATHS 
+        "${CMAKE_SOURCE_DIR}/ThirdParty/imgui"
         "${CMAKE_SOURCE_DIR}/ThirdParty/UI/imgui"
         "${CMAKE_SOURCE_DIR}/External/imgui"
-        "${CMAKE_SOURCE_DIR}/Vendor/imgui")
-        if(EXISTS "${ALT_PATH}")
-            set(IMGUI_DIR "${ALT_PATH}")
-            break()
-        endif()
-    endforeach()
-endif()
+        "${CMAKE_SOURCE_DIR}/Vendor/imgui"
+    DOC "Dear ImGui include directory"
+)
 
-if(EXISTS "${IMGUI_DIR}")
-    message(STATUS "Found Dear ImGui at: ${IMGUI_DIR}")
+if(IMGUI_INCLUDE_DIR)
+    message(STATUS "Found Dear ImGui at: ${IMGUI_INCLUDE_DIR}")
     
-    # Create ImGui library
+    # Create proper ImGui library target
     add_library(imgui STATIC
-        "${IMGUI_DIR}/imgui.cpp"
-        "${IMGUI_DIR}/imgui_demo.cpp"
-        "${IMGUI_DIR}/imgui_draw.cpp"
-        "${IMGUI_DIR}/imgui_tables.cpp"
-        "${IMGUI_DIR}/imgui_widgets.cpp"
-        "${IMGUI_DIR}/backends/imgui_impl_win32.cpp"
-        "${IMGUI_DIR}/backends/imgui_impl_dx11.cpp"
-        "${IMGUI_DIR}/imgui.h"
-        "${IMGUI_DIR}/imconfig.h"
-        "${IMGUI_DIR}/imgui_internal.h"
-        "${IMGUI_DIR}/imstb_rectpack.h"
-        "${IMGUI_DIR}/imstb_textedit.h"
-        "${IMGUI_DIR}/imstb_truetype.h"
-        "${IMGUI_DIR}/backends/imgui_impl_win32.h"
-        "${IMGUI_DIR}/backends/imgui_impl_dx11.h"
+        "${IMGUI_INCLUDE_DIR}/imgui.cpp"
+        "${IMGUI_INCLUDE_DIR}/imgui_demo.cpp"
+        "${IMGUI_INCLUDE_DIR}/imgui_draw.cpp"
+        "${IMGUI_INCLUDE_DIR}/imgui_tables.cpp"
+        "${IMGUI_INCLUDE_DIR}/imgui_widgets.cpp"
+        "${IMGUI_INCLUDE_DIR}/backends/imgui_impl_win32.cpp"
+        "${IMGUI_INCLUDE_DIR}/backends/imgui_impl_dx11.cpp"
     )
     
     target_include_directories(imgui PUBLIC 
-        "${IMGUI_DIR}"
-        "${IMGUI_DIR}/backends"
+        "${IMGUI_INCLUDE_DIR}"
+        "${IMGUI_INCLUDE_DIR}/backends"
     )
     
     target_compile_definitions(imgui PUBLIC
@@ -61,18 +49,9 @@ if(EXISTS "${IMGUI_DIR}")
         IMGUI_IMPL_WIN32_DISABLE_LINKING_XINPUT
     )
     
-    # Link system libraries needed by ImGui
+    # Link required system libraries
     target_link_libraries(imgui PUBLIC
-        d3d11
-        dxgi
-        user32
-        gdi32
-        shell32
-        ole32
-        oleaut32
-        uuid
-        comdlg32
-        advapi32
+        d3d11 dxgi user32 gdi32 shell32 ole32 oleaut32 uuid comdlg32 advapi32
     )
     
     if(MSVC)
@@ -86,7 +65,7 @@ if(EXISTS "${IMGUI_DIR}")
     
     set(IMGUI_FOUND TRUE)
 else()
-    message(WARNING "Dear ImGui not found. Editor will not build properly.")
+    message(FATAL_ERROR "Dear ImGui is required for SparkEditor but was not found!")
     set(IMGUI_FOUND FALSE)
 endif()
 
@@ -121,8 +100,8 @@ target_include_directories(SparkEditor PRIVATE
 # Add ImGui include directories if found
 if(IMGUI_FOUND)
     target_include_directories(SparkEditor PRIVATE
-        "${IMGUI_DIR}"
-        "${IMGUI_DIR}/backends"
+        "${IMGUI_INCLUDE_DIR}"
+        "${IMGUI_INCLUDE_DIR}/backends"
     )
 endif()
 
@@ -136,19 +115,6 @@ target_compile_definitions(SparkEditor PRIVATE
     EDITOR_VERSION_MINOR=0
     EDITOR_VERSION_PATCH=0
     
-    # Phase completions
-    PHASE_1_COMPLETE      # Foundation systems
-    PHASE_2_COMPLETE      # Advanced editing systems  
-    PHASE_3_COMPLETE      # Professional tools
-    
-    # Feature flags for all Phase 3 systems
-    VISUAL_SCRIPTING_ENABLED
-    ADVANCED_ASSET_PIPELINE_ENABLED
-    LEVEL_STREAMING_ENABLED
-    PERFORMANCE_PROFILER_ENABLED
-    VERSION_CONTROL_ENABLED
-    BUILD_DEPLOYMENT_ENABLED
-    
     # DirectX and graphics
     GRAPHICS_API_DX11
     NOMINMAX
@@ -157,14 +123,6 @@ target_compile_definitions(SparkEditor PRIVATE
     
     # Engine integration
     ENGINE_INTEGRATION_ENABLED
-    REAL_TIME_PREVIEW_ENABLED
-    HOT_RELOAD_ENABLED
-    
-    # Professional features
-    COLLABORATIVE_EDITING_ENABLED
-    AI_OPTIMIZATION_ENABLED
-    CLOUD_SERVICES_ENABLED
-    MULTI_PLATFORM_BUILD_ENABLED
 )
 
 # Debug-specific definitions
@@ -178,7 +136,7 @@ target_compile_definitions(SparkEditor PRIVATE
     >
 )
 
-# Release-specific definitions  
+# Release-specific definitions 
 target_compile_definitions(SparkEditor PRIVATE
     $<$<CONFIG:Release>:
         SPARK_RELEASE
@@ -191,25 +149,24 @@ target_compile_definitions(SparkEditor PRIVATE
 # ---------------------------------------------------------------------
 if(MSVC)
     target_compile_options(SparkEditor PRIVATE
-        /W3                 # Warning level 3
-        /MP                 # Multi-processor compilation
-        /bigobj             # Large object files
-        /std:c++20          # C++20 standard
+        /W3  # Warning level 3
+        /MP  # Multi-processor compilation
+        /bigobj  # Large object files
+        /std:c++20  # C++20 standard
         
         # Disable specific warnings
-        /wd4005             # Macro redefinition
-        /wd4996             # Deprecated functions
-        /wd4244             # Conversion warnings
-        /wd4267             # size_t conversion warnings
-        /wd4251             # DLL interface warnings
-        /wd4275             # DLL interface warnings for base classes
+        /wd4005  # Macro redefinition
+        /wd4996  # Deprecated functions
+        /wd4244  # Conversion warnings
+        /wd4267  # size_t conversion warnings
+        /wd4251  # DLL interface warnings
+        /wd4275  # DLL interface warnings for base classes
         
         # Performance optimizations for Release
         $<$<CONFIG:Release>:/O2 /Oi /Ot /Oy /GL>
         
         # Debug information for Debug
-        $<$<CONFIG:Debug>:/Od /RTC1 /MDd>
-        $<$<CONFIG:Release>:/MD>
+        $<$<CONFIG:Debug>:/Od /RTC1>
     )
     
     # Link-time optimizations for Release
@@ -231,7 +188,7 @@ endif()
 target_link_libraries(SparkEditor PRIVATE
     # DirectX 11
     d3d11
-    dxgi  
+    dxgi 
     d3dcompiler
     dxguid
     
@@ -249,7 +206,7 @@ target_link_libraries(SparkEditor PRIVATE
     odbc32
     odbccp32
     
-    # Network libraries (for version control and collaboration)
+    # Network libraries
     ws2_32
     wsock32
     winmm
@@ -273,31 +230,12 @@ add_custom_command(TARGET SparkEditor POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/EditorAssets/Icons"
     COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/EditorAssets/Themes"
     COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/EditorAssets/Layouts"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/EditorAssets/Templates"
     COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Projects"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Projects/DefaultProject"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Projects/DefaultProject/Scenes"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Projects/DefaultProject/Assets"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Projects/DefaultProject/Scripts"
     COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Temp"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Library"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEditor>/Cache"
     COMMENT "Creating SparkEditor directory structure"
 )
 
-# Copy editor-specific assets if they exist
-foreach(ASSET_TYPE IN ITEMS "Icons" "Themes" "Layouts" "Templates")
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Resources/${ASSET_TYPE}")
-        add_custom_command(TARGET SparkEditor POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${CMAKE_CURRENT_SOURCE_DIR}/Resources/${ASSET_TYPE}"
-            "$<TARGET_FILE_DIR:SparkEditor>/EditorAssets/${ASSET_TYPE}"
-            COMMENT "Copying ${ASSET_TYPE} to editor assets"
-        )
-    endif()
-endforeach()
-
-# Copy editor configuration files
+# Copy editor configuration files if they exist
 foreach(CONFIG_FILE IN ITEMS "EditorConfig.json" "KeyBindings.json" "DefaultLayout.json")
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${CONFIG_FILE}")
         add_custom_command(TARGET SparkEditor POST_BUILD
@@ -318,22 +256,21 @@ if(TARGET SparkEngine)
     add_dependencies(SparkEditor SparkEngine)
     message(STATUS "SparkEditor will be built after SparkEngine")
     
-    # Copy SparkEngine.exe to editor directory for engine integration
+    # Copy SparkEngine executable for integration
     add_custom_command(TARGET SparkEditor POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "$<TARGET_FILE:SparkEngine>"
-            "$<TARGET_FILE_DIR:SparkEditor>/SparkEngine.exe"
-        COMMENT "Copying SparkEngine.exe to editor directory for integration"
+            $<TARGET_FILE:SparkEngine>
+            $<TARGET_FILE_DIR:SparkEditor>/$<TARGET_FILE_NAME:SparkEngine>
+        COMMENT "Installing SparkEngine for editor integration"
     )
 endif()
 
-# Copy SparkConsole if it exists (for debugging and communication)
 if(TARGET SparkConsole)
     add_custom_command(TARGET SparkEditor POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "$<TARGET_FILE:SparkConsole>"
-            "$<TARGET_FILE_DIR:SparkEditor>/SparkConsole.exe"
-        COMMENT "Copying SparkConsole.exe to editor directory"
+            $<TARGET_FILE:SparkConsole>
+            $<TARGET_FILE_DIR:SparkEditor>/$<TARGET_FILE_NAME:SparkConsole>
+        COMMENT "Installing SparkConsole for editor debugging"
     )
 endif()
 
@@ -370,22 +307,6 @@ if(MSVC)
     source_group("Communication" REGULAR_EXPRESSION "Source/Communication/.*")
     source_group("Viewport" REGULAR_EXPRESSION "Source/Viewport/.*")
     
-    # Phase 2 systems
-    source_group("Advanced Systems\\\\Gizmos" REGULAR_EXPRESSION "Source/Gizmos/.*")
-    source_group("Advanced Systems\\\\Reflection" REGULAR_EXPRESSION "Source/Reflection/.*")
-    source_group("Advanced Systems\\\\Material Editor" REGULAR_EXPRESSION "Source/MaterialEditor/.*")
-    source_group("Advanced Systems\\\\Animation" REGULAR_EXPRESSION "Source/Animation/.*")
-    source_group("Advanced Systems\\\\Terrain" REGULAR_EXPRESSION "Source/Terrain/.*")
-    source_group("Advanced Systems\\\\Lighting" REGULAR_EXPRESSION "Source/Lighting/.*")
-    
-    # Phase 3 systems
-    source_group("Professional Tools\\\\Visual Scripting" REGULAR_EXPRESSION "Source/VisualScripting/.*")
-    source_group("Professional Tools\\\\Asset Pipeline" REGULAR_EXPRESSION "Source/AssetPipeline/.*")
-    source_group("Professional Tools\\\\Level Streaming" REGULAR_EXPRESSION "Source/LevelStreaming/.*")
-    source_group("Professional Tools\\\\Profiler" REGULAR_EXPRESSION "Source/Profiler/.*")
-    source_group("Professional Tools\\\\Version Control" REGULAR_EXPRESSION "Source/VersionControl/.*")
-    source_group("Professional Tools\\\\Build System" REGULAR_EXPRESSION "Source/BuildSystem/.*")
-    
     # Add custom build configurations
     set_property(TARGET SparkEditor PROPERTY VS_GLOBAL_KEYWORD "Win32Proj")
     set_property(TARGET SparkEditor PROPERTY VS_GLOBAL_ROOTNAMESPACE "SparkEditor")
@@ -418,27 +339,6 @@ if(WIN32)
 endif()
 
 # ---------------------------------------------------------------------
-# Package Configuration
-# ---------------------------------------------------------------------
-set(CPACK_PACKAGE_NAME "SparkEditor")
-set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Spark Engine Editor - Professional Game Development Environment")
-set(CPACK_PACKAGE_VENDOR "Spark Engine Team")
-set(CPACK_PACKAGE_CONTACT "support@sparkengine.dev")
-
-if(WIN32)
-    set(CPACK_GENERATOR "ZIP;NSIS")
-    set(CPACK_NSIS_DISPLAY_NAME "Spark Engine Editor")
-    set(CPACK_NSIS_PACKAGE_NAME "SparkEditor")
-    set(CPACK_NSIS_CONTACT "support@sparkengine.dev")
-    set(CPACK_NSIS_HELP_LINK "https://sparkengine.dev/docs")
-    set(CPACK_NSIS_URL_INFO_ABOUT "https://sparkengine.dev")
-    set(CPACK_NSIS_MODIFY_PATH ON)
-endif()
-
-include(CPack)
-
-# ---------------------------------------------------------------------
 # Status Messages
 # ---------------------------------------------------------------------
 message(STATUS "")
@@ -450,19 +350,6 @@ message(STATUS "Install Prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "")
 message(STATUS "Dependencies:")
 message(STATUS "  Dear ImGui: ${IMGUI_FOUND}")
-message(STATUS "")
-message(STATUS "Features Enabled:")
-message(STATUS "  ? Phase 1 - Foundation Systems (Complete)")
-message(STATUS "  ? Phase 2 - Advanced Editing (Complete)")  
-message(STATUS "  ? Phase 3 - Professional Tools (Complete)")
-message(STATUS "")
-message(STATUS "Professional Tools:")
-message(STATUS "  ? Visual Scripting System")
-message(STATUS "  ? Advanced Asset Pipeline") 
-message(STATUS "  ? Level Streaming & World Composition")
-message(STATUS "  ? Performance Profiler & Optimization")
-message(STATUS "  ? Version Control Integration")
-message(STATUS "  ? Build & Deployment System")
 message(STATUS "")
 message(STATUS "Output Directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 message(STATUS "SparkEditor will be built to: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")

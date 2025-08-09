@@ -1,4 +1,16 @@
-cmake_minimum_required(VERSION 3.16)
+﻿cmake_minimum_required(VERSION 3.16)
+
+# ================================================================
+# Modern CMake Configuration
+# ================================================================
+
+# Set CMake policies for modern behavior
+cmake_policy(SET CMP0091 NEW)  # Enable MSVC_RUNTIME_LIBRARY support
+
+# Set consistent runtime library for all targets
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+endif()
 
 # ---------------------------------------------------------------------
 # 1) Disable all third-party tests/examples globally
@@ -12,8 +24,11 @@ set(BUILD_DOCS OFF CACHE BOOL "Disable docs" FORCE)
 # ---------------------------------------------------------------------
 # 2) Global generator and project settings
 # ---------------------------------------------------------------------
-if(WIN32)
+# Platform-specific generator settings (only if not already set)
+if(WIN32 AND NOT CMAKE_GENERATOR_TOOLSET)
     set(CMAKE_GENERATOR_TOOLSET "v143")
+endif()
+if(WIN32 AND NOT CMAKE_GENERATOR_PLATFORM)
     set(CMAKE_GENERATOR_PLATFORM "x64")
 endif()
 
@@ -88,9 +103,6 @@ if(EXISTS "${CURL_ROOT}")
         "${CURL_ROOT}/lib/*.h"
     )
     list(FILTER CURL_SOURCES EXCLUDE REGEX ".*test.*|.*example.*|.*tool.*")
-    
-    # Add our custom mprintf implementation
-    list(APPEND CURL_SOURCES "${CURL_ROOT}/lib/mprintf_impl.cpp")
 endif()
 
 # MINIZ
@@ -103,42 +115,31 @@ if(EXISTS "${MINIZ_ROOT}")
     list(FILTER MINIZ_SOURCES EXCLUDE REGEX ".*test.*|.*example.*|.*tool.*")
 endif()
 
-# TinyObjLoader (header-only, but add implementation file)
-set(TINYOBJ_FOUND FALSE)
-foreach(PATH IN ITEMS
-    "ThirdParty/Utils/tinyobjloader"
-    "ThirdParty/FileFormats/tinyobjloader"
-    "ThirdParty/Graphics/tinyobjloader"
-    "ThirdParty/tinyobjloader"
+# TinyObjLoader - Proper Implementation
+find_path(TINYOBJLOADER_INCLUDE_DIR 
+    NAMES tiny_obj_loader.h
+    PATHS 
+        "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader"
+        "${CMAKE_SOURCE_DIR}/ThirdParty/FileFormats/tinyobjloader"
+        "${CMAKE_SOURCE_DIR}/ThirdParty/Graphics/tinyobjloader"
+        "${CMAKE_SOURCE_DIR}/ThirdParty/tinyobjloader"
+        "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/tinyobjloader/include"
+        "${CMAKE_SOURCE_DIR}/ThirdParty/FileFormats/tinyobjloader/include"
+    DOC "TinyObjLoader include directory"
 )
-    if(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}/tiny_obj_loader.h")
-        set(TINYOBJ_IMPL_FILE "${CMAKE_BINARY_DIR}/tinyobj_impl.cpp")
-        file(WRITE ${TINYOBJ_IMPL_FILE}
-            "#pragma warning(push)\n"
-            "#pragma warning(disable : 26495)\n"
-            "#define TINYOBJLOADER_IMPLEMENTATION\n"
-            "#include \"tiny_obj_loader.h\"\n"
-            "#pragma warning(pop)\n"
-        )
-        set(TINYOBJ_INCLUDE "${CMAKE_SOURCE_DIR}/${PATH}")
-        set(TINYOBJ_FOUND TRUE)
-        message(STATUS "Found TinyObjLoader at: ${PATH}")
-        break()
-    elseif(EXISTS "${CMAKE_SOURCE_DIR}/${PATH}/include/tiny_obj_loader.h")
-        set(TINYOBJ_IMPL_FILE "${CMAKE_BINARY_DIR}/tinyobj_impl.cpp")
-        file(WRITE ${TINYOBJ_IMPL_FILE}
-            "#pragma warning(push)\n"
-            "#pragma warning(disable : 26495)\n"
-            "#define TINYOBJLOADER_IMPLEMENTATION\n"
-            "#include \"tiny_obj_loader.h\"\n"
-            "#pragma warning(pop)\n"
-        )
-        set(TINYOBJ_INCLUDE "${CMAKE_SOURCE_DIR}/${PATH}/include")
-        set(TINYOBJ_FOUND TRUE)
-        message(STATUS "Found TinyObjLoader at: ${PATH}")
-        break()
-    endif()
-endforeach()
+
+if(TINYOBJLOADER_INCLUDE_DIR)
+    # Create a proper library target for TinyObjLoader
+    add_library(tinyobjloader INTERFACE)
+    target_include_directories(tinyobjloader INTERFACE ${TINYOBJLOADER_INCLUDE_DIR})
+    target_compile_definitions(tinyobjloader INTERFACE TINYOBJLOADER_IMPLEMENTATION)
+    
+    set(TINYOBJ_FOUND TRUE)
+    message(STATUS "Found TinyObjLoader at: ${TINYOBJLOADER_INCLUDE_DIR}")
+else()
+    set(TINYOBJ_FOUND FALSE)
+    message(WARNING "TinyObjLoader not found")
+endif()
 
 # ---------------------------------------------------------------------
 # 8) Build SparkConsole FIRST to ensure it's available for SparkEngine
@@ -176,8 +177,8 @@ if(MINIZ_SOURCES)
 endif()
 
 if(TINYOBJ_FOUND)
-    target_sources(SparkEngine PRIVATE ${TINYOBJ_IMPL_FILE})
-    message(STATUS "Added TinyObjLoader implementation to build")
+    target_link_libraries(SparkEngine PRIVATE tinyobjloader)
+    message(STATUS "Added TinyObjLoader to build")
 endif()
 
 # Ensure SparkEngine depends on SparkConsole
@@ -188,9 +189,9 @@ if(TARGET SparkConsole)
     # Add a post-build step to copy SparkConsole.exe to the same directory as SparkEngine.exe
     add_custom_command(TARGET SparkEngine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "$<TARGET_FILE:SparkConsole>"
-            "$<TARGET_FILE_DIR:SparkEngine>/SparkConsole.exe"
-        COMMENT "Copying SparkConsole.exe to SparkEngine output directory"
+            $<TARGET_FILE:SparkConsole>
+            $<TARGET_FILE_DIR:SparkEngine>/$<TARGET_FILE_NAME:SparkConsole>
+        COMMENT "Copying SparkConsole to SparkEngine output directory"
     )
 endif()
 
@@ -209,87 +210,19 @@ if(ENABLE_EDITOR AND EXISTS "${CMAKE_SOURCE_DIR}/SparkEditor/CMakeLists.txt")
 endif()
 
 # ---------------------------------------------------------------------
-# 10) COMPLETE ASSET MANAGEMENT - COPY ALL ASSETS TO BUILD OUTPUT
+# 10) Asset Management
 # ---------------------------------------------------------------------
-function(copy_assets_to_build)
-    set(ASSETS_COPIED FALSE)
-    
-    # Copy Shaders
-    foreach(SHADER_PATH IN ITEMS
-        "${CMAKE_SOURCE_DIR}/Spark Engine/Shaders"
-        "${CMAKE_SOURCE_DIR}/Shaders"
-        "${CMAKE_SOURCE_DIR}/Assets/Shaders")
-        if(EXISTS "${SHADER_PATH}")
-            add_custom_command(TARGET SparkEngine POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-                "${SHADER_PATH}"
-                "$<TARGET_FILE_DIR:SparkEngine>/Shaders"
-                COMMENT "Copying shaders from ${SHADER_PATH}")
-            message(STATUS "Shader source found: ${SHADER_PATH}")
-            set(ASSETS_COPIED TRUE)
-            break()
-        endif()
-    endforeach()
-    
-    # Copy Assets
-    foreach(ASSET_PATH IN ITEMS
-        "${CMAKE_SOURCE_DIR}/Spark Engine/Assets"
-        "${CMAKE_SOURCE_DIR}/Assets")
-        if(EXISTS "${ASSET_PATH}")
-            add_custom_command(TARGET SparkEngine POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-                "${ASSET_PATH}"
-                "$<TARGET_FILE_DIR:SparkEngine>/Assets"
-                COMMENT "Copying assets from ${ASSET_PATH}")
-            message(STATUS "Asset source found: ${ASSET_PATH}")
-            set(ASSETS_COPIED TRUE)
-            break()
-        endif()
-    endforeach()
-    
-    # Copy specific asset types
-    foreach(TYPE_PATH IN ITEMS "Models;Models" "Textures;Textures" "Audio;Audio" "Scripts;Scripts" "Config;Config")
-        string(REPLACE ";" "=" TYPE_PAIR "${TYPE_PATH}")
-        string(REPLACE "=" ";" TYPE_PAIR "${TYPE_PAIR}")
-        list(GET TYPE_PAIR 0 TYPE_NAME)
-        list(GET TYPE_PAIR 1 TYPE_DIR)
-        foreach(SEARCH_PATH IN ITEMS
-            "${CMAKE_SOURCE_DIR}/Spark Engine/${TYPE_DIR}"
-            "${CMAKE_SOURCE_DIR}/${TYPE_DIR}"
-            "${CMAKE_SOURCE_DIR}/Assets/${TYPE_DIR}")
-            if(EXISTS "${SEARCH_PATH}")
-                add_custom_command(TARGET SparkEngine POST_BUILD
-                    COMMAND ${CMAKE_COMMAND} -E copy_directory
-                    "${SEARCH_PATH}"
-                    "$<TARGET_FILE_DIR:SparkEngine>/${TYPE_DIR}"
-                    COMMENT "Copying ${TYPE_NAME} from ${SEARCH_PATH}")
-                message(STATUS "${TYPE_NAME} source found: ${SEARCH_PATH}")
-                set(ASSETS_COPIED TRUE)
-            endif()
-        endforeach()
-    endforeach()
-    
-    # Create directory structure
-    add_custom_command(TARGET SparkEngine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Shaders"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Shaders/HLSL"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Assets"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Assets/Models"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Assets/Scenes"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Models"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Textures"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Audio"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Scripts"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Config"
-        COMMENT "Creating asset directory structure")
-    
-    if(ASSETS_COPIED)
-        message(STATUS "Asset copying configured successfully")
-    else()
-        message(WARNING "No asset directories found - assets will need to be manually copied")
-    endif()
-endfunction()
-copy_assets_to_build()
+# Create necessary directories
+add_custom_command(TARGET SparkEngine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Shaders"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Assets"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Models"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Textures"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Audio"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Scripts"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:SparkEngine>/Config"
+    COMMENT "Creating asset directory structure"
+)
 
 # ---------------------------------------------------------------------
 # 11) Include directories
@@ -306,11 +239,6 @@ endif()
 # Add MINIZ headers if available
 if(EXISTS "${MINIZ_ROOT}")
     target_include_directories(SparkEngine PRIVATE "${MINIZ_ROOT}")
-endif()
-
-# Add TinyObjLoader headers if found
-if(TINYOBJ_FOUND)
-    target_include_directories(SparkEngine PRIVATE "${TINYOBJ_INCLUDE}")
 endif()
 
 # ---------------------------------------------------------------------
@@ -362,18 +290,52 @@ endif()
 # ---------------------------------------------------------------------
 # 14) Feature definitions
 # ---------------------------------------------------------------------
-target_compile_definitions(SparkEngine PRIVATE
-    EDITOR_ENABLED
-    GRAPHICS_ENABLED
-    COLLABORATIVE_ENABLED
-    PROFILING_ENABLED
-    ASSET_STREAMING_ENABLED
-    HOT_RELOAD_ENABLED
-    TERRAIN_SYSTEM_ENABLED
-    POST_PROCESSING_ENABLED
-    LIGHTING_SYSTEM_ENABLED
-    ADVANCED_INPUT_ENABLED
-)
+set(FEATURE_DEFINITIONS "")
+
+if(ENABLE_EDITOR)
+    list(APPEND FEATURE_DEFINITIONS "EDITOR_ENABLED")
+endif()
+
+if(ENABLE_GRAPHICS)
+    list(APPEND FEATURE_DEFINITIONS "GRAPHICS_ENABLED")
+endif()
+
+if(ENABLE_COLLABORATIVE)
+    list(APPEND FEATURE_DEFINITIONS "COLLABORATIVE_ENABLED")
+endif()
+
+if(ENABLE_PROFILING)
+    list(APPEND FEATURE_DEFINITIONS "PROFILING_ENABLED")
+endif()
+
+if(ENABLE_ASSET_STREAMING)
+    list(APPEND FEATURE_DEFINITIONS "ASSET_STREAMING_ENABLED")
+endif()
+
+if(ENABLE_HOT_RELOAD)
+    list(APPEND FEATURE_DEFINITIONS "HOT_RELOAD_ENABLED")
+endif()
+
+if(ENABLE_TERRAIN_SYSTEM)
+    list(APPEND FEATURE_DEFINITIONS "TERRAIN_SYSTEM_ENABLED")
+endif()
+
+if(ENABLE_POST_PROCESSING)
+    list(APPEND FEATURE_DEFINITIONS "POST_PROCESSING_ENABLED")
+endif()
+
+if(ENABLE_LIGHTING_SYSTEM)
+    list(APPEND FEATURE_DEFINITIONS "LIGHTING_SYSTEM_ENABLED")
+endif()
+
+if(ENABLE_ADVANCED_INPUT)
+    list(APPEND FEATURE_DEFINITIONS "ADVANCED_INPUT_ENABLED")
+endif()
+
+# Apply feature definitions to target
+if(FEATURE_DEFINITIONS)
+    target_compile_definitions(SparkEngine PRIVATE ${FEATURE_DEFINITIONS})
+endif()
 
 # ---------------------------------------------------------------------
 # 15) Visual Studio settings

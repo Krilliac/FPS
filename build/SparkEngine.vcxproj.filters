@@ -646,9 +646,6 @@
     <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\ws.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Networking\curl\lib\mprintf_impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -659,9 +656,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Spark Engine\SparkEngine\ThirdParty\Utils\miniz\miniz_zip.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Spark Engine\SparkEngine\build\tinyobj_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

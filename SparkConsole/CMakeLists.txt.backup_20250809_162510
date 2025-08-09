@@ -79,4 +79,3 @@ if(CONSOLE_SOURCES)
 else()
     message(STATUS "No SparkConsole source files found - skipping SparkConsole build")
 endif()
-
