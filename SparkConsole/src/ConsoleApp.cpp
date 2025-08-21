@@ -561,7 +561,7 @@ void ConsoleApp::RegisterDefaultCommands() {
         "Test pipe communication with engine",
         "pipe_test",
         [this](const std::vector<std::string>& args) -> std::string {
-            // Check stdin type
+            // Check stdin to=
             HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
             DWORD fileType = GetFileType(hStdin);
             
@@ -651,9 +651,33 @@ std::string ConsoleApp::GetNextCommand() {
 }
 
 void ConsoleApp::ClearInputLine() {
-    // TODO: Implement input line clearing for advanced input handling
+    // Implementation for input line clearing for advanced input handling
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    
+    if (GetConsoleScreenBufferInfo(hStdOut, &csbi)) {
+        // Move cursor to beginning of current line
+        COORD coord = {0, csbi.dwCursorPosition.Y};
+        SetConsoleCursorPosition(hStdOut, coord);
+        
+        // Clear the line by writing spaces
+        DWORD written;
+        std::string spaces(csbi.dwSize.X, ' ');
+        WriteConsoleA(hStdOut, spaces.c_str(), csbi.dwSize.X, &written, nullptr);
+        
+        // Move cursor back to beginning
+        SetConsoleCursorPosition(hStdOut, coord);
+    }
 }
 
 void ConsoleApp::UpdateInputLine(const std::string& text) {
-    // TODO: Implement input line updating for advanced input handling
+    // Implementation for input line updating for advanced input handling
+    ClearInputLine();
+    
+    // Display prompt with new text
+    SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+    std::wcout << L"SparkConsole> ";
+    SetConsoleColor(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+    std::cout << text;
+    std::cout.flush();
 }

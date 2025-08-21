@@ -12,6 +12,7 @@
 #include <algorithm>                  // for std::transform
 #include <sstream>                    // for stringstream
 #include <chrono>                     // for timestamp in debug command
+#include <cmath>                      // for isfinite
 
 #include "../Graphics/GraphicsEngine.h"
 #include "../Game/Game.h"
@@ -43,6 +44,10 @@ ATOM                MyRegisterClass(HINSTANCE);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+// Enhanced console command registration
+void RegisterGraphicsConsoleCommands();
+void RegisterGameConsoleCommands();
 
 // ===================================================================================
 //                                    wWinMain
@@ -112,21 +117,29 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            // Update and render
-            float dt = g_timer->GetDeltaTime();
+            // **SOLUTION: Clean main loop with single render path**
+            float dt = g_timer ? g_timer->GetDeltaTime() : 0.016f;
 
+            // Input update
             if (g_input) g_input->Update();
-            if (g_game && !g_console.IsVisible()) g_game->Update(dt);
-
-            if (g_graphics) {
-                g_graphics->BeginFrame();
-                if (g_game) g_game->Render();
-                if (g_console.IsVisible())
-                    g_console.Render(g_graphics->GetContext());
-                g_graphics->EndFrame();
+            
+            // Game update (only if console not visible)
+            if (g_game && !g_console.IsVisible()) {
+                g_game->Update(dt);
             }
 
-            // **SIMPLE: Just update the simple console**
+            // **SOLUTION: Single, clean graphics rendering call**
+            // Console rendering happens INSIDE Game::Render() - nowhere else
+            if (g_graphics) {
+                g_graphics->BeginFrame();
+                
+                if (g_game) g_game->Render();
+                
+                g_graphics->EndFrame();
+            }
+            // **CRITICAL: NO console rendering here - only in Game::Render()**
+
+            // Console update (non-rendering operations only)
             console.Update();
         }
     }
@@ -220,14 +233,21 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
     // **PROFESSIONAL: Initialize SparkConsole and register comprehensive commands**
     auto& console = Spark::SimpleConsole::GetInstance();
     if (console.Initialize()) {
-        console.LogSuccess("Development console initialized");
+        console.LogSuccess("Enhanced Spark Engine initialized with AAA features and console integration");
+        
+        // Register enhanced graphics console commands
+        RegisterGraphicsConsoleCommands();
+        
+        // Register enhanced game console commands  
+        RegisterGameConsoleCommands();
         
         // The console now has comprehensive built-in commands
-        console.LogInfo("Advanced debugging system active");
+        console.LogInfo("Advanced debugging system active with enhanced features");
         console.LogInfo("Type 'help' for complete command reference");
+        console.LogInfo("Enhanced features include shader hot-reload, advanced graphics settings, and real-time debugging");
     } else {
         // Fallback to OutputDebugString if console fails
-        OutputDebugStringW(L"Failed to initialize development console\n");
+        OutputDebugStringW(L"Failed to initialize enhanced development console\n");
     }
 
     // 7. Show window and activate
@@ -237,9 +257,10 @@ BOOL InitInstance(HINSTANCE hInst, int nCmdShow)
     SetFocus(hWnd);
 
     // Log successful initialization
-    console.LogSuccess("SparkEngine initialization completed successfully");
+    console.LogSuccess("Enhanced SparkEngine initialization completed successfully with AAA features");
     console.LogInfo("Main window is now visible and ready for interaction");
     console.LogInfo("Press ` (tilde) key to toggle engine console, or use the separate console window");
+    console.LogInfo("Enhanced Features: Advanced Graphics Pipeline, Shader Hot-Reload, Real-time Performance Monitoring");
 
     return TRUE;
 }
@@ -289,4 +310,193 @@ INT_PTR CALLBACK About(HWND hDlg, UINT msg, WPARAM wParam, LPARAM)
         return TRUE;
     }
     return FALSE;
+}
+
+// ===================================================================================
+//                    ENHANCED CONSOLE COMMAND REGISTRATION
+// ===================================================================================
+
+/**
+ * @brief Register enhanced graphics console commands
+ */
+void RegisterGraphicsConsoleCommands()
+{
+    auto& console = Spark::SimpleConsole::GetInstance();
+    
+    // Graphics pipeline control
+    console.RegisterCommand("gfx_pipeline", [](const std::vector<std::string>& args) -> std::string {
+        if (args.empty()) return "Usage: gfx_pipeline <forward|deferred>";
+        if (!g_graphics) return "Graphics engine not available";
+        
+        try {
+            if (args[0] == "forward") {
+                g_graphics->Console_SetRenderingPipeline(RenderingPipeline::Forward);
+                return "Switched to Forward rendering pipeline";
+            } else if (args[0] == "deferred") {
+                g_graphics->Console_SetRenderingPipeline(RenderingPipeline::Deferred);
+                return "Switched to Deferred rendering pipeline";
+            }
+            return "Invalid pipeline. Use 'forward' or 'deferred'";
+        } catch (...) {
+            return "Advanced pipeline control not available in this build";
+        }
+    }, "Set graphics rendering pipeline");
+
+    // HDR control
+    console.RegisterCommand("gfx_hdr", [](const std::vector<std::string>& args) -> std::string {
+        if (args.empty()) return "Usage: gfx_hdr <on|off>";
+        if (!g_graphics) return "Graphics engine not available";
+        
+        try {
+            bool enable = (args[0] == "on" || args[0] == "true" || args[0] == "1");
+            g_graphics->Console_SetHDR(enable);
+            return enable ? "HDR rendering enabled" : "HDR rendering disabled";
+        } catch (...) {
+            return "HDR control not available in this build";
+        }
+    }, "Enable/disable HDR rendering");
+
+    // VSync control
+    console.RegisterCommand("gfx_vsync", [](const std::vector<std::string>& args) -> std::string {
+        if (args.empty()) return "Usage: gfx_vsync <on|off>";
+        if (!g_graphics) return "Graphics engine not available";
+        
+        bool enable = (args[0] == "on" || args[0] == "true" || args[0] == "1");
+        g_graphics->Console_SetVSync(enable);
+        return enable ? "VSync enabled" : "VSync disabled";
+    }, "Enable/disable VSync");
+
+    // Wireframe mode
+    console.RegisterCommand("gfx_wireframe", [](const std::vector<std::string>& args) -> std::string {
+        if (args.empty()) return "Usage: gfx_wireframe <on|off>";
+        if (!g_graphics) return "Graphics engine not available";
+        
+        bool enable = (args[0] == "on" || args[0] == "true" || args[0] == "1");
+        g_graphics->Console_SetWireframeMode(enable);
+        return enable ? "Wireframe mode enabled" : "Wireframe mode disabled";
+    }, "Enable/disable wireframe rendering");
+
+    // Graphics metrics
+    console.RegisterCommand("gfx_metrics", [](const std::vector<std::string>& args) -> std::string {
+        if (!g_graphics) return "Graphics engine not available";
+        
+        // Try to get advanced metrics, fallback to basic metrics if not available
+        try {
+            auto metrics = g_graphics->Console_GetMetrics();
+            std::stringstream ss;
+            ss << "=== Enhanced Graphics Metrics ===\n";
+            ss << "Frame Time: " << metrics.frameTime << "ms\n";
+            ss << "Render Time: " << metrics.renderTime << "ms\n";
+            ss << "Present Time: " << metrics.presentTime << "ms\n";
+            ss << "FPS: " << metrics.fps << "\n";
+            ss << "Draw Calls: " << metrics.drawCalls << "\n";
+            ss << "Triangles: " << metrics.triangles << "\n";
+            ss << "Vertices: " << metrics.vertices << "\n";
+            ss << "GPU Usage: " << metrics.gpuUsage << "%\n";
+            ss << "GPU Memory: " << (metrics.totalGPUMemory / 1024 / 1024) << " MB\n";
+            return ss.str();
+        } catch (...) {
+            // Fallback to basic metrics
+            auto metrics = g_graphics->Console_GetMetrics();
+            std::stringstream ss;
+            ss << "=== Basic Graphics Metrics ===\n";
+            ss << "Frame Time: " << metrics.frameTime << "ms\n";
+            ss << "Render Time: " << metrics.renderTime << "ms\n";
+            ss << "Present Time: " << metrics.presentTime << "ms\n";
+            ss << "Draw Calls: " << metrics.drawCalls << "\n";
+            ss << "Triangles: " << metrics.triangles << "\n";
+            ss << "Vertices: " << metrics.vertices << "\n";
+            ss << "VRAM Usage: " << (metrics.bufferMemory / 1024 / 1024) << " MB\n";
+            ss << "VSync: " << (metrics.vsyncEnabled ? "On" : "Off") << "\n";
+            ss << "Wireframe: " << (metrics.wireframeMode ? "On" : "Off") << "\n";
+            return ss.str();
+        }
+    }, "Display detailed graphics performance metrics");
+
+    // Screenshot
+    console.RegisterCommand("gfx_screenshot", [](const std::vector<std::string>& args) -> std::string {
+        if (!g_graphics) return "Graphics engine not available";
+        
+        std::string filename = args.empty() ? "" : args[0];
+        bool success = g_graphics->Console_TakeScreenshot(filename);
+        return success ? "Screenshot saved successfully" : "Failed to save screenshot";
+    }, "Take a screenshot");
+}
+
+/**
+ * @brief Register enhanced game console commands
+ */
+void RegisterGameConsoleCommands()
+{
+    auto& console = Spark::SimpleConsole::GetInstance();
+    
+    // Time scale control
+    console.RegisterCommand("game_timescale", [](const std::vector<std::string>& args) -> std::string {
+        if (args.empty()) return "Usage: game_timescale <scale>";
+        if (!g_game) return "Game not available";
+        
+        float scale = std::stof(args[0]);
+        g_game->SetTimeScale(scale);
+        return "Time scale set to " + std::to_string(scale);
+    }, "Set game time scale");
+
+    // Player teleport
+    console.RegisterCommand("player_tp", [](const std::vector<std::string>& args) -> std::string {
+        if (args.size() < 3) return "Usage: player_tp <x> <y> <z>";
+        if (!g_game) return "Game not available";
+        
+        float x = std::stof(args[0]);
+        float y = std::stof(args[1]);
+        float z = std::stof(args[2]);
+        g_game->TeleportPlayer(x, y, z);
+        return "Player teleported to (" + args[0] + ", " + args[1] + ", " + args[2] + ")";
+    }, "Teleport player to coordinates");
+
+    // Spawn object
+    console.RegisterCommand("spawn", [](const std::vector<std::string>& args) -> std::string {
+        if (args.size() < 4) return "Usage: spawn <type> <x> <y> <z>";
+        if (!g_game) return "Game not available";
+        
+        std::string type = args[0];
+        float x = std::stof(args[1]);
+        float y = std::stof(args[2]);
+        float z = std::stof(args[3]);
+        bool success = g_game->SpawnObject(type, x, y, z);
+        return success ? "Object spawned successfully" : "Failed to spawn object";
+    }, "Spawn an object at coordinates");
+
+    // God mode
+    console.RegisterCommand("god", [](const std::vector<std::string>& args) -> std::string {
+        if (!g_game) return "Game not available";
+        
+        bool enable = args.empty() ? true : (args[0] == "on" || args[0] == "true" || args[0] == "1");
+        g_game->ApplyDebugSettings(enable, false, false);
+        return enable ? "God mode enabled" : "God mode disabled";
+    }, "Toggle god mode");
+
+    // Noclip
+    console.RegisterCommand("noclip", [](const std::vector<std::string>& args) -> std::string {
+        if (!g_game) return "Game not available";
+        
+        bool enable = args.empty() ? true : (args[0] == "on" || args[0] == "true" || args[0] == "1");
+        g_game->ApplyDebugSettings(false, enable, false);
+        return enable ? "Noclip enabled" : "Noclip disabled";
+    }, "Toggle noclip mode");
+
+    // Performance stats
+    console.RegisterCommand("game_stats", [](const std::vector<std::string>& args) -> std::string {
+        if (!g_game) return "Game not available";
+        
+        int drawCalls, triangles, activeObjects;
+        g_game->GetPerformanceStats(drawCalls, triangles, activeObjects);
+        
+        std::stringstream ss;
+        ss << "=== Game Performance Stats ===\n";
+        ss << "Draw Calls: " << drawCalls << "\n";
+        ss << "Triangles: " << triangles << "\n";
+        ss << "Active Objects: " << activeObjects << "\n";
+        ss << "Time Scale: " << g_game->GetTimeScale() << "\n";
+        ss << "Paused: " << (g_game->IsPaused() ? "Yes" : "No") << "\n";
+        return ss.str();
+    }, "Display game performance statistics");
 }

@@ -163,6 +163,17 @@ public:
     HRESULT CreateSphere(float radius = 1.0f, int slices = 20, int stacks = 20);
 
     /**
+     * @brief Generate a procedural pyramid mesh
+     * 
+     * Creates a 4-sided pyramid (square base) with proper normals and texture coordinates.
+     * 
+     * @param size Base size of the pyramid (default: 1.0f)
+     * @param height Height of the pyramid (default: 1.0f)
+     * @return HRESULT indicating success or failure of mesh creation
+     */
+    HRESULT CreatePyramid(float size = 1.0f, float height = 1.0f);
+
+    /**
      * @brief Create mesh from custom vertex and index arrays
      * 
      * Allows creation of custom meshes from user-provided vertex and index data.

@@ -57,6 +57,12 @@ struct ConsoleFilter {
     bool autoScroll = true;
     bool wordWrap = true;
     int maxDisplayEntries = 1000;
+    
+    // Additional properties for simplified filter UI
+    bool showInfo = true;
+    bool showWarning = true;
+    bool showError = true;
+    std::string searchText;
 };
 
 /**

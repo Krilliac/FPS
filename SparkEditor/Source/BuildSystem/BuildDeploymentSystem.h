@@ -12,6 +12,7 @@
 #pragma once
 
 #include "../Core/EditorPanel.h"
+#include <imgui.h>
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -743,6 +744,21 @@ private:
      */
     bool LoadConfiguration();
 
+    /**
+     * @brief Create default build targets
+     */
+    void CreateDefaultBuildTargets();
+
+    /**
+     * @brief Detect available platforms
+     */
+    void DetectPlatformAvailability();
+
+    /**
+     * @brief Check for completed builds
+     */
+    void UpdateCompletedBuilds();
+    
 private:
     // Build configuration
     std::vector<BuildTarget> m_buildTargets;    ///< Build targets
@@ -752,7 +768,7 @@ private:
     std::vector<BuildJob> m_buildJobs;          ///< All build jobs (history)
     std::queue<std::string> m_buildQueue;       ///< Pending build job IDs
     std::vector<std::thread> m_buildThreads;    ///< Build worker threads
-    std::mutex m_buildMutex;                    ///< Build queue mutex
+    mutable std::mutex m_buildMutex;            ///< Build queue mutex
     std::condition_variable m_buildCondition;   ///< Build queue condition
     std::atomic<bool> m_shouldStopBuilds{false}; ///< Stop builds flag
     
@@ -785,7 +801,7 @@ private:
     
     // Cache and optimization
     std::string m_buildCacheDirectory;          ///< Build cache directory
-    std::unordered_map<std::string, std::chrono::file_time_type> m_sourceFileTimestamps; ///< Source file timestamps
+    std::unordered_map<std::string, std::time_t> m_sourceFileTimestamps; ///< Source file timestamps (using time_t for C++17 compatibility)
     
     // Notification settings
     bool m_enableNotifications = true;          ///< Enable notifications

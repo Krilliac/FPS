@@ -9,7 +9,12 @@
 #include <d3d11.h>
 #include <wincodec.h>
 #include <wrl/client.h>
+
+// Only include CURL when networking is enabled
+#ifdef NETWORKING_ENABLED
 #include <curl/curl.h>
+#endif
+
 #include <miniz.h>
 #include <filesystem>
 #include <fstream>
@@ -219,8 +224,10 @@ static std::wstring SymStackTrace(EXCEPTION_POINTERS*);
 static std::wstring ThreadStacks();
 static void SaveScreenshot(const std::wstring&);
 static void ZipFiles(const std::wstring&, const std::vector<std::wstring>&);
-static bool Upload(const std::string&, const std::wstring&, const std::string&);
 
+#ifdef NETWORKING_ENABLED
+static bool Upload(const std::string&, const std::wstring&, const std::string&);
+#endif
 static LONG WINAPI CrashFilter(EXCEPTION_POINTERS* ep)
 {
     HandleCrashInternal(ep, nullptr);
@@ -272,6 +279,7 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* msg)
         ZipFiles(zipFile, files);
 
     bool ok = true;
+#ifdef NETWORKING_ENABLED
     if (!g_cfg.uploadURL.empty()) {
         if (g_cfg.zipBeforeUpload)
             ok = Upload(g_cfg.uploadURL, zipFile, "package");
@@ -282,14 +290,26 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* msg)
                 ok &= Upload(g_cfg.uploadURL, shot, "screenshot");
         }
     }
+#else
+    // When networking is disabled, mark upload as successful (no-op)
+    if (!g_cfg.uploadURL.empty()) {
+        ok = true; // Consider it successful since we can't upload
+    }
+#endif
 
     std::wstring msgBox = msg ? L"Assertion captured.\n"
         : L"Crash captured.\n";
     msgBox += L"Files:\n" + dump + L"\n" + logFile;
     if (g_cfg.captureScreenshot)
         msgBox += L"\n" + shot;
+        
+#ifdef NETWORKING_ENABLED
     if (!g_cfg.uploadURL.empty())
         msgBox += L"\nUpload: " + std::wstring(ok ? L"Success" : L"FAILED");
+#else
+    if (!g_cfg.uploadURL.empty())
+        msgBox += L"\nUpload: Disabled (networking not enabled)";
+#endif
 
     MessageBoxW(nullptr,
         msgBox.c_str(),
@@ -720,9 +740,10 @@ static void ZipFiles(
 }
 
 //------------------------------------------------------------------------------
-// Upload via libcurl
+// Upload via libcurl (only if networking is enabled)
 //------------------------------------------------------------------------------
 
+#ifdef NETWORKING_ENABLED
 static bool Upload(
     const std::string& url,
     const std::wstring& wfile,
@@ -753,3 +774,4 @@ static bool Upload(
 
     return (res == CURLE_OK);
 }
+#endif // NETWORKING_ENABLED

@@ -24,8 +24,6 @@ class SparkEngineCamera;
 class GameObject;
 class Player;
 class ProjectilePool;
-class Shader;
-struct ConstantBuffer;
 
 #include "Primitives.h"
 #include "PlaceholderMesh.h"
@@ -41,6 +39,8 @@ struct ConstantBuffer;
  * the main game loop. It handles initialization of game objects, processing
  * user input, updating game state, and rendering the scene. This class serves
  * as the bridge between the engine systems and the actual game content.
+ * 
+ * All rendering is now handled through the unified GraphicsEngine system.
  * 
  * @note The Game class does not own the graphics or input systems, but holds references
  * @warning Ensure Initialize() is called before any Update() or Render() operations
@@ -66,9 +66,9 @@ public:
     /**
      * @brief Initialize the game systems and scene
      * 
-     * Sets up all game systems including camera, shaders, player, projectile pool,
-     * and creates initial test objects in the scene. Must be called after the
-     * graphics and input systems are initialized.
+     * Sets up all game systems including camera, player, projectile pool,
+     * and creates initial test objects in the scene. All rendering is handled
+     * by the unified GraphicsEngine system.
      * 
      * @param graphics Pointer to the initialized graphics engine
      * @param input Pointer to the initialized input manager
@@ -97,11 +97,10 @@ public:
     void Update(float deltaTime);
 
     /**
-     * @brief Render the current frame
+     * @brief Render the current frame using unified graphics system
      * 
-     * Issues rendering commands for all visible game objects and manages
-     * the rendering pipeline for the current frame. Should be called after
-     * Update() during the main game loop.
+     * Uses the unified GraphicsEngine rendering pipeline to render all
+     * visible game objects. No legacy rendering paths remain.
      */
     void Render();
 
@@ -335,12 +334,11 @@ private:
     GraphicsEngine* m_graphics{ nullptr }; ///< Reference to graphics engine
     InputManager* m_input{ nullptr };      ///< Reference to input manager
 
-    // Sub-systems owned by Game
+    // Sub-systems owned by Game (unified system - no separate shader management)
     std::unique_ptr<SparkEngineCamera> m_camera;        ///< First-person camera system
-    std::unique_ptr<Shader>            m_shader;        ///< Shader management
     std::unique_ptr<Player>            m_player;        ///< Player controller
     std::unique_ptr<ProjectilePool>    m_projectilePool; ///< Projectile object pool
-    std::unique_ptr<SceneManager>      m_sceneManager;    ///< Scene management
+    std::unique_ptr<SceneManager>      m_sceneManager;  ///< Scene management
 
     // Scene objects
     std::vector<std::unique_ptr<GameObject>> m_gameObjects; ///< All game objects in the scene

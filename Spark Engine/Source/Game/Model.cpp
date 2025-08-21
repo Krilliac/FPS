@@ -13,8 +13,8 @@ HRESULT Model::LoadObj(const std::wstring& filename, ID3D11Device* device)
     // ------------------------------------------------------------------
     //  Argument validation
     // ------------------------------------------------------------------
-    ASSERT_ALWAYS_MSG(!filename.empty(), "Model::LoadObj ‒ filename is empty");
-    ASSERT_ALWAYS_MSG(device != nullptr, "Model::LoadObj ‒ ID3D11Device is null");
+    ASSERT_ALWAYS_MSG(!filename.empty(), "Model::LoadObj - filename is empty");
+    ASSERT_ALWAYS_MSG(device != nullptr, "Model::LoadObj - ID3D11Device is null");
 
     // Convert UTF-16 filename to UTF-8 for tinyobjloader
     std::string fileUtf8(filename.begin(), filename.end());

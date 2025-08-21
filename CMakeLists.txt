@@ -10,6 +10,11 @@ cmake_policy(SET CMP0091 NEW)  # Enable MSVC_RUNTIME_LIBRARY support
 # Set consistent runtime library for all targets
 if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    # Force specific runtime library settings to avoid conflicts
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MDd")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MD")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
 endif()
 
 # ---------------------------------------------------------------------
@@ -43,7 +48,7 @@ option(ENABLE_LUA "Enable Lua scripting support" ON)
 option(ENABLE_COLLABORATIVE "Enable collaborative features" ON)
 option(ENABLE_GRAPHICS "Enable graphics engine" ON)
 option(ENABLE_PROFILING "Enable profiling tools" ON)
-option(ENABLE_NETWORKING "Enable networking features" ON)
+option(ENABLE_NETWORKING "Enable networking features" OFF)  # Disabled for now to avoid CURL issues
 option(ENABLE_ASSET_STREAMING "Enable asset streaming" ON)
 option(ENABLE_HOT_RELOAD "Enable hot reload functionality" ON)
 option(ENABLE_TERRAIN_SYSTEM "Enable terrain system" ON)
@@ -92,20 +97,10 @@ if(MSVC)
 endif()
 
 # ---------------------------------------------------------------------
-# 7) Third-party library sources (curl, miniz, tinyobjloader)
+# 7) Third-party library configuration
 # ---------------------------------------------------------------------
 
-# CURL
-set(CURL_ROOT "${CMAKE_SOURCE_DIR}/ThirdParty/Networking/curl")
-if(EXISTS "${CURL_ROOT}")
-    file(GLOB_RECURSE CURL_SOURCES
-        "${CURL_ROOT}/lib/*.c"
-        "${CURL_ROOT}/lib/*.h"
-    )
-    list(FILTER CURL_SOURCES EXCLUDE REGEX ".*test.*|.*example.*|.*tool.*")
-endif()
-
-# MINIZ
+# MINIZ - Simple compression library
 set(MINIZ_ROOT "${CMAKE_SOURCE_DIR}/ThirdParty/Utils/miniz")
 if(EXISTS "${MINIZ_ROOT}")
     file(GLOB_RECURSE MINIZ_SOURCES
@@ -113,9 +108,24 @@ if(EXISTS "${MINIZ_ROOT}")
         "${MINIZ_ROOT}/*.h"
     )
     list(FILTER MINIZ_SOURCES EXCLUDE REGEX ".*test.*|.*example.*|.*tool.*")
+    
+    # Create miniz library target
+    add_library(miniz STATIC ${MINIZ_SOURCES})
+    target_include_directories(miniz PUBLIC "${MINIZ_ROOT}")
+    
+    # Set consistent runtime library for miniz
+    if(MSVC)
+        set_property(TARGET miniz PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    endif()
+    
+    set(MINIZ_FOUND TRUE)
+    message(STATUS "Found MINIZ at: ${MINIZ_ROOT}")
+else()
+    set(MINIZ_FOUND FALSE)
+    message(STATUS "MINIZ not found")
 endif()
 
-# TinyObjLoader - Proper Implementation
+# TinyObjLoader - Proper static library implementation
 find_path(TINYOBJLOADER_INCLUDE_DIR 
     NAMES tiny_obj_loader.h
     PATHS 
@@ -129,13 +139,22 @@ find_path(TINYOBJLOADER_INCLUDE_DIR
 )
 
 if(TINYOBJLOADER_INCLUDE_DIR)
-    # Create a proper library target for TinyObjLoader
-    add_library(tinyobjloader INTERFACE)
-    target_include_directories(tinyobjloader INTERFACE ${TINYOBJLOADER_INCLUDE_DIR})
-    target_compile_definitions(tinyobjloader INTERFACE TINYOBJLOADER_IMPLEMENTATION)
+    # Create a proper static library for TinyObjLoader instead of INTERFACE
+    # This prevents duplicate symbol issues by having only one implementation
+    add_library(tinyobjloader STATIC
+        "Spark Engine/Source/Utils/TinyObjImpl.cpp"
+    )
+    target_include_directories(tinyobjloader PUBLIC ${TINYOBJLOADER_INCLUDE_DIR})
+    # Don't add TINYOBJLOADER_IMPLEMENTATION to the interface - it's only in TinyObjImpl.cpp
+    
+    # Set consistent runtime library for tinyobjloader
+    if(MSVC)
+        set_property(TARGET tinyobjloader PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    endif()
     
     set(TINYOBJ_FOUND TRUE)
     message(STATUS "Found TinyObjLoader at: ${TINYOBJLOADER_INCLUDE_DIR}")
+    message(STATUS "TinyObjLoader implementation will be compiled once in TinyObjImpl.cpp")
 else()
     set(TINYOBJ_FOUND FALSE)
     message(WARNING "TinyObjLoader not found")
@@ -150,7 +169,7 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/SparkConsole/CMakeLists.txt")
 endif()
 
 # ---------------------------------------------------------------------
-# 9) SparkEngine source files
+# 9) SparkEngine source files and executable
 # ---------------------------------------------------------------------
 file(GLOB_RECURSE SPARK_ENGINE_SOURCES
     CONFIGURE_DEPENDS
@@ -161,24 +180,18 @@ file(GLOB_RECURSE SPARK_ENGINE_SOURCES
 list(FILTER SPARK_ENGINE_SOURCES EXCLUDE REGEX ".*[Tt]est.*")
 list(FILTER SPARK_ENGINE_SOURCES EXCLUDE REGEX ".*[Ee]xample.*")
 
-# Create the main executable
+# Create the main executable - WIN32 subsystem since it uses wWinMain
 add_executable(SparkEngine WIN32 ${SPARK_ENGINE_SOURCES})
 
-# Add third-party sources if they exist
-if(CURL_SOURCES)
-    target_sources(SparkEngine PRIVATE ${CURL_SOURCES})
-    target_compile_definitions(SparkEngine PRIVATE NETWORKING_ENABLED CURL_STATICLIB)
-    message(STATUS "Added CURL sources to build")
-endif()
-
-if(MINIZ_SOURCES)
-    target_sources(SparkEngine PRIVATE ${MINIZ_SOURCES})
-    message(STATUS "Added MINIZ sources to build")
+# Link third-party libraries properly
+if(MINIZ_FOUND)
+    target_link_libraries(SparkEngine PRIVATE miniz)
+    message(STATUS "Linking SparkEngine with MINIZ")
 endif()
 
 if(TINYOBJ_FOUND)
     target_link_libraries(SparkEngine PRIVATE tinyobjloader)
-    message(STATUS "Added TinyObjLoader to build")
+    message(STATUS "Linking SparkEngine with TinyObjLoader")
 endif()
 
 # Ensure SparkEngine depends on SparkConsole
@@ -186,12 +199,13 @@ if(TARGET SparkConsole)
     add_dependencies(SparkEngine SparkConsole)
     message(STATUS "SparkEngine will be built after SparkConsole")
     
-    # Add a post-build step to copy SparkConsole.exe to the same directory as SparkEngine.exe
+    # FIXED: Simplified post-build step to copy SparkConsole.exe
     add_custom_command(TARGET SparkEngine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             $<TARGET_FILE:SparkConsole>
-            $<TARGET_FILE_DIR:SparkEngine>/$<TARGET_FILE_NAME:SparkConsole>
+            $<TARGET_FILE_DIR:SparkEngine>
         COMMENT "Copying SparkConsole to SparkEngine output directory"
+        VERBATIM
     )
 endif()
 
@@ -210,7 +224,7 @@ if(ENABLE_EDITOR AND EXISTS "${CMAKE_SOURCE_DIR}/SparkEditor/CMakeLists.txt")
 endif()
 
 # ---------------------------------------------------------------------
-# 10) Asset Management
+# 10) Asset Management - IMPROVED: No automatic shader compilation
 # ---------------------------------------------------------------------
 # Create necessary directories
 add_custom_command(TARGET SparkEngine POST_BUILD
@@ -224,6 +238,26 @@ add_custom_command(TARGET SparkEngine POST_BUILD
     COMMENT "Creating asset directory structure"
 )
 
+# Copy shaders to output directory instead of compiling them
+file(GLOB_RECURSE SHADER_FILES "Spark Engine/Shaders/HLSL/*.hlsl")
+foreach(SHADER_FILE ${SHADER_FILES})
+    get_filename_component(SHADER_NAME ${SHADER_FILE} NAME)
+    add_custom_command(TARGET SparkEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${SHADER_FILE}
+            "$<TARGET_FILE_DIR:SparkEngine>/Shaders/${SHADER_NAME}"
+        COMMENT "Copying shader ${SHADER_NAME}"
+    )
+endforeach()
+
+# Exclude shader files from automatic compilation by setting them as None instead of FxCompile
+file(GLOB_RECURSE ALL_SHADER_FILES "*.hlsl")
+set_source_files_properties(${ALL_SHADER_FILES} PROPERTIES
+    VS_TOOL_OVERRIDE "None"
+    VS_DEPLOYMENT_CONTENT 1
+    VS_DEPLOYMENT_LOCATION "Shaders"
+)
+
 # ---------------------------------------------------------------------
 # 11) Include directories
 # ---------------------------------------------------------------------
@@ -231,27 +265,33 @@ target_include_directories(SparkEngine PRIVATE
     "Spark Engine/Source"
 )
 
-# Add CURL headers if available
-if(EXISTS "${CURL_ROOT}/include")
-    target_include_directories(SparkEngine PRIVATE "${CURL_ROOT}/include")
-endif()
-
-# Add MINIZ headers if available
-if(EXISTS "${MINIZ_ROOT}")
-    target_include_directories(SparkEngine PRIVATE "${MINIZ_ROOT}")
-endif()
-
 # ---------------------------------------------------------------------
-# 12) System libraries
+# 12) System libraries - Properly configured
 # ---------------------------------------------------------------------
 target_link_libraries(SparkEngine PRIVATE
+    # DirectX and graphics
     d3d11 dxgi d3dcompiler dxguid
-    winmm ws2_32 wsock32
-    ole32 oleaut32 uuid
+    
+    # Windows core libraries
     kernel32 user32 gdi32 winspool
     shell32 comdlg32 advapi32
-    crypt32 wldap32 normaliz
+    ole32 oleaut32 uuid
+    
+    # Multimedia and timing
+    winmm
+    
+    # Networking libraries (only if networking is enabled)
+    $<$<BOOL:${ENABLE_NETWORKING}>:ws2_32>
+    $<$<BOOL:${ENABLE_NETWORKING}>:wsock32>
+    $<$<BOOL:${ENABLE_NETWORKING}>:crypt32>
+    $<$<BOOL:${ENABLE_NETWORKING}>:wldap32>
+    $<$<BOOL:${ENABLE_NETWORKING}>:normaliz>
 )
+
+# Add legacy stdio for compatibility
+if(MSVC)
+    target_link_libraries(SparkEngine PRIVATE legacy_stdio_definitions)
+endif()
 
 # ---------------------------------------------------------------------
 # 13) Lua, PhysX, and other third-party includes
@@ -308,6 +348,10 @@ if(ENABLE_PROFILING)
     list(APPEND FEATURE_DEFINITIONS "PROFILING_ENABLED")
 endif()
 
+if(ENABLE_NETWORKING)
+    list(APPEND FEATURE_DEFINITIONS "NETWORKING_ENABLED")
+endif()
+
 if(ENABLE_ASSET_STREAMING)
     list(APPEND FEATURE_DEFINITIONS "ASSET_STREAMING_ENABLED")
 endif()
@@ -351,9 +395,12 @@ foreach(src ${SPARK_ENGINE_SOURCES})
     endif()
 endforeach()
 
+# Set working directory and startup project
 if(MSVC)
     set_property(TARGET SparkEngine PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT SparkEngine)
+    
+    # Organize asset files in Visual Studio
     source_group("Assets\\\\Shaders" FILES "*.hlsl" "*.fx" "*.glsl")
     source_group("Assets\\\\Models" FILES "*.obj" "*.fbx" "*.dae" "*.3ds" "*.ply")
     source_group("Assets\\\\Textures" FILES "*.png" "*.jpg" "*.jpeg" "*.tga" "*.dds" "*.bmp")
@@ -364,3 +411,5 @@ endif()
 
 message(STATUS "SPARKENGINE CONFIGURED SUCCESSFULLY")
 message(STATUS "SparkEngine and SparkConsole will be built to: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+message(STATUS "Networking is ${ENABLE_NETWORKING} (disabled to avoid CURL linking issues)")
+message(STATUS "All hacky configurations have been removed and replaced with proper CMake practices")

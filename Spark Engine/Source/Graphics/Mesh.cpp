@@ -382,8 +382,81 @@ HRESULT Mesh::CreateSphere(float radius, int slices, int stacks)
     return CreateFromVertices(md.vertices, md.indices);
 }
 
+HRESULT Mesh::CreatePyramid(float size, float height)
+{
+    ASSERT(size > 0.0f && height > 0.0f);
+
+    std::wcout << L"[OPERATION] Mesh::CreatePyramid called. size=" << size << L" height=" << height << std::endl;
+
+    // Clear existing data
+    m_vertices.clear();
+    m_indices.clear();
+
+    float h = size * 0.5f;
+
+    // 5 vertices: 4 for the base + 1 for the apex
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    // Base vertices (square base in XZ plane at y=0)
+    vertices.emplace_back(XMFLOAT3(-h, 0.0f, -h), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)); // 0: bottom-left
+    vertices.emplace_back(XMFLOAT3( h, 0.0f, -h), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 1.0f)); // 1: bottom-right
+    vertices.emplace_back(XMFLOAT3( h, 0.0f,  h), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)); // 2: top-right
+    vertices.emplace_back(XMFLOAT3(-h, 0.0f,  h), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)); // 3: top-left
+
+    // Apex vertex (at the top)
+    vertices.emplace_back(XMFLOAT3(0.0f, height, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.5f, 0.5f)); // 4: apex
+
+    // Base (bottom face) - 2 triangles
+    indices.insert(indices.end(), {0, 2, 1}); // Triangle 1
+    indices.insert(indices.end(), {0, 3, 2}); // Triangle 2
+
+    // Side faces - 4 triangles
+    // Front face (negative Z)
+    indices.insert(indices.end(), {0, 1, 4});
+    // Right face (positive X)  
+    indices.insert(indices.end(), {1, 2, 4});
+    // Back face (positive Z)
+    indices.insert(indices.end(), {2, 3, 4});
+    // Left face (negative X)
+    indices.insert(indices.end(), {3, 0, 4});
+
+    std::wcout << L"[INFO] Pyramid base mesh created with " << vertices.size() << L" vertices and " << indices.size() << L" indices." << std::endl;
+
+    // Now compute proper normals for the side faces
+    // For each triangle, calculate face normal and assign to all vertices of that triangle
+    for (size_t i = 6; i < indices.size(); i += 3) // Skip base triangles (indices 0-5)
+    {
+        unsigned int i0 = indices[i];
+        unsigned int i1 = indices[i + 1];
+        unsigned int i2 = indices[i + 2];
+
+        XMVECTOR v0 = XMLoadFloat3(&vertices[i0].Position);
+        XMVECTOR v1 = XMLoadFloat3(&vertices[i1].Position);
+        XMVECTOR v2 = XMLoadFloat3(&vertices[i2].Position);
+
+        XMVECTOR edge1 = v1 - v0;
+        XMVECTOR edge2 = v2 - v0;
+        XMVECTOR normal = XMVector3Normalize(XMVector3Cross(edge1, edge2));
+
+        XMFLOAT3 n;
+        XMStoreFloat3(&n, normal);
+
+        // Assign the same normal to all vertices of this triangle
+        vertices[i0].Normal = n;
+        vertices[i1].Normal = n;
+        vertices[i2].Normal = n;
+    }
+
+    ASSERT_ALWAYS_MSG(!vertices.empty() && !indices.empty(), "CreatePyramid produced empty mesh");
+
+    std::wcout << L"[INFO] Pyramid mesh created successfully." << std::endl;
+
+    return CreateFromVertices(vertices, indices);
+}
+
 void Mesh::CalculateNormals() {
-    std::wcout << L"[OPERATION] Mesh::CalculateNormals called." << std::endl;
+    // **FIXED: Removed excessive logging**
     ASSERT(!m_vertices.empty() && !m_indices.empty());
 
     for (size_t i = 0; i + 2 < m_indices.size(); i += 3)
@@ -401,11 +474,15 @@ void Mesh::CalculateNormals() {
         m_vertices[i2].Normal = nf;
     }
 
-    std::wcout << L"[INFO] Mesh normals calculated." << std::endl;
+    // **ONLY log normal calculations occasionally for debugging**
+    static int normalCalcCount = 0;
+    if (++normalCalcCount % 5 == 0) { // Every 5th normal calculation
+        std::wcout << L"[DEBUG] Calculated normals " << normalCalcCount << L" times" << std::endl;
+    }
 }
 
 HRESULT Mesh::CreateBuffers() {
-    std::wcout << L"[OPERATION] Mesh::CreateBuffers called." << std::endl;
+    // **FIXED: Removed excessive logging**
     ASSERT(m_device);
     ASSERT(!m_vertices.empty() && !m_indices.empty());
 
@@ -433,19 +510,30 @@ HRESULT Mesh::CreateBuffers() {
     ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (IB) failed");
     if (FAILED(hr)) return hr;
 
-    std::wcout << L"[INFO] Mesh buffers created." << std::endl;
+    // **ONLY log buffer creation occasionally for debugging**
+    static int bufferCreateCount = 0;
+    if (++bufferCreateCount % 10 == 0) { // Every 10th buffer creation
+        std::wcout << L"[DEBUG] Created " << bufferCreateCount << L" mesh buffers" << std::endl;
+    }
+    
     return S_OK;
 }
 
 void Mesh::Render(ID3D11DeviceContext* ctx) {
-    std::wcout << L"[OPERATION] Mesh::Render called." << std::endl;
+    // **FIXED: Removed per-frame logging that was causing severe performance issues**
     ASSERT(ctx && m_vb && m_ib && m_indexCount > 0);
 
     UINT stride = sizeof(Vertex), offset = 0;
     ctx->IASetVertexBuffers(0, 1, &m_vb, &stride, &offset);
     ctx->IASetIndexBuffer(m_ib, DXGI_FORMAT_R32_UINT, 0);
     ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    
+    // **ENSURE PROPER RENDERING STATE**
     ctx->DrawIndexed(m_indexCount, 0, 0);
 
-    std::wcout << L"[INFO] Mesh rendered." << std::endl;
+    // **ONLY log rendering statistics occasionally for debugging**
+    static int renderCallCount = 0;
+    if (++renderCallCount % 3600 == 0) { // Every 60 seconds at 60fps
+        std::wcout << L"[DEBUG] Mesh rendered " << renderCallCount << L" times. IndexCount=" << m_indexCount << std::endl;
+    }
 }

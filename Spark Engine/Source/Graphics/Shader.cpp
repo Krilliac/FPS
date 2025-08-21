@@ -1,241 +1,620 @@
-﻿// Shader.cpp
+﻿// Shader.cpp - Enhanced shader system implementation with AAA features (C++14 compatible)
 #include "Shader.h"
 #include "Utils/Assert.h"
+#include "../Utils/SparkConsole.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
-#include <filesystem>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <chrono>
+#include <Windows.h>
 
-Shader::Shader() {
-    std::wcout << L"[INFO] Shader constructed." << std::endl;
+using namespace DirectX;
+
+// Helper function for C++14 compatible file existence check
+bool FileExists(const std::wstring& filename) {
+    DWORD attrs = GetFileAttributesW(filename.c_str());
+    return (attrs != INVALID_FILE_ATTRIBUTES && !(attrs & FILE_ATTRIBUTE_DIRECTORY));
 }
 
-Shader::~Shader() {
-    std::wcout << L"[INFO] Shader destructor called." << std::endl;
+// Console logging integration
+#define LOG_TO_CONSOLE_IMMEDIATE(wmsg, wtype) \
+    do { \
+        std::wstring wstr = wmsg; \
+        std::wstring wtypestr = wtype; \
+        std::string msg(wstr.begin(), wstr.end()); \
+        std::string type(wtypestr.begin(), wtypestr.end()); \
+        Spark::SimpleConsole::GetInstance().Log(msg, type); \
+    } while(0)
+
+// ============================================================================
+// SHADER RESOURCE IMPLEMENTATIONS
+// ============================================================================
+
+void VertexShaderResource::Bind(ID3D11DeviceContext* context)
+{
+    if (m_vertexShader && m_inputLayout) {
+        context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+        context->IASetInputLayout(m_inputLayout.Get());
+    }
+}
+
+void VertexShaderResource::Unbind(ID3D11DeviceContext* context)
+{
+    context->VSSetShader(nullptr, nullptr, 0);
+    context->IASetInputLayout(nullptr);
+}
+
+void PixelShaderResource::Bind(ID3D11DeviceContext* context)
+{
+    if (m_pixelShader) {
+        context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+    }
+}
+
+void PixelShaderResource::Unbind(ID3D11DeviceContext* context)
+{
+    context->PSSetShader(nullptr, nullptr, 0);
+}
+
+// ============================================================================
+// MAIN SHADER CLASS IMPLEMENTATION
+// ============================================================================
+
+Shader::Shader()
+    : m_device(nullptr)
+    , m_context(nullptr)
+    , m_activeVariant(-1)
+    , m_hotReloadEnabled(true)
+    , m_validationEnabled(true)
+{
+    // Initialize default compilation flags for C++14 compatibility
+    m_defaultFlags.enableDebug = false;
+    m_defaultFlags.enableOptimization = true;
+    m_defaultFlags.enableValidation = true;
+    m_defaultFlags.treatWarningsAsErrors = false;
+    m_defaultFlags.entryPoint = "main";
+    
+    // Initialize metrics for C++14 compatibility
+    m_metrics.compiledShaders = 0;
+    m_metrics.failedCompilations = 0;
+    m_metrics.activeVariants = 0;
+    m_metrics.hotReloadCount = 0;
+    m_metrics.lastCompileTime = 0.0f;
+    m_metrics.totalCompileTime = 0.0f;
+    m_metrics.shaderMemoryUsage = 0;
+    m_metrics.hotReloadEnabled = false;
+    
+    // **FIXED: Add correct search paths pointing to source directory**
+    m_searchPaths.clear();
+    m_searchPaths.push_back("D:/Spark Engine/SparkEngine/Spark Engine/Shaders/HLSL/");
+    m_searchPaths.push_back("../Spark Engine/Shaders/HLSL/");
+    m_searchPaths.push_back("../../Spark Engine/Shaders/HLSL/");
+    m_searchPaths.push_back("Shaders/HLSL/");
+    m_searchPaths.push_back("Assets/Shaders/");
+    m_searchPaths.push_back("./");
+    
+    LOG_TO_CONSOLE_IMMEDIATE(L"Enhanced Shader system constructed with AAA features and console integration.", L"INFO");
+}
+
+Shader::~Shader()
+{
+    LOG_TO_CONSOLE_IMMEDIATE(L"Enhanced Shader destructor called.", L"INFO");
     Shutdown();
 }
 
-HRESULT Shader::Initialize(ID3D11Device* device, ID3D11DeviceContext* context) {
-    std::wcout << L"[OPERATION] Shader::Initialize called." << std::endl;
+HRESULT Shader::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+{
+    LOG_TO_CONSOLE_IMMEDIATE(L"Enhanced Shader::Initialize started with AAA features.", L"INFO");
     ASSERT_MSG(device != nullptr, "Shader::Initialize device is null");
     ASSERT_MSG(context != nullptr, "Shader::Initialize context is null");
 
     m_device = device;
     m_context = context;
 
-    HRESULT hr = CreateConstantBuffer();
-    std::wcout << L"[INFO] Shader constant buffer creation HR=0x" << std::hex << hr << std::dec << std::endl;
-    ASSERT_MSG(SUCCEEDED(hr), "CreateConstantBuffer failed");
-    return hr;
+    HRESULT hr = CreateConstantBuffers();
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"Enhanced Shader constant buffer creation failed with HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        return hr;
+    }
+
+    // Initialize shader resources (C++14 compatible)
+    m_vertexShader = std::unique_ptr<VertexShaderResource>(new VertexShaderResource());
+    m_pixelShader = std::unique_ptr<PixelShaderResource>(new PixelShaderResource());
+
+    LOG_TO_CONSOLE_IMMEDIATE(L"Enhanced Shader system initialized with comprehensive features.", L"SUCCESS");
+    return S_OK;
 }
 
-void Shader::Shutdown() {
-    std::wcout << L"[OPERATION] Shader::Shutdown called." << std::endl;
-    if (m_constantBuffer) { m_constantBuffer->Release(); m_constantBuffer = nullptr; }
-    if (m_inputLayout) { m_inputLayout->Release();    m_inputLayout = nullptr; }
-    if (m_pixelShader) { m_pixelShader->Release();    m_pixelShader = nullptr; }
-    if (m_vertexShader) { m_vertexShader->Release();   m_vertexShader = nullptr; }
-    std::wcout << L"[INFO] Shader shutdown complete." << std::endl;
+void Shader::Shutdown()
+{
+    LOG_TO_CONSOLE_IMMEDIATE(L"Enhanced Shader::Shutdown called.", L"INFO");
+    
+    // Clear shader cache
+    m_shaderCache.clear();
+    m_shaderVariants.clear();
+    
+    // Reset DirectX resources
+    m_postProcessingBuffer.Reset();
+    m_lightingDataBuffer.Reset();
+    m_perMaterialBuffer.Reset();
+    m_perObjectBuffer.Reset();
+    m_perFrameBuffer.Reset();
+    
+    m_pixelShader.reset();
+    m_vertexShader.reset();
+    
+    m_device = nullptr;
+    m_context = nullptr;
+    
+    LOG_TO_CONSOLE_IMMEDIATE(L"Enhanced Shader shutdown complete.", L"INFO");
 }
 
-HRESULT Shader::LoadVertexShader(const std::wstring& filename) {
-    std::wcout << L"[OPERATION] Shader::LoadVertexShader called. filename=" << filename << std::endl;
+HRESULT Shader::LoadVertexShader(const std::wstring& filename, const ShaderCompilationFlags& flags)
+{
+    LOG_TO_CONSOLE_IMMEDIATE(std::wstring(L"Loading enhanced vertex shader: ") + filename, L"INFO");
+    
+    auto startTime = std::chrono::high_resolution_clock::now();
+    
     ASSERT_MSG(!filename.empty(), "LoadVertexShader: filename empty");
     ASSERT_MSG(m_device != nullptr, "LoadVertexShader: device is null");
 
-    ID3DBlob* vsBlob = nullptr;
-    HRESULT hr = CompileShaderFromFile(filename, "main", "vs_5_0", &vsBlob);
-    ASSERT_MSG(SUCCEEDED(hr), "CompileShaderFromFile (VS) failed");
-    if (FAILED(hr)) return hr;
+    ComPtr<ID3DBlob> vsBlob;
+    
+    // **FIX: Explicitly specify vertex shader compilation**
+    ShaderCompilationFlags vsFlags = flags;
+    vsFlags.target = "vs_5_0"; // Force vertex shader target
+    
+    HRESULT hr = CompileShaderFromFileAdvanced(filename, ShaderType::VERTEX_SHADER, vsFlags, &vsBlob);
+    if (FAILED(hr)) {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Vertex shader compilation failed, trying fallback method", L"WARNING");
+        
+        // **FALLBACK: Try direct D3DCompileFromFile**
+        ComPtr<ID3DBlob> errorBlob;
+        hr = D3DCompileFromFile(
+            filename.c_str(),
+            nullptr,
+            D3D_COMPILE_STANDARD_FILE_INCLUDE,
+            "main",
+            "vs_5_0",
+            D3DCOMPILE_ENABLE_STRICTNESS,
+            0,
+            &vsBlob,
+            &errorBlob
+        );
+        
+        if (FAILED(hr)) {
+            if (errorBlob) {
+                std::string errorString(reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
+                std::wstring wErrorString(errorString.begin(), errorString.end());
+                LOG_TO_CONSOLE_IMMEDIATE(L"Vertex shader compilation error: " + wErrorString, L"ERROR");
+            }
+            return hr;
+        }
+    }
 
+    m_vertexShader = std::make_unique<VertexShaderResource>();
     hr = m_device->CreateVertexShader(
         vsBlob->GetBufferPointer(),
         vsBlob->GetBufferSize(),
         nullptr,
-        &m_vertexShader);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateVertexShader failed");
-    if (FAILED(hr)) { vsBlob->Release(); return hr; }
+        m_vertexShader->m_vertexShader.GetAddressOf()
+    );
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"CreateVertexShader failed with HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        return hr;
+    }
 
-    D3D11_INPUT_ELEMENT_DESC layoutDesc[] = {
-        { "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-    };
-
-    hr = m_device->CreateInputLayout(
-        layoutDesc,
-        ARRAYSIZE(layoutDesc),
-        vsBlob->GetBufferPointer(),
-        vsBlob->GetBufferSize(),
-        &m_inputLayout);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateInputLayout failed");
-
-    vsBlob->Release();
-    std::wcout << L"[INFO] Vertex shader loaded." << std::endl;
+    m_vertexShader->m_shaderBlob = vsBlob;
+    
+    hr = CreateInputLayout(vsBlob.Get(), m_vertexShader->m_inputLayout.GetAddressOf());
+    if (SUCCEEDED(hr)) {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Vertex shader and input layout loaded successfully", L"SUCCESS");
+    } else {
+        std::wstring errorMsg = L"CreateInputLayout failed with HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+    }
+    
     return hr;
 }
 
-HRESULT Shader::LoadPixelShader(const std::wstring& filename) {
-    std::wcout << L"[OPERATION] Shader::LoadPixelShader called. filename=" << filename << std::endl;
+HRESULT Shader::LoadPixelShader(const std::wstring& filename, const ShaderCompilationFlags& flags)
+{
+    LOG_TO_CONSOLE_IMMEDIATE(std::wstring(L"Loading enhanced pixel shader: ") + filename, L"INFO");
+    
+    auto startTime = std::chrono::high_resolution_clock::now();
+    
     ASSERT_MSG(!filename.empty(), "LoadPixelShader: filename empty");
     ASSERT_MSG(m_device != nullptr, "LoadPixelShader: device is null");
 
-    ID3DBlob* psBlob = nullptr;
-    HRESULT hr = CompileShaderFromFile(filename, "main", "ps_5_0", &psBlob);
-    ASSERT_MSG(SUCCEEDED(hr), "CompileShaderFromFile (PS) failed");
-    if (FAILED(hr)) return hr;
+    ComPtr<ID3DBlob> psBlob;
+    
+    // **FIX: Explicitly specify pixel shader compilation**
+    ShaderCompilationFlags psFlags = flags;
+    psFlags.target = "ps_5_0"; // Force pixel shader target
+    
+    HRESULT hr = CompileShaderFromFileAdvanced(filename, ShaderType::PIXEL_SHADER, psFlags, &psBlob);
+    if (FAILED(hr)) {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Pixel shader compilation failed, trying fallback method", L"WARNING");
+        
+        // **FALLBACK: Try direct D3DCompileFromFile**
+        ComPtr<ID3DBlob> errorBlob;
+        hr = D3DCompileFromFile(
+            filename.c_str(),
+            nullptr,
+            D3D_COMPILE_STANDARD_FILE_INCLUDE,
+            "main",
+            "ps_5_0",
+            D3DCOMPILE_ENABLE_STRICTNESS,
+            0,
+            &psBlob,
+            &errorBlob
+        );
+        
+        if (FAILED(hr)) {
+            if (errorBlob) {
+                std::string errorString(reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
+                std::wstring wErrorString(errorString.begin(), errorString.end());
+                LOG_TO_CONSOLE_IMMEDIATE(L"Pixel shader compilation error: " + wErrorString, L"ERROR");
+            }
+            return hr;
+        }
+    }
 
+    m_pixelShader = std::make_unique<PixelShaderResource>();
     hr = m_device->CreatePixelShader(
         psBlob->GetBufferPointer(),
         psBlob->GetBufferSize(),
         nullptr,
-        &m_pixelShader);
-    ASSERT_MSG(SUCCEEDED(hr), "CreatePixelShader failed");
+        m_pixelShader->m_pixelShader.GetAddressOf()
+    );
 
-    psBlob->Release();
-    std::wcout << L"[INFO] Pixel shader loaded." << std::endl;
+    if (SUCCEEDED(hr)) {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Pixel shader loaded successfully", L"SUCCESS");
+    } else {
+        std::wstring errorMsg = L"CreatePixelShader failed with HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+    }
+
     return hr;
 }
 
-void Shader::SetShaders() {
-    std::wcout << L"[OPERATION] Shader::SetShaders called." << std::endl;
+void Shader::SetShaders()
+{
     ASSERT(m_context != nullptr);
-    ASSERT(m_vertexShader != nullptr);
-    ASSERT(m_pixelShader != nullptr);
-    ASSERT(m_inputLayout != nullptr);
-    ASSERT(m_constantBuffer != nullptr);
-
-    m_context->VSSetShader(m_vertexShader, nullptr, 0);
-    m_context->PSSetShader(m_pixelShader, nullptr, 0);
-    m_context->IASetInputLayout(m_inputLayout);
-    m_context->VSSetConstantBuffers(0, 1, &m_constantBuffer);
-
-    std::wcout << L"[INFO] Shaders set and constant buffer bound." << std::endl;
+    
+    if (m_vertexShader && m_vertexShader->IsValid()) {
+        m_vertexShader->Bind(m_context);
+    }
+    
+    if (m_pixelShader && m_pixelShader->IsValid()) {
+        m_pixelShader->Bind(m_context);
+    }
+    
+    // Bind constant buffers to appropriate slots
+    ID3D11Buffer* buffers[] = {
+        m_perFrameBuffer.Get(),
+        m_perObjectBuffer.Get(),
+        m_perMaterialBuffer.Get(),
+        m_lightingDataBuffer.Get(),
+        m_postProcessingBuffer.Get()
+    };
+    
+    m_context->VSSetConstantBuffers(0, 5, buffers);
+    m_context->PSSetConstantBuffers(0, 5, buffers);
 }
 
-void Shader::UpdateConstantBuffer(const ConstantBuffer& cb) {
-    std::wcout << L"[OPERATION] Shader::UpdateConstantBuffer called." << std::endl;
+void Shader::UnbindShaders()
+{
     ASSERT(m_context != nullptr);
-    ASSERT(m_constantBuffer != nullptr);
+    
+    if (m_vertexShader) {
+        m_vertexShader->Unbind(m_context);
+    }
+    
+    if (m_pixelShader) {
+        m_pixelShader->Unbind(m_context);
+    }
+}
+
+bool Shader::IsValid() const
+{
+    return m_vertexShader && m_vertexShader->IsValid() &&
+           m_pixelShader && m_pixelShader->IsValid();
+}
+
+// ============================================================================
+// CONSTANT BUFFER MANAGEMENT
+// ============================================================================
+
+void Shader::UpdatePerFrameConstants(const PerFrameConstants& constants)
+{
+    ASSERT(m_context != nullptr);
+    ASSERT(m_perFrameBuffer != nullptr);
 
     D3D11_MAPPED_SUBRESOURCE mapped;
-    HRESULT hr = m_context->Map(
-        m_constantBuffer,
-        0,
-        D3D11_MAP_WRITE_DISCARD,
-        0,
-        &mapped);
-    ASSERT_MSG(SUCCEEDED(hr), "VS Map constant buffer failed");
-    if (FAILED(hr)) return;
-
-    auto dataPtr = reinterpret_cast<ConstantBuffer*>(mapped.pData);
-    dataPtr->World = XMMatrixTranspose(cb.World);
-    dataPtr->View = XMMatrixTranspose(cb.View);
-    dataPtr->Projection = XMMatrixTranspose(cb.Projection);
-
-    m_context->Unmap(m_constantBuffer, 0);
-    std::wcout << L"[INFO] Constant buffer updated." << std::endl;
+    HRESULT hr = m_context->Map(m_perFrameBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+    if (SUCCEEDED(hr)) {
+        PerFrameConstants* data = reinterpret_cast<PerFrameConstants*>(mapped.pData);
+        *data = constants;
+        
+        // Transpose matrices for HLSL
+        data->ViewMatrix = XMMatrixTranspose(constants.ViewMatrix);
+        data->ProjectionMatrix = XMMatrixTranspose(constants.ProjectionMatrix);
+        data->ViewProjectionMatrix = XMMatrixTranspose(constants.ViewProjectionMatrix);
+        
+        m_context->Unmap(m_perFrameBuffer.Get(), 0);
+    }
 }
 
-HRESULT Shader::CompileShaderFromFile(const std::wstring& filename,
-    const std::string& entryPoint,
-    const std::string& shaderModel,
-    ID3DBlob** blobOut)
+void Shader::UpdatePerObjectConstants(const PerObjectConstants& constants)
 {
-    std::wcout << L"[OPERATION] Shader::CompileShaderFromFile called. filename=" << filename << std::endl;
-    ASSERT_MSG(!filename.empty(), "CompileShaderFromFile: filename empty");
-    ASSERT(blobOut != nullptr);
+    ASSERT(m_context != nullptr);
+    ASSERT(m_perObjectBuffer != nullptr);
 
-    // Try multiple shader locations based on your actual directory structure
-    std::vector<std::wstring> searchPaths = {
-        filename,                                           // Relative to working dir
-        std::wstring(L"Spark Engine/Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1),  // Your actual location
-        std::wstring(L"Spark Engine\\Shaders\\HLSL\\") + filename.substr(filename.find_last_of(L"/\\") + 1), // Windows paths
-        std::wstring(L"Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1),       // Expected location
-        std::wstring(L"Shaders\\HLSL\\") + filename.substr(filename.find_last_of(L"/\\") + 1),     // Windows expected
-        std::wstring(L"../Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1),    // One level up
-        std::wstring(L"build/bin/Debug/Shaders/HLSL/") + filename.substr(filename.find_last_of(L"/\\") + 1) // Build output
-    };
-
-    std::wstring foundPath;
-    bool fileFound = false;
-
-    for (const auto& path : searchPaths) {
-        if (std::filesystem::exists(path)) {
-            foundPath = path;
-            fileFound = true;
-            std::wstring msg = L"Found shader at: " + foundPath + L"\n";
-            OutputDebugStringW(msg.c_str());
-            break;
-        }
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    HRESULT hr = m_context->Map(m_perObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+    if (SUCCEEDED(hr)) {
+        PerObjectConstants* data = reinterpret_cast<PerObjectConstants*>(mapped.pData);
+        *data = constants;
+        
+        // Transpose matrices for HLSL
+        data->WorldMatrix = XMMatrixTranspose(constants.WorldMatrix);
+        data->WorldViewProjectionMatrix = XMMatrixTranspose(constants.WorldViewProjectionMatrix);
+        data->WorldInverseTransposeMatrix = XMMatrixTranspose(constants.WorldInverseTransposeMatrix);
+        data->PreviousWorldMatrix = XMMatrixTranspose(constants.PreviousWorldMatrix);
+        
+        m_context->Unmap(m_perObjectBuffer.Get(), 0);
     }
+}
 
-    if (!fileFound) {
-        std::wstring errorMsg = L"Shader file not found in any search path: " + filename + L"\n";
-        errorMsg += L"Searched paths:\n";
-        for (const auto& path : searchPaths) {
-            errorMsg += L"  - " + path + L" (exists: " + (std::filesystem::exists(path) ? L"YES" : L"NO") + L")\n";
+void Shader::UpdatePerMaterialConstants(const PerMaterialConstants& constants)
+{
+    ASSERT(m_context != nullptr);
+    ASSERT(m_perMaterialBuffer != nullptr);
+
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    HRESULT hr = m_context->Map(m_perMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+    if (SUCCEEDED(hr)) {
+        auto dataPtr = reinterpret_cast<PerMaterialConstants*>(mapped.pData);
+        *dataPtr = constants;
+        m_context->Unmap(m_perMaterialBuffer.Get(), 0);
+    }
+}
+
+void Shader::UpdateLightingData(const LightingData& lightingData)
+{
+    ASSERT(m_context != nullptr);
+    ASSERT(m_lightingDataBuffer != nullptr);
+
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    HRESULT hr = m_context->Map(m_lightingDataBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+    if (SUCCEEDED(hr)) {
+        auto dataPtr = reinterpret_cast<LightingData*>(mapped.pData);
+        *dataPtr = lightingData;
+        m_context->Unmap(m_lightingDataBuffer.Get(), 0);
+    }
+}
+
+void Shader::UpdatePostProcessingConstants(const PostProcessingConstants& constants)
+{
+    ASSERT(m_context != nullptr);
+    ASSERT(m_postProcessingBuffer != nullptr);
+
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    HRESULT hr = m_context->Map(m_postProcessingBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+    if (SUCCEEDED(hr)) {
+        auto dataPtr = reinterpret_cast<PostProcessingConstants*>(mapped.pData);
+        *dataPtr = constants;
+        m_context->Unmap(m_postProcessingBuffer.Get(), 0);
+    }
+}
+
+void Shader::UpdateConstantBuffer(const ConstantBuffer& cb)
+{
+    ASSERT(m_context != nullptr);
+    ASSERT(m_perObjectBuffer != nullptr);
+
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    HRESULT hr = m_context->Map(m_perObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+    if (SUCCEEDED(hr)) {
+        ConstantBuffer* data = reinterpret_cast<ConstantBuffer*>(mapped.pData);
+        data->World = XMMatrixTranspose(cb.World);
+        data->View = XMMatrixTranspose(cb.View);
+        data->Projection = XMMatrixTranspose(cb.Projection);
+        
+        m_context->Unmap(m_perObjectBuffer.Get(), 0);
+    }
+}
+
+HRESULT Shader::CreateConstantBuffers()
+{
+    ASSERT(m_device != nullptr);
+    
+    // Create per-frame constant buffer
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = sizeof(PerFrameConstants);
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    
+    HRESULT hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_perFrameBuffer.GetAddressOf());
+    if (FAILED(hr)) return hr;
+    
+    // Create per-object constant buffer
+    bufferDesc.ByteWidth = sizeof(PerObjectConstants);
+    hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_perObjectBuffer.GetAddressOf());
+    if (FAILED(hr)) return hr;
+    
+    // Create per-material constant buffer
+    bufferDesc.ByteWidth = sizeof(PerMaterialConstants);
+    hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_perMaterialBuffer.GetAddressOf());
+    if (FAILED(hr)) return hr;
+    
+    // Create lighting data constant buffer
+    bufferDesc.ByteWidth = sizeof(LightingData);
+    hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_lightingDataBuffer.GetAddressOf());
+    if (FAILED(hr)) return hr;
+    
+    // Create post-processing constant buffer
+    bufferDesc.ByteWidth = sizeof(PostProcessingConstants);
+    hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_postProcessingBuffer.GetAddressOf());
+    if (FAILED(hr)) return hr;
+    
+    LOG_TO_CONSOLE_IMMEDIATE(L"Shader constant buffers created successfully", L"SUCCESS");
+    return S_OK;
+}
+
+HRESULT Shader::CompileShaderFromFileAdvanced(const std::wstring& filename, ShaderType type, 
+                                             const ShaderCompilationFlags& flags, ID3DBlob** shaderBlob)
+{
+    ASSERT(!filename.empty());
+    ASSERT(shaderBlob != nullptr);
+    
+    std::wstring fullPath = filename;
+    bool fileFound = false;
+    
+    // Try to find the file in search paths
+    if (!FileExists(fullPath)) {
+        for (const auto& searchPath : m_searchPaths) {
+            std::wstring testPath = std::wstring(searchPath.begin(), searchPath.end()) + filename;
+            if (FileExists(testPath)) {
+                fullPath = testPath;
+                fileFound = true;
+                break;
+            }
         }
-        OutputDebugStringW(errorMsg.c_str());
-
-        // Also print current working directory for debugging
-        wchar_t currentDir[MAX_PATH];
-        GetCurrentDirectoryW(MAX_PATH, currentDir);
-        std::wstring cwdMsg = L"Current working directory: ";
-        cwdMsg += currentDir;
-        cwdMsg += L"\n";
-        OutputDebugStringW(cwdMsg.c_str());
-
+    } else {
+        fileFound = true;
+    }
+    
+    if (!fileFound) {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Shader file not found: " + filename, L"ERROR");
         return E_FAIL;
     }
-
-    DWORD flags = D3DCOMPILE_ENABLE_STRICTNESS;
-#ifdef _DEBUG
-    flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-    ID3DBlob* errorBlob = nullptr;
-    HRESULT hr = D3DCompileFromFile(
-        foundPath.c_str(),  // Use the found path
-        nullptr,
-        nullptr,
-        entryPoint.c_str(),
-        shaderModel.c_str(),
-        flags,
-        0,
-        blobOut,
-        &errorBlob);
-
-    if (FAILED(hr)) {
-        std::wstring errorMsg = L"D3DCompileFromFile failed for: " + foundPath + L"\n";
-        errorMsg += L"HRESULT: 0x" + std::to_wstring(hr) + L"\n";
-        OutputDebugStringW(errorMsg.c_str());
-
-        if (errorBlob) {
-            OutputDebugStringA("Shader compilation errors:\n");
-            OutputDebugStringA(reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
-            OutputDebugStringA("\n");
-        }
+    
+    // Determine shader target based on type
+    std::string target;
+    switch (type) {
+        case ShaderType::VERTEX_SHADER:
+            target = "vs_5_0";
+            break;
+        case ShaderType::PIXEL_SHADER:
+            target = "ps_5_0";
+            break;
+        case ShaderType::GEOMETRY_SHADER:
+            target = "gs_5_0";
+            break;
+        case ShaderType::HULL_SHADER:
+            target = "hs_5_0";
+            break;
+        case ShaderType::DOMAIN_SHADER:
+            target = "ds_5_0";
+            break;
+        case ShaderType::COMPUTE_SHADER:
+            target = "cs_5_0";
+            break;
+        default:
+            target = "vs_5_0";
+            break;
     }
-
-    if (errorBlob) errorBlob->Release();
-
-    std::wcout << L"[INFO] Shader compiled from file." << std::endl;
+    
+    UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+    if (flags.enableDebug) {
+        compileFlags |= D3DCOMPILE_DEBUG;
+        compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+    }
+    if (flags.enableOptimization) {
+        compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+    }
+    if (flags.treatWarningsAsErrors) {
+        compileFlags |= D3DCOMPILE_WARNINGS_ARE_ERRORS;
+    }
+    
+    ComPtr<ID3DBlob> errorBlob;
+    HRESULT hr = D3DCompileFromFile(
+        fullPath.c_str(),
+        nullptr,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        flags.entryPoint.c_str(),
+        target.c_str(),
+        compileFlags,
+        0,
+        shaderBlob,
+        &errorBlob
+    );
+    
+    if (FAILED(hr)) {
+        if (errorBlob) {
+            std::string errorString(reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
+            std::wstring wErrorString(errorString.begin(), errorString.end());
+            LOG_TO_CONSOLE_IMMEDIATE(L"Shader compilation error: " + wErrorString, L"ERROR");
+        }
+        
+        std::lock_guard<std::mutex> lock(m_metricsMutex);
+        m_metrics.failedCompilations++;
+    } else {
+        std::lock_guard<std::mutex> lock(m_metricsMutex);
+        m_metrics.compiledShaders++;
+    }
+    
     return hr;
 }
 
-HRESULT Shader::CreateConstantBuffer() {
-    std::wcout << L"[OPERATION] Shader::CreateConstantBuffer called." << std::endl;
-    ASSERT_MSG(m_device != nullptr, "CreateConstantBuffer: device is null");
+void Shader::NotifyStateChange()
+{
+    // Notify any registered callbacks about shader state changes
+    LOG_TO_CONSOLE_IMMEDIATE(L"Shader state changed", L"DEBUG");
+}
 
-    D3D11_BUFFER_DESC bd{};
-    bd.Usage = D3D11_USAGE_DYNAMIC;
-    bd.ByteWidth = sizeof(ConstantBuffer);
-    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+Shader::ShaderMetrics Shader::GetMetricsThreadSafe() const
+{
+    std::lock_guard<std::mutex> lock(m_metricsMutex);
+    return m_metrics;
+}
 
-    HRESULT hr = m_device->CreateBuffer(&bd, nullptr, &m_constantBuffer);
-    ASSERT_MSG(SUCCEEDED(hr), "CreateBuffer (constant) failed");
-    std::wcout << L"[INFO] Constant buffer created." << std::endl;
+HRESULT Shader::CreateInputLayout(ID3DBlob* vertexShaderBlob, ID3D11InputLayout** inputLayout)
+{
+    // **FIXED: Input layout to match source shader VS_INPUT structure**
+    // The source BasicVS.hlsl expects: POSITION, NORMAL, TEXCOORD0
+    D3D11_INPUT_ELEMENT_DESC layoutDesc[] = {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+    };
+
+    HRESULT hr = m_device->CreateInputLayout(
+        layoutDesc,
+        ARRAYSIZE(layoutDesc),
+        vertexShaderBlob->GetBufferPointer(),
+        vertexShaderBlob->GetBufferSize(),
+        inputLayout);
+
+    if (FAILED(hr)) {
+        // **FALLBACK: Try with FLOAT3 positions (our Vertex structure)**
+        D3D11_INPUT_ELEMENT_DESC fallbackLayoutDesc[] = {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+
+        hr = m_device->CreateInputLayout(
+            fallbackLayoutDesc,
+            ARRAYSIZE(fallbackLayoutDesc),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            inputLayout);
+    }
+
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"Failed to create input layout with HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+    } else {
+        LOG_TO_CONSOLE_IMMEDIATE(L"Input layout created successfully", L"SUCCESS");
+    }
+
     return hr;
 }

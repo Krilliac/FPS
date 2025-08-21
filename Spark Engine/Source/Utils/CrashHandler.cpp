@@ -8,7 +8,12 @@
 #include <d3d11.h>
 #include <wincodec.h>
 #include <wrl/client.h>
+
+// Only include CURL when networking is enabled
+#ifdef NETWORKING_ENABLED
 #include <curl/curl.h>
+#endif
+
 #include <miniz.h>
 #include <filesystem>
 #include <fstream>
@@ -50,12 +55,19 @@ static std::wstring SystemInfo();
 static std::wstring ThreadStacks();
 static void SaveScreenshot(const std::wstring& file);
 static void ZipFiles(const std::wstring& zip, const std::vector<std::wstring>& files);
+
+#ifdef NETWORKING_ENABLED
 static bool Upload(const std::string& url, const std::wstring& file, const std::string& field);
+#endif
 
 void InstallCrashHandler(const CrashConfig& cfg) {
     g_cfg = cfg;
     g_triggerCrashOnAssert = cfg.triggerCrashOnAssert; // Store the flag
+    
+#ifdef NETWORKING_ENABLED
     curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
+    
     SetUnhandledExceptionFilter(CrashFilter); // This stays active always
 }
 
@@ -173,8 +185,9 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* assertMsg) {
     if (g_cfg.captureScreenshot) files.push_back(shot);
     if (g_cfg.zipBeforeUpload) ZipFiles(zipFile, files);
 
-    // Optional upload
+    // Optional upload (only if networking is enabled)
     bool ok = true;
+#ifdef NETWORKING_ENABLED
     if (!g_cfg.uploadURL.empty()) {
         if (g_cfg.zipBeforeUpload)
             ok = Upload(g_cfg.uploadURL, zipFile, "package");
@@ -184,12 +197,23 @@ static void HandleCrashInternal(EXCEPTION_POINTERS* ep, const char* assertMsg) {
             if (g_cfg.captureScreenshot) ok &= Upload(g_cfg.uploadURL, shot, "screenshot");
         }
     }
+#else
+    // When networking is disabled, mark upload as successful (no-op)
+    if (!g_cfg.uploadURL.empty()) {
+        ok = true; // Consider it successful since we can't upload
+    }
+#endif
 
     // Notify user
     std::wstring msg = assertMsg ? L"Assertion captured.\n" : L"Crash captured.\n";
     msg += L"Files:\n" + dump + L"\n" + logFile;
     if (g_cfg.captureScreenshot) msg += L"\n" + shot;
+    
+#ifdef NETWORKING_ENABLED
     if (!g_cfg.uploadURL.empty()) msg += L"\nUpload: " + std::wstring(ok ? L"Success" : L"FAILED");
+#else
+    if (!g_cfg.uploadURL.empty()) msg += L"\nUpload: Disabled (networking not enabled)";
+#endif
 
     MessageBoxW(nullptr, msg.c_str(),
         assertMsg ? L"Assertion Handler" : L"Crash Handler",
@@ -467,6 +491,7 @@ static void ZipFiles(const std::wstring& zip, const std::vector<std::wstring>& f
     mz_zip_writer_end(&za);
 }
 
+#ifdef NETWORKING_ENABLED
 static bool Upload(const std::string& url,
     const std::wstring& file,
     const std::string& field) {
@@ -485,3 +510,4 @@ static bool Upload(const std::string& url,
     curl_easy_cleanup(c);
     return (res == CURLE_OK);
 }
+#endif

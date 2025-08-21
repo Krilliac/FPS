@@ -1,13 +1,13 @@
 ﻿/**
  * @file GraphicsEngine.h
- * @brief DirectX 11 graphics engine with comprehensive console integration
+ * @brief Advanced DirectX 11 graphics engine with AAA features and console integration
  * @author Spark Engine Team
  * @date 2025
  * 
- * This class manages the entire DirectX 11 rendering pipeline including device creation,
- * swap chain management, render target setup, depth buffer configuration, frame
- * rendering operations, and comprehensive console integration for real-time graphics
- * debugging and parameter adjustment.
+ * This class manages the entire DirectX 11 rendering pipeline with advanced features
+ * including PBR materials, deferred rendering, post-processing, temporal effects,
+ * texture streaming, asset pipeline, physics integration, and comprehensive 
+ * console integration for real-time graphics debugging.
  */
 
 #pragma once
@@ -16,323 +16,699 @@
 #include <windows.h>
 #include <wrl/client.h>
 #include <d3d11_1.h>
-#include <dxgi1_3.h>     // IDXGIFactory2, IDXGISwapChain1
-#include <dxgidebug.h>   // DXGIGetDebugInterface1, IDXGIInfoQueue
-#include "..\Core\framework.h"  // XMFLOAT3, XMMATRIX, HRESULT
-#include <functional>    // std::function
-#include <mutex>         // std::mutex
-#include <chrono>        // For performance timing
+#include <dxgi1_3.h>
+#include <dxgidebug.h>
+#include "..\Core\framework.h"
+#include <functional>
+#include <mutex>
+#include <chrono>
+#include <vector>
+#include <unordered_map>
+#include <memory>
 
 using Microsoft::WRL::ComPtr;
 
+// Forward declarations for engine systems
+class RenderTarget;
+class MaterialSystem;
+class LightManager;
+class PostProcessingPipeline;
+class TemporalEffects;
+class TextureSystem;
+class LightingSystem;
+class PostProcessingSystem;
+class AssetPipeline;
+class PhysicsSystem;
+class GameObject;
+
 /**
- * @brief Core DirectX 11 graphics engine with console integration
+ * @brief Rendering pipeline type
+ */
+enum class RenderingPipeline
+{
+    Forward,           ///< Forward rendering pipeline
+    Deferred,          ///< Deferred rendering pipeline
+    ForwardPlus,       ///< Forward+ rendering pipeline
+    Clustered          ///< Clustered deferred rendering
+};
+
+/**
+ * @brief Render path types for advanced graphics
+ */
+enum class RenderPath
+{
+    Forward,           ///< Forward rendering
+    Deferred,          ///< Deferred rendering
+    ForwardPlus,       ///< Forward+ (tiled forward) rendering
+    Clustered          ///< Clustered rendering
+};
+
+/**
+ * @brief Rendering quality presets
+ */
+enum class QualityPreset
+{
+    Low,               ///< Low quality (mobile/integrated graphics)
+    Medium,            ///< Medium quality (mid-range hardware)
+    High,              ///< High quality (high-end hardware)
+    Ultra,             ///< Ultra quality (enthusiast hardware)
+    Custom             ///< Custom quality settings
+};
+
+/**
+ * @brief Multi-sampling anti-aliasing settings
+ */
+enum class MSAALevel
+{
+    None = 1,          ///< No MSAA
+    MSAA2x = 2,        ///< 2x MSAA
+    MSAA4x = 4,        ///< 4x MSAA
+    MSAA8x = 8         ///< 8x MSAA
+};
+
+/**
+ * @brief Temporal anti-aliasing settings
+ */
+struct TAASettings
+{
+    bool enabled = false;           ///< Enable temporal anti-aliasing
+    float jitterScale = 1.0f;       ///< Jitter scale for TAA
+    float historyBlend = 0.9f;      ///< History blending factor
+    float motionBlurScale = 1.0f;   ///< Motion blur intensity
+    bool varianceClipping = true;   ///< Enable variance clipping
+};
+
+/**
+ * @brief Screen-space ambient occlusion settings
+ */
+struct SSAOSettings
+{
+    bool enabled = false;           ///< Enable SSAO
+    float radius = 0.5f;            ///< SSAO sampling radius
+    float intensity = 1.0f;         ///< SSAO intensity
+    int sampleCount = 16;           ///< Number of SSAO samples
+    float bias = 0.025f;            ///< SSAO bias to prevent self-occlusion
+    bool blur = true;               ///< Enable SSAO blur
+};
+
+/**
+ * @brief Screen-space reflection settings
+ */
+struct SSRSettings
+{
+    bool enabled = false;           ///< Enable SSR
+    float maxDistance = 100.0f;     ///< Maximum reflection distance
+    int maxSteps = 32;              ///< Maximum ray marching steps
+    float thickness = 0.5f;         ///< Surface thickness for intersection
+    float fadeStart = 80.0f;        ///< Distance to start fading reflections
+    float fadeEnd = 100.0f;         ///< Distance to fully fade reflections
+};
+
+/**
+ * @brief Volumetric lighting settings
+ */
+struct VolumetricSettings
+{
+    bool enabled = false;           ///< Enable volumetric lighting
+    int sampleCount = 32;           ///< Number of volumetric samples
+    float scattering = 0.1f;        ///< Light scattering factor
+    float extinction = 0.01f;       ///< Light extinction factor
+    float anisotropy = 0.3f;        ///< Phase function anisotropy
+};
+
+/**
+ * @brief Advanced graphics settings
+ */
+struct GraphicsSettings
+{
+    // Rendering
+    RenderPath renderPath = RenderPath::Deferred;
+    QualityPreset qualityPreset = QualityPreset::High;
+    bool vsync = true;
+    bool hdr = true;
+    uint32_t msaaSamples = 4;
+    
+    // Textures  
+    uint32_t maxTextureSize = 2048;
+    bool anisotropicFiltering = true;
+    uint32_t anisotropyLevel = 16;
+    
+    // Shadows
+    bool shadows = true;
+    uint32_t shadowMapSize = 2048;
+    uint32_t cascadeCount = 3;
+    
+    // Post-processing
+    bool bloom = true;
+    bool ssao = false;
+    bool taa = false;
+    bool motionBlur = false;
+    
+    // Performance
+    bool frustumCulling = true;
+    bool occlusionCulling = false;
+    bool levelOfDetail = true;
+    uint32_t maxDrawCalls = 1000;
+    
+    // Legacy compatibility
+    bool wireframeMode = false;
+    bool debugMode = false;
+    bool showFPS = false;
+    float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    float renderScale = 1.0f;
+    bool enableGPUTiming = false;
+};
+
+/**
+ * @brief Comprehensive render statistics
+ */
+struct RenderStatistics
+{
+    // Performance
+    float frameTime;               ///< Total frame time (ms)
+    float cpuTime;                 ///< CPU time (ms)
+    float gpuTime;                 ///< GPU time (ms)
+    uint32_t fps;                  ///< Frames per second
+    
+    // Rendering
+    uint32_t drawCalls;            ///< Draw calls per frame
+    uint32_t triangles;            ///< Triangles rendered
+    uint32_t vertices;             ///< Vertices processed
+    uint32_t textureBinds;         ///< Texture binds per frame
+    uint32_t materialSwitches;     ///< Material switches per frame
+    
+    // Culling
+    uint32_t totalObjects;         ///< Total objects in scene
+    uint32_t visibleObjects;       ///< Objects after culling
+    uint32_t culledObjects;        ///< Objects culled
+    float cullingTime;             ///< Culling time (ms)
+    
+    // Memory
+    size_t textureMemory;          ///< Texture memory usage (bytes)
+    size_t meshMemory;             ///< Mesh memory usage (bytes)
+    size_t totalGPUMemory;         ///< Total GPU memory usage (bytes)
+    
+    // Lighting
+    uint32_t activeLights;         ///< Active lights
+    uint32_t shadowUpdates;        ///< Shadow map updates
+    float lightCullingTime;        ///< Light culling time (ms)
+    
+    // Post-processing
+    float postProcessTime;         ///< Post-processing time (ms)
+    uint32_t postProcessPasses;    ///< Post-processing passes
+    
+    // Legacy compatibility
+    float renderTime;              ///< Legacy render time
+    float presentTime;             ///< Legacy present time
+    size_t bufferMemory;           ///< Legacy buffer memory
+    float gpuUsage;                ///< Legacy GPU usage
+    bool vsyncEnabled;             ///< Legacy VSync state
+    bool wireframeMode;            ///< Legacy wireframe state
+    bool debugMode;                ///< Legacy debug state
+};
+
+/**
+ * @brief Advanced DirectX 11 graphics engine with AAA features
  * 
- * The GraphicsEngine class encapsulates all DirectX 11 functionality required for
- * rendering 3D graphics in the Spark Engine. It manages device initialization,
- * resource creation, provides a clean interface for rendering operations, and
- * includes comprehensive console integration for real-time debugging and tuning.
+ * Comprehensive graphics engine supporting modern rendering techniques,
+ * multiple rendering pipelines, advanced post-processing, and extensive
+ * console integration for real-time debugging and performance tuning.
  * 
- * @note This class follows RAII principles and automatically handles resource cleanup
- * @warning Ensure Initialize() is called before any rendering operations
+ * Integrates all advanced systems:
+ * - TextureSystem for advanced texture management and streaming
+ * - MaterialSystem for PBR materials and shader management
+ * - LightingSystem for advanced lighting and shadow mapping
+ * - PostProcessingSystem for HDR and visual effects
+ * - AssetPipeline for model loading and asset streaming
+ * - PhysicsSystem for physics simulation integration
  */
 class GraphicsEngine
 {
 public:
     /**
      * @brief Default constructor
-     * 
-     * Initializes member variables to safe default values. The actual DirectX
-     * device and resources are created in the Initialize() method.
      */
     GraphicsEngine();
 
     /**
      * @brief Destructor
-     * 
-     * Automatically calls Shutdown() to ensure proper resource cleanup.
      */
     ~GraphicsEngine();
 
     /**
-     * @brief Initialize the graphics engine with DirectX 11
-     * 
-     * Creates the DirectX 11 device, device context, swap chain, render target view,
-     * and depth stencil view. Also sets up debug output filters and viewport.
-     * 
+     * @brief Initialize the graphics engine with advanced features
      * @param hWnd Handle to the window for rendering
      * @return HRESULT indicating success or failure of initialization
-     * @note Must be called before any rendering operations
-     * @warning Calling this multiple times without Shutdown() will cause resource leaks
      */
     HRESULT Initialize(HWND hWnd);
 
     /**
      * @brief Clean up all DirectX resources
-     * 
-     * Releases all COM interfaces and resets internal state. Safe to call
-     * multiple times.
      */
     void Shutdown();
 
     /**
-     * @brief Begin a new rendering frame
-     * 
-     * Clears the render target and depth buffer, preparing for new frame rendering.
-     * Should be called at the start of each frame before any draw operations.
+     * @brief Resize the rendering surface
+     * @param width New width
+     * @param height New height
+     */
+    HRESULT Resize(uint32_t width, uint32_t height);
+
+    /**
+     * @brief Begin a new rendering frame with advanced setup
      */
     void BeginFrame();
 
     /**
      * @brief Complete the current frame and present to screen
-     * 
-     * Presents the completed frame to the display. Should be called after all
-     * draw operations for the current frame are complete.
      */
     void EndFrame();
 
     /**
-     * @brief Handle window resize events
-     * 
-     * Recreates the swap chain buffers and adjusts the viewport to match
-     * the new window dimensions.
-     * 
+     * @brief Render the scene with advanced pipeline
+     * @param viewMatrix View transformation matrix
+     * @param projMatrix Projection transformation matrix
+     * @param objects List of objects to render
+     */
+    void RenderScene(const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix,
+                    const std::vector<GameObject*>& objects);
+
+    /**
+     * @brief Handle window resize events with advanced buffer management
      * @param width New window width in pixels
      * @param height New window height in pixels
      */
     void OnResize(UINT width, UINT height);
 
+    // ========================================================================
+    // ADVANCED SYSTEM ACCESSORS
+    // ========================================================================
+
+    TextureSystem* GetTextureSystem() const { return m_textureSystem.get(); }
+    MaterialSystem* GetMaterialSystem() const { return m_materialSystem.get(); }
+    LightingSystem* GetLightingSystem() const { return m_lightingSystem.get(); }
+    PostProcessingSystem* GetPostProcessingSystem() const { return m_postProcessingSystem.get(); }
+    AssetPipeline* GetAssetPipeline() const { return m_assetPipeline.get(); }
+    PhysicsSystem* GetPhysicsSystem() const { return m_physicsSystem; }
+
+    // Legacy compatibility accessors
+    LightManager* GetLightManager() const;
+
+    // ========================================================================
+    // ADVANCED RENDERING FEATURES
+    // ========================================================================
+
+    /**
+     * @brief Set the active rendering pipeline
+     * @param pipeline Rendering pipeline type
+     */
+    void SetRenderingPipeline(RenderingPipeline pipeline);
+
+    /**
+     * @brief Get the current rendering pipeline
+     */
+    RenderingPipeline GetRenderingPipeline() const { return m_currentPipeline; }
+
+    /**
+     * @brief Set graphics settings
+     */
+    void SetGraphicsSettings(const GraphicsSettings& settings);
+    const GraphicsSettings& GetGraphicsSettings() const { return m_settings; }
+
+    /**
+     * @brief Set quality preset
+     */
+    void SetQualityPreset(QualityPreset preset);
+
+    /**
+     * @brief Set render path
+     */
+    void SetRenderPath(RenderPath path);
+
+    /**
+     * @brief Enable/disable HDR rendering
+     * @param enabled HDR state
+     */
+    void SetHDREnabled(bool enabled);
+
+    /**
+     * @brief Set multi-sampling anti-aliasing level
+     * @param msaaLevel MSAA level
+     */
+    void SetMSAALevel(MSAALevel msaaLevel);
+
+    /**
+     * @brief Configure temporal anti-aliasing
+     * @param settings TAA settings
+     */
+    void SetTAASettings(const TAASettings& settings);
+
+    /**
+     * @brief Configure screen-space ambient occlusion
+     * @param settings SSAO settings
+     */
+    void SetSSAOSettings(const SSAOSettings& settings);
+
+    /**
+     * @brief Configure screen-space reflections
+     * @param settings SSR settings
+     */
+    void SetSSRSettings(const SSRSettings& settings);
+
+    /**
+     * @brief Configure volumetric lighting
+     * @param settings Volumetric lighting settings
+     */
+    void SetVolumetricSettings(const VolumetricSettings& settings);
+
+    // ========================================================================
+    // RESOURCE ACCESS
+    // ========================================================================
+
     /**
      * @brief Get the DirectX 11 device
-     * @return Pointer to the ID3D11Device interface
-     * @note Returns nullptr if Initialize() hasn't been called successfully
      */
-    ID3D11Device* GetDevice()     const { return m_device.Get(); }
+    ID3D11Device* GetDevice() const { return m_device.Get(); }
 
     /**
      * @brief Get the DirectX 11 device context
-     * @return Pointer to the ID3D11DeviceContext interface  
-     * @note Returns nullptr if Initialize() hasn't been called successfully
      */
-    ID3D11DeviceContext* GetContext()    const { return m_context.Get(); }
+    ID3D11DeviceContext* GetContext() const { return m_context.Get(); }
 
     /**
      * @brief Get the current window width
-     * @return Window width in pixels
      */
-    UINT                 GetWindowWidth() const { return m_windowWidth; }
+    UINT GetWindowWidth() const { return m_windowWidth; }
 
     /**
      * @brief Get the current window height
-     * @return Window height in pixels
      */
-    UINT                 GetWindowHeight() const { return m_windowHeight; }
+    UINT GetWindowHeight() const { return m_windowHeight; }
 
     /**
      * @brief Get the DXGI swap chain
-     * @return Pointer to the IDXGISwapChain interface
-     * @note Returns nullptr if Initialize() hasn't been called successfully
      */
     IDXGISwapChain* GetSwapChain() const { return m_swapChain.Get(); }
 
-    // ============================================================================
-    // CONSOLE INTEGRATION METHODS - Graphics Engine Control
-    // ============================================================================
+    /**
+     * @brief Get render target views
+     */
+    ID3D11RenderTargetView* GetBackBufferRTV() const { return m_renderTargetView.Get(); }
+    ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
+
+    // ========================================================================
+    // STATISTICS AND PERFORMANCE
+    // ========================================================================
 
     /**
-     * @brief Graphics performance metrics structure
+     * @brief Get render statistics
      */
-    struct GraphicsMetrics {
-        float frameTime;        ///< Frame time in milliseconds
-        float renderTime;       ///< Render time in milliseconds
-        float presentTime;      ///< Present time in milliseconds
-        int drawCalls;          ///< Number of draw calls per frame
-        int triangles;          ///< Number of triangles rendered
-        int vertices;           ///< Number of vertices processed
-        size_t textureMemory;   ///< Texture memory usage in bytes
-        size_t bufferMemory;    ///< Buffer memory usage in bytes
-        float gpuUsage;         ///< GPU usage percentage (if available)
-        bool vsyncEnabled;      ///< VSync state
-        bool wireframeMode;     ///< Wireframe rendering state
-        bool debugMode;         ///< Debug rendering state
-    };
+    const RenderStatistics& GetStatistics() const { return m_statistics; }
+    void ResetStatistics();
 
     /**
-     * @brief Graphics settings structure for console control
+     * @brief Save screenshot
      */
-    struct GraphicsSettings {
-        bool vsyncEnabled;      ///< Enable/disable VSync
-        bool wireframeMode;     ///< Enable/disable wireframe rendering
-        bool debugMode;         ///< Enable/disable debug rendering
-        bool showFPS;           ///< Show FPS counter
-        float clearColor[4];    ///< Background clear color (RGBA)
-        int msaaSamples;        ///< MSAA sample count (1, 2, 4, 8)
-        bool enableGPUTiming;   ///< Enable GPU timing queries
-        float renderScale;      ///< Render scale factor (0.5-2.0)
-    };
+    HRESULT SaveScreenshot(const std::string& filename);
 
+    // ========================================================================
+    // CONSOLE INTEGRATION METHODS
+    // ========================================================================
+
+    /**
+     * @brief Get render statistics for console
+     */
+    RenderStatistics Console_GetStatistics() const;
+
+    /**
+     * @brief Set quality preset via console
+     */
+    void Console_SetQuality(const std::string& preset);
+
+    /**
+     * @brief Set render path via console
+     */
+    void Console_SetRenderPath(const std::string& path);
+
+    /**
+     * @brief Enable/disable feature via console
+     */
+    void Console_EnableFeature(const std::string& feature, bool enabled);
+
+    /**
+     * @brief Set graphics setting via console
+     */
+    void Console_SetSetting(const std::string& setting, float value);
+
+    /**
+     * @brief Reload all shaders via console
+     */
+    void Console_ReloadShaders();
+
+    /**
+     * @brief Take screenshot via console
+     */
+    bool Console_Screenshot(const std::string& filename);
+
+    /**
+     * @brief Get system information via console
+     */
+    std::string Console_GetSystemInfo() const;
+
+    /**
+     * @brief Benchmark rendering performance via console
+     */
+    std::string Console_Benchmark(int seconds = 10);
+
+    /**
+     * @brief Enable/disable wireframe mode via console
+     */
+    void Console_SetWireframe(bool enabled);
+
+    /**
+     * @brief Legacy alias for Console_SetWireframe
+     */
+    void Console_SetWireframeMode(bool enabled);
+    
     /**
      * @brief Enable/disable VSync via console
-     * @param enabled true to enable VSync, false to disable
      */
     void Console_SetVSync(bool enabled);
 
     /**
-     * @brief Enable/disable wireframe rendering via console
-     * @param enabled true for wireframe mode, false for solid rendering
+     * @brief Set rendering pipeline via console
      */
-    void Console_SetWireframeMode(bool enabled);
-
+    void Console_SetRenderingPipeline(RenderingPipeline pipeline);
+    
     /**
-     * @brief Set background clear color via console
-     * @param r Red component (0.0-1.0)
-     * @param g Green component (0.0-1.0)
-     * @param b Blue component (0.0-1.0)
-     * @param a Alpha component (0.0-1.0)
+     * @brief Enable/disable HDR via console
      */
-    void Console_SetClearColor(float r, float g, float b, float a);
-
+    void Console_SetHDR(bool enabled);
+    
     /**
-     * @brief Set render scale factor via console
-     * @param scale Scale factor (0.5-2.0, 1.0 = native resolution)
-     */
-    void Console_SetRenderScale(float scale);
-
-    /**
-     * @brief Enable/disable debug rendering mode via console
-     * @param enabled true to enable debug mode, false to disable
+     * @brief Enable/disable debug mode via console
      */
     void Console_SetDebugMode(bool enabled);
-
+    
     /**
-     * @brief Take a screenshot via console
-     * @param filename Output filename (optional, auto-generated if empty)
-     * @return true if screenshot was taken successfully
+     * @brief Set clear color via console
+     */
+    void Console_SetClearColor(float r, float g, float b, float a);
+    
+    /**
+     * @brief Set render scale via console
+     */
+    void Console_SetRenderScale(float scale);
+    
+    /**
+     * @brief Take screenshot via console
      */
     bool Console_TakeScreenshot(const std::string& filename = "");
-
+    
     /**
-     * @brief Force a full graphics device reset via console
+     * @brief Reset graphics device via console
      */
     void Console_ResetDevice();
-
+    
     /**
-     * @brief Get comprehensive graphics metrics (console integration)
-     * @return GraphicsMetrics structure with current performance data
-     */
-    GraphicsMetrics Console_GetMetrics() const;
-
-    /**
-     * @brief Get current graphics settings (console integration)
-     * @return GraphicsSettings structure with current settings
-     */
-    GraphicsSettings Console_GetSettings() const;
-
-    /**
-     * @brief Apply graphics settings from console
-     * @param settings GraphicsSettings structure with new settings
-     */
-    void Console_ApplySettings(const GraphicsSettings& settings);
-
-    /**
-     * @brief Reset graphics settings to defaults via console
-     */
-    void Console_ResetToDefaults();
-
-    /**
-     * @brief Register console state change callback
-     * @param callback Function to call when graphics state changes
-     */
-    void Console_RegisterStateCallback(std::function<void()> callback);
-
-    /**
-     * @brief Enable/disable GPU performance queries via console
-     * @param enabled true to enable GPU timing, false to disable
-     */
-    void Console_SetGPUTiming(bool enabled);
-
-    /**
-     * @brief Get VRAM usage information via console
-     * @return VRAM usage in bytes, or 0 if unavailable
-     */
-    size_t Console_GetVRAMUsage() const;
-
-    /**
-     * @brief Force garbage collection of graphics resources via console
+     * @brief Force garbage collection via console
      */
     void Console_ForceGarbageCollection();
+    
+    /**
+     * @brief Apply graphics settings via console
+     */
+    void Console_ApplySettings(const GraphicsSettings& settings);
+    
+    /**
+     * @brief Reset to default settings via console
+     */
+    void Console_ResetToDefaults();
+    
+    /**
+     * @brief Register state change callback
+     */
+    void Console_RegisterStateCallback(std::function<void()> callback);
+    
+    /**
+     * @brief Enable/disable GPU timing via console
+     */
+    void Console_SetGPUTiming(bool enabled);
+    
+    /**
+     * @brief Get VRAM usage via console
+     */
+    size_t Console_GetVRAMUsage() const;
+    
+    /**
+     * @brief Get current graphics settings
+     */
+    GraphicsSettings Console_GetSettings() const;
+    
+    /**
+     * @brief Get current render statistics
+     */
+    RenderStatistics Console_GetMetrics() const;
 
 private:
-    /**
-     * @brief Create DirectX device and swap chain
-     * @param hWnd Window handle for the swap chain
-     * @return HRESULT indicating success or failure
-     */
-    HRESULT CreateDeviceAndSwapChain(HWND hWnd);
-
-    /**
-     * @brief Create the render target view from swap chain back buffer
-     * @return HRESULT indicating success or failure
-     */
-    HRESULT CreateRenderTargetView();
-
-    /**
-     * @brief Create depth stencil buffer and view
-     * @return HRESULT indicating success or failure
-     */
-    HRESULT CreateDepthStencilView();
-
-    /**
-     * @brief Configure the rendering viewport
-     */
-    void    SetViewport();
-
-    /**
-     * @brief Update performance metrics
-     */
-    void UpdateMetrics();
-
-    /**
-     * @brief Apply current graphics settings to D3D11 state
-     */
-    void ApplyGraphicsState();
-
-    /**
-     * @brief Notify console of state changes
-     */
-    void NotifyStateChange();
-
-    /**
-     * @brief Thread-safe metrics access helper
-     * @return Current graphics metrics with thread safety
-     */
-    GraphicsMetrics GetMetricsThreadSafe() const;
-
-    ComPtr<ID3D11Device1>          m_device;           ///< DirectX 11.1 device
-    ComPtr<ID3D11DeviceContext1>   m_context;          ///< DirectX 11.1 device context
-    ComPtr<IDXGISwapChain1>        m_swapChain;        ///< DXGI swap chain for presentation
-    ComPtr<ID3D11RenderTargetView> m_renderTargetView; ///< Render target view for back buffer
-    ComPtr<ID3D11DepthStencilView> m_depthStencilView; ///< Depth stencil view for depth testing
-
-    UINT m_windowWidth;  ///< Current window width in pixels
-    UINT m_windowHeight; ///< Current window height in pixels
-
-    // Console integration state
-    GraphicsSettings m_settings;              ///< Current graphics settings
-    mutable std::mutex m_metricsMutex;        ///< Thread safety for metrics access
-    std::function<void()> m_stateCallback;    ///< Callback for state changes
+    // ========================================================================
+    // ADVANCED RENDERING SUBSYSTEMS
+    // ========================================================================
     
-    // Performance tracking
-    mutable GraphicsMetrics m_metrics;        ///< Current performance metrics
-    std::chrono::high_resolution_clock::time_point m_frameStartTime; ///< Frame timing
-    std::chrono::high_resolution_clock::time_point m_renderStartTime; ///< Render timing
+    std::unique_ptr<TextureSystem> m_textureSystem;
+    std::unique_ptr<MaterialSystem> m_materialSystem;
+    std::unique_ptr<LightingSystem> m_lightingSystem;
+    std::unique_ptr<PostProcessingSystem> m_postProcessingSystem;
+    std::unique_ptr<AssetPipeline> m_assetPipeline;
+    // Use forward declaration pattern for PhysicsSystem to avoid incomplete type
+    PhysicsSystem* m_physicsSystem;
+
+    // Legacy rendering subsystems
+    std::unique_ptr<LightManager> m_lightManager;
+    std::unique_ptr<PostProcessingPipeline> m_postProcessing;
+    std::unique_ptr<TemporalEffects> m_temporalEffects;
+
+    // ========================================================================
+    // DIRECTX RESOURCES
+    // ========================================================================
     
-    // D3D11 state objects for console control
-    ComPtr<ID3D11RasterizerState> m_solidRasterState;     ///< Solid rendering state
-    ComPtr<ID3D11RasterizerState> m_wireframeRasterState; ///< Wireframe rendering state
-    ComPtr<ID3D11Query> m_gpuTimingQuery;                 ///< GPU timing query
+    ComPtr<ID3D11Device1> m_device;
+    ComPtr<ID3D11DeviceContext1> m_context;
+    ComPtr<IDXGISwapChain1> m_swapChain;
+    ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+    ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+
+    // Advanced render targets for deferred/forward+ rendering
+    ComPtr<ID3D11Texture2D> m_gBufferTextures[4];      // Albedo, Normal, Material, Motion
+    ComPtr<ID3D11RenderTargetView> m_gBufferRTVs[4];
+    ComPtr<ID3D11ShaderResourceView> m_gBufferSRVs[4];
+    ComPtr<ID3D11Texture2D> m_hdrTexture;
+    ComPtr<ID3D11RenderTargetView> m_hdrRTV;
+    ComPtr<ID3D11ShaderResourceView> m_hdrSRV;
+    ComPtr<ID3D11Texture2D> m_depthStencilTexture;
+
+    // Enhanced render targets for deferred rendering
+    std::unordered_map<std::string, std::unique_ptr<RenderTarget>> m_renderTargets;
+
+    // ========================================================================
+    // RENDERING STATE
+    // ========================================================================
     
+    RenderingPipeline m_currentPipeline;
+    GraphicsSettings m_settings;
+    RenderStatistics m_statistics;
+    uint32_t m_width;
+    uint32_t m_height;
+    bool m_fullscreen;
+    HWND m_hwnd;
+
+    // Advanced settings
+    bool m_hdrEnabled;
+    MSAALevel m_msaaLevel;
+    TAASettings m_taaSettings;
+    SSAOSettings m_ssaoSettings;
+    SSRSettings m_ssrSettings;
+    VolumetricSettings m_volumetricSettings;
+
+    // Window dimensions
+    UINT m_windowWidth;
+    UINT m_windowHeight;
+
+    // ========================================================================
+    // PERFORMANCE TRACKING
+    // ========================================================================
+    
+    std::chrono::high_resolution_clock::time_point m_frameStartTime;
+    std::chrono::high_resolution_clock::time_point m_renderStartTime;
+    std::chrono::high_resolution_clock::time_point m_geometryStartTime;
+    std::chrono::high_resolution_clock::time_point m_lightingStartTime;
+    std::chrono::high_resolution_clock::time_point m_postProcessStartTime;
+
+    ComPtr<ID3D11Query> m_disjointQuery;
+    ComPtr<ID3D11Query> m_timestampStartQuery;
+    ComPtr<ID3D11Query> m_timestampEndQuery;
+    ComPtr<ID3D11Query> m_gpuTimingQuery;
+    ComPtr<ID3D11Query> m_timestampBegin;
+    ComPtr<ID3D11Query> m_timestampEnd;
+    ComPtr<ID3D11Query> m_timestampDisjoint;
+
+    // ========================================================================
+    // RENDER STATE OBJECTS
+    // ========================================================================
+    
+    ComPtr<ID3D11RasterizerState> m_defaultRasterState;
+    ComPtr<ID3D11RasterizerState> m_wireframeRasterState;
+    ComPtr<ID3D11RasterizerState> m_solidRasterState;
+    ComPtr<ID3D11DepthStencilState> m_defaultDepthState;
+    ComPtr<ID3D11BlendState> m_defaultBlendState;
+
+    // ========================================================================
+    // THREADING AND STATE MANAGEMENT
+    // ========================================================================
+    
+    mutable std::mutex m_metricsMutex;
+    std::function<void()> m_stateCallback;
+
     // Resource tracking
-    size_t m_textureMemoryUsage;              ///< Current texture memory usage
-    size_t m_bufferMemoryUsage;               ///< Current buffer memory usage
+    size_t m_textureMemoryUsage;
+    size_t m_bufferMemoryUsage;
+
+    // ========================================================================
+    // PRIVATE METHODS
+    // ========================================================================
+    
+    HRESULT CreateDeviceAndSwapChain(HWND hWnd);
+    HRESULT CreateDevice(HWND hwnd, uint32_t width, uint32_t height, bool fullscreen);
+    HRESULT CreateRenderTargetView();
+    HRESULT CreateDepthStencilView();
+    HRESULT CreateRenderTargets();
+    HRESULT CreateAdvancedRenderTargets();
+    HRESULT CreateRenderStates();
+    void SetViewport();
+    void UpdateMetrics();
+    void UpdateAdvancedMetrics();
+    void ApplyGraphicsState();
+    void ApplyAdvancedGraphicsState();
+    void ApplyQualityPreset(QualityPreset preset);
+    void NotifyStateChange();
+    void SetupDeferredPipeline();
+    void SetupForwardPlusPipeline();
+    
+    // Advanced rendering methods
+    void RenderForward(const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix,
+                      const std::vector<GameObject*>& objects);
+    void RenderDeferred(const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix,
+                       const std::vector<GameObject*>& objects);
+    void RenderForwardPlus(const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix,
+                          const std::vector<GameObject*>& objects);
+    void FillGBuffer(const std::vector<GameObject*>& objects,
+                    const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix);
+    void LightingPass(const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix);
+    void CullObjects(const std::vector<GameObject*>& objects,
+                    const XMMATRIX& viewMatrix, const XMMATRIX& projMatrix,
+                    std::vector<GameObject*>& visibleObjects);
+    void RenderGeometryPass();
+    void RenderLightingPass();
+    void RenderPostProcessing();
+    void RenderTemporalEffects();
 };

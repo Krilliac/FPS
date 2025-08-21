@@ -189,6 +189,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{DC42F323-6AC1-367A-9673-86B2F2F4D7D2}</Project>
       <Name>imgui</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\miniz.vcxproj">
+      <Project>{CCB8D980-A653-3CA1-B72A-7150F80A5C89}</Project>
+      <Name>miniz</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Spark Engine\SparkEngine\build\tinyobjloader.vcxproj">
+      <Project>{CDAC3C6B-676C-3BCD-9432-3F3423CE052E}</Project>
+      <Name>tinyobjloader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

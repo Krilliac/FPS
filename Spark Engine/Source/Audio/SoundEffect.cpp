@@ -6,9 +6,9 @@
 #include <filesystem>
 #include <iostream>
 
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 //  SoundEffect implementation
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 SoundEffect::SoundEffect() {
     std::wcout << L"[INFO] SoundEffect constructed." << std::endl;
 }
@@ -18,7 +18,7 @@ SoundEffect::~SoundEffect() {
 
 HRESULT SoundEffect::LoadFromFile(const std::wstring& filename)
 {
-    ASSERT_ALWAYS_MSG(!filename.empty(), "SoundEffect::LoadFromFile ‒ empty filename");
+    ASSERT_ALWAYS_MSG(!filename.empty(), "SoundEffect::LoadFromFile - empty filename");
 
     std::wcout << L"[OPERATION] SoundEffect::LoadFromFile called. filename=" << filename << std::endl;
 
@@ -113,9 +113,9 @@ HRESULT SoundEffect::ReadChunkData(const BYTE* src, DWORD pos, void* dst, DWORD 
     return S_OK;
 }
 
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 //  SoundEffectFactory implementation
-//──────────────────────────────────────────────────────────────────────────────
+//------------------------------------------------------------------------------
 static constexpr float PI = 3.14159265358979f;
 
 void SoundEffectFactory::GenerateWaveform(std::vector<short>& samples,
@@ -287,7 +287,7 @@ std::unique_ptr<SoundEffect> SoundEffectFactory::CreatePickup()
     {
         float t = static_cast<float>(i) / SR;
         float prog = t / DUR;
-        float freq = 440.f + 440.f * prog;   // glide 440→880
+        float freq = 440.f + 440.f * prog;   // glide 440->880
         float env = 1.f - prog;             // fade out
         float samp = std::sinf(2.f * PI * freq * t) * env;
         s[i] = static_cast<short>(samp * 16383.f);
