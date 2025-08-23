@@ -289,9 +289,9 @@ public:
     void GenerateIBLTextures();
 
     // Shadow mapping
-    void SetGlobalShadowQuality(uint32_t size) { m_shadowMapSize = size; }
+    void SetGlobalShadowQuality(uint32_t size);
     uint32_t GetGlobalShadowQuality() const { return m_shadowMapSize; }
-    void EnableShadows(bool enabled) { m_shadowsEnabled = enabled; }
+    void EnableShadows(bool enabled);
     bool AreShadowsEnabled() const { return m_shadowsEnabled; }
 
     // Light culling

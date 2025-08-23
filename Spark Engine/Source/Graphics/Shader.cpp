@@ -434,6 +434,8 @@ HRESULT Shader::CreateConstantBuffers()
 {
     ASSERT(m_device != nullptr);
     
+    LOG_TO_CONSOLE_IMMEDIATE(L"Creating shader constant buffers...", L"INFO");
+    
     // Create per-frame constant buffer
     D3D11_BUFFER_DESC bufferDesc = {};
     bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -442,27 +444,55 @@ HRESULT Shader::CreateConstantBuffers()
     bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     
     HRESULT hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_perFrameBuffer.GetAddressOf());
-    if (FAILED(hr)) return hr;
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"Failed to create per-frame constant buffer: HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        return hr;
+    }
     
     // Create per-object constant buffer
     bufferDesc.ByteWidth = sizeof(PerObjectConstants);
     hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_perObjectBuffer.GetAddressOf());
-    if (FAILED(hr)) return hr;
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"Failed to create per-object constant buffer: HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        return hr;
+    }
     
     // Create per-material constant buffer
     bufferDesc.ByteWidth = sizeof(PerMaterialConstants);
     hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_perMaterialBuffer.GetAddressOf());
-    if (FAILED(hr)) return hr;
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"Failed to create per-material constant buffer: HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        return hr;
+    }
     
     // Create lighting data constant buffer
     bufferDesc.ByteWidth = sizeof(LightingData);
     hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_lightingDataBuffer.GetAddressOf());
-    if (FAILED(hr)) return hr;
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"Failed to create lighting data constant buffer: HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        return hr;
+    }
     
     // Create post-processing constant buffer
     bufferDesc.ByteWidth = sizeof(PostProcessingConstants);
     hr = m_device->CreateBuffer(&bufferDesc, nullptr, m_postProcessingBuffer.GetAddressOf());
-    if (FAILED(hr)) return hr;
+    if (FAILED(hr)) {
+        std::wstring errorMsg = L"Failed to create post-processing constant buffer: HR=0x" + std::to_wstring(hr);
+        LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        return hr;
+    }
+    
+    // Log buffer sizes for debugging
+    std::wstring sizeMsg = L"Constant buffer sizes: PerFrame=" + std::to_wstring(sizeof(PerFrameConstants)) +
+                          L", PerObject=" + std::to_wstring(sizeof(PerObjectConstants)) +
+                          L", PerMaterial=" + std::to_wstring(sizeof(PerMaterialConstants)) +
+                          L", Lighting=" + std::to_wstring(sizeof(LightingData)) +
+                          L", PostProcess=" + std::to_wstring(sizeof(PostProcessingConstants));
+    LOG_TO_CONSOLE_IMMEDIATE(sizeMsg, L"DEBUG");
     
     LOG_TO_CONSOLE_IMMEDIATE(L"Shader constant buffers created successfully", L"SUCCESS");
     return S_OK;

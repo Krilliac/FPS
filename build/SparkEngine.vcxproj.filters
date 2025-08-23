@@ -16,6 +16,9 @@
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Core\SparkEngine.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Enums\EnumUtils.cpp">
+      <Filter>Source Files\Enums</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Console.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
@@ -29,6 +32,9 @@
       <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Model.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\ModelObject.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\PlaneObject.cpp">
@@ -106,6 +112,9 @@
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\Rocket.cpp">
       <Filter>Source Files\Projectiles</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Projectiles\WeaponStats.cpp">
+      <Filter>Source Files\Projectiles</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\SceneManager\SceneManager.cpp">
       <Filter>Source Files\SceneManager</Filter>
     </ClCompile>
@@ -138,6 +147,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\AllEnums.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Audio\AudioEngine.h">
       <Filter>Source Files\Audio</Filter>
     </ClInclude>
@@ -168,6 +180,18 @@
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Engine\Scripting\AngelScriptEngine.h">
       <Filter>Source Files\Engine\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Enums\EnumUtils.h">
+      <Filter>Source Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Enums\GameSystemEnums.h">
+      <Filter>Source Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Enums\GraphicsEnums.h">
+      <Filter>Source Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Enums\InputEnums.h">
+      <Filter>Source Files\Enums</Filter>
+    </ClInclude>
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Console.h">
       <Filter>Source Files\Game</Filter>
     </ClInclude>
@@ -181,6 +205,9 @@
       <Filter>Source Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\Model.h">
+      <Filter>Source Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\ModelObject.h">
       <Filter>Source Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="D:\Spark Engine\SparkEngine\Spark Engine\Source\Game\ModelVertex.h">
@@ -334,6 +361,9 @@
     </Filter>
     <Filter Include="Source Files\Engine\Scripting">
       <UniqueIdentifier>{CCDD0B03-606D-3DFE-9A1A-C5397F93E274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Enums">
+      <UniqueIdentifier>{68FEB5B5-DDA9-3DB4-BFDA-1CAC970965B0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{60398CCF-DBE9-320A-ADEA-33CC1717DD5B}</UniqueIdentifier>

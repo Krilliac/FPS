@@ -11,6 +11,16 @@
 class Model
 {
 public:
+    /**
+     * @brief Default constructor
+     */
+    Model() = default;
+
+    /**
+     * @brief Destructor - cleans up DirectX resources
+     */
+    ~Model();
+
     // Load OBJ from wide-string path and build vertex / index buffers.
     //   - filename : full or relative path to .obj (UTF-16 wide string)
     //   - device   : valid ID3D11Device*

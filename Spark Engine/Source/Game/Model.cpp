@@ -109,9 +109,12 @@ HRESULT Model::LoadObj(const std::wstring& filename, ID3D11Device* device)
 void Model::Render(ID3D11DeviceContext* ctx)
 {
     ASSERT(ctx != nullptr);
-    ASSERT(m_vb != nullptr);
-    ASSERT(m_ib != nullptr);
-    ASSERT(m_indexCount > 0);
+
+    // **SAFETY CHECK: Don't render if model failed to load**
+    if (m_vb == nullptr || m_ib == nullptr || m_indexCount == 0) {
+        // Model failed to load or is empty, skip rendering
+        return;
+    }
 
     UINT stride = sizeof(ModelVertex);
     UINT offset = 0;
@@ -120,4 +123,16 @@ void Model::Render(ID3D11DeviceContext* ctx)
     ctx->IASetIndexBuffer(m_ib, DXGI_FORMAT_R32_UINT, 0);
     ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     ctx->DrawIndexed(m_indexCount, 0, 0);
+}
+
+Model::~Model()
+{
+    if (m_vb) {
+        m_vb->Release();
+        m_vb = nullptr;
+    }
+    if (m_ib) {
+        m_ib->Release();
+        m_ib = nullptr;
+    }
 }

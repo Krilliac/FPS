@@ -12,12 +12,13 @@
 
 #pragma once
 
-#include "Utils/Assert.h"
+#include "../Utils/Assert.h"
 #include <windows.h>
 #include <wrl/client.h>
 #include <d3d11_1.h>
 #include <dxgi1_3.h>
 #include <dxgidebug.h>
+#include <DirectXMath.h>
 #include "..\Core\framework.h"
 #include <functional>
 #include <mutex>
@@ -25,8 +26,10 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <atomic>  // **CRITICAL FIX: Added for atomic frame state**
 
 using Microsoft::WRL::ComPtr;
+using namespace DirectX;
 
 // Forward declarations for engine systems
 class RenderTarget;
@@ -40,6 +43,7 @@ class PostProcessingSystem;
 class AssetPipeline;
 class PhysicsSystem;
 class GameObject;
+class Shader;
 
 /**
  * @brief Rendering pipeline type
@@ -179,7 +183,7 @@ struct GraphicsSettings
     bool enableGPUTiming = false;
 };
 
-/**
+ /**
  * @brief Comprehensive render statistics
  */
 struct RenderStatistics
@@ -304,12 +308,12 @@ public:
     // ADVANCED SYSTEM ACCESSORS
     // ========================================================================
 
-    TextureSystem* GetTextureSystem() const { return m_textureSystem.get(); }
-    MaterialSystem* GetMaterialSystem() const { return m_materialSystem.get(); }
-    LightingSystem* GetLightingSystem() const { return m_lightingSystem.get(); }
-    PostProcessingSystem* GetPostProcessingSystem() const { return m_postProcessingSystem.get(); }
-    AssetPipeline* GetAssetPipeline() const { return m_assetPipeline.get(); }
-    PhysicsSystem* GetPhysicsSystem() const { return m_physicsSystem; }
+    TextureSystem* GetTextureSystem() const;
+    MaterialSystem* GetMaterialSystem() const;
+    LightingSystem* GetLightingSystem() const;
+    PostProcessingSystem* GetPostProcessingSystem() const;
+    AssetPipeline* GetAssetPipeline() const;
+    PhysicsSystem* GetPhysicsSystem() const;
 
     // Legacy compatibility accessors
     LightManager* GetLightManager() const;
@@ -327,13 +331,13 @@ public:
     /**
      * @brief Get the current rendering pipeline
      */
-    RenderingPipeline GetRenderingPipeline() const { return m_currentPipeline; }
+    RenderingPipeline GetRenderingPipeline() const;
 
     /**
      * @brief Set graphics settings
      */
     void SetGraphicsSettings(const GraphicsSettings& settings);
-    const GraphicsSettings& GetGraphicsSettings() const { return m_settings; }
+    const GraphicsSettings& GetGraphicsSettings() const;
 
     /**
      * @brief Set quality preset
@@ -388,33 +392,33 @@ public:
     /**
      * @brief Get the DirectX 11 device
      */
-    ID3D11Device* GetDevice() const { return m_device.Get(); }
+    ID3D11Device* GetDevice() const;
 
     /**
      * @brief Get the DirectX 11 device context
      */
-    ID3D11DeviceContext* GetContext() const { return m_context.Get(); }
+    ID3D11DeviceContext* GetContext() const;
 
     /**
      * @brief Get the current window width
      */
-    UINT GetWindowWidth() const { return m_windowWidth; }
+    UINT GetWindowWidth() const;
 
     /**
      * @brief Get the current window height
      */
-    UINT GetWindowHeight() const { return m_windowHeight; }
+    UINT GetWindowHeight() const;
 
     /**
      * @brief Get the DXGI swap chain
      */
-    IDXGISwapChain* GetSwapChain() const { return m_swapChain.Get(); }
+    IDXGISwapChain* GetSwapChain() const;
 
     /**
      * @brief Get render target views
      */
-    ID3D11RenderTargetView* GetBackBufferRTV() const { return m_renderTargetView.Get(); }
-    ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
+    ID3D11RenderTargetView* GetBackBufferRTV() const;
+    ID3D11DepthStencilView* GetDepthStencilView() const;
 
     // ========================================================================
     // STATISTICS AND PERFORMANCE
@@ -423,7 +427,7 @@ public:
     /**
      * @brief Get render statistics
      */
-    const RenderStatistics& GetStatistics() const { return m_statistics; }
+    const RenderStatistics& GetStatistics() const;
     void ResetStatistics();
 
     /**
@@ -489,7 +493,7 @@ public:
      * @brief Legacy alias for Console_SetWireframe
      */
     void Console_SetWireframeMode(bool enabled);
-    
+
     /**
      * @brief Enable/disable VSync via console
      */
@@ -583,6 +587,9 @@ private:
     // Use forward declaration pattern for PhysicsSystem to avoid incomplete type
     PhysicsSystem* m_physicsSystem;
 
+    // Shader system
+    std::unique_ptr<class Shader> m_shader;
+
     // Legacy rendering subsystems
     std::unique_ptr<LightManager> m_lightManager;
     std::unique_ptr<PostProcessingPipeline> m_postProcessing;
@@ -668,6 +675,9 @@ private:
     
     mutable std::mutex m_metricsMutex;
     std::function<void()> m_stateCallback;
+    
+    // **CRITICAL FIX: Added atomic frame state for thread-safe frame management**
+    std::atomic<bool> m_frameInProgress;
 
     // Resource tracking
     size_t m_textureMemoryUsage;

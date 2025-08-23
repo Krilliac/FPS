@@ -20,6 +20,7 @@
 #include "CubeObject.h"
 #include "PlaneObject.h"
 #include "SphereObject.h"
+#include "ModelObject.h"  // Add ModelObject for .obj file rendering
 #include "Player.h"
 #include "..\Game\Console.h"
 #include "..\Projectiles\ProjectilePool.h"
@@ -214,51 +215,78 @@ void Game::Render()
         return;
     }
 
-    // **ALWAYS** call BeginFrame/EndFrame for proper frame management
-    m_graphics->BeginFrame();
-    
-    // Collect all renderable objects for unified rendering
-    std::vector<GameObject*> renderableObjects;
-    
-    // Add game objects
-    for (auto& obj : m_gameObjects) {
-        if (obj && obj->IsActive() && obj->IsVisible()) {
-            renderableObjects.push_back(obj.get());
-        }
-    }
-
-    // Add scene manager objects
-    if (m_sceneManager) {
-        for (auto& obj : m_sceneManager->GetObjects()) {
+    // **CRITICAL: This is the ONLY place BeginFrame/EndFrame should be called**
+    try {
+        m_graphics->BeginFrame();
+        
+        // Collect all renderable objects for unified rendering
+        std::vector<GameObject*> renderableObjects;
+        
+        // Add game objects
+        for (auto& obj : m_gameObjects) {
             if (obj && obj->IsActive() && obj->IsVisible()) {
                 renderableObjects.push_back(obj.get());
             }
         }
-    }
 
-    // **UNIFIED RENDERING: Use the complete modern graphics pipeline**
-    XMMATRIX view = m_camera->GetViewMatrix();
-    XMMATRIX proj = m_camera->GetProjectionMatrix();
-    
-    // Call the unified RenderScene method
-    m_graphics->RenderScene(view, proj, renderableObjects);
-    
-    // Render player and projectiles through the unified system
-    if (m_player) {
-        m_player->Render(view, proj);
+        // Add scene manager objects
+        if (m_sceneManager) {
+            for (auto& obj : m_sceneManager->GetObjects()) {
+                if (obj && obj->IsActive() && obj->IsVisible()) {
+                    renderableObjects.push_back(obj.get());
+                }
+            }
+        }
+
+        // **UNIFIED RENDERING: Use the complete modern graphics pipeline**
+        XMMATRIX view = m_camera->GetViewMatrix();
+        XMMATRIX proj = m_camera->GetProjectionMatrix();
+        
+        // Call the unified RenderScene method
+        m_graphics->RenderScene(view, proj, renderableObjects);
+        
+        // **ENHANCED: Render player weapons in first-person view**
+        if (m_player) {
+            m_player->Render(view, proj);
+        }
+        
+        if (m_projectilePool) {
+            m_projectilePool->Render(view, proj);
+        }
+        
+        // **SOLUTION: Single console rendering location - this is the ONLY place console renders**
+        if (g_console.IsVisible()) {
+            g_console.Render(m_graphics->GetContext());
+        }
+        
+        // **CRITICAL: Always EndFrame, even if errors occurred above**
+        m_graphics->EndFrame();
+        
+    } catch (const std::exception& e) {
+        // Ensure we always call EndFrame even if rendering fails
+        try {
+            m_graphics->EndFrame();
+        } catch (...) {
+            // If EndFrame also fails, log it but don't throw again
+            LOG_TO_CONSOLE_IMMEDIATE(L"Critical: EndFrame failed during error recovery", L"ERROR");
+        }
+        
+        // Log the original error
+        std::string errorMsg = "Rendering error: " + std::string(e.what());
+        std::wstring wErrorMsg(errorMsg.begin(), errorMsg.end());
+        LOG_TO_CONSOLE_IMMEDIATE(wErrorMsg, L"ERROR");
+        
+    } catch (...) {
+        // Ensure we always call EndFrame even if rendering fails
+        try {
+            m_graphics->EndFrame();
+        } catch (...) {
+            // If EndFrame also fails, log it but don't throw again
+            LOG_TO_CONSOLE_IMMEDIATE(L"Critical: EndFrame failed during error recovery", L"ERROR");
+        }
+        
+        LOG_TO_CONSOLE_IMMEDIATE(L"Unknown rendering error occurred", L"ERROR");
     }
-    
-    if (m_projectilePool) {
-        m_projectilePool->Render(view, proj);
-    }
-    
-    // **SOLUTION: Single console rendering location - this is theONLY place console renders**
-    if (g_console.IsVisible()) {
-        g_console.Render(m_graphics->GetContext());
-    }
-    
-    // **ALWAYS** call EndFrame to ensure proper present
-    m_graphics->EndFrame();
 }
 
 /*-------------------------------------------------------------*/
@@ -370,6 +398,60 @@ void Game::CreateTestObjects()
         } else {
             std::wstring errorMsg = L"Sphere creation failed with HR=0x" + std::to_wstring(hr);
             LOG_TO_CONSOLE_IMMEDIATE(errorMsg, L"ERROR");
+        }
+    }
+
+    // **ENHANCED: Add model-based objects using our new .obj files**
+    {
+        // Target practice targets
+        auto target1 = std::make_unique<ModelObject>(L"../Assets/Models/target.obj");
+        ASSERT(target1);
+        HRESULT hr = target1->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        if (SUCCEEDED(hr)) {
+            target1->SetPosition({ -8.0f, 2.0f, 15.0f });
+            target1->SetName("Target_1");
+            m_gameObjects.push_back(std::move(target1));
+            LOG_TO_CONSOLE_IMMEDIATE(L"Target 1 model created successfully", L"INFO");
+        } else {
+            LOG_TO_CONSOLE_IMMEDIATE(L"Target 1 model creation failed", L"WARNING");
+        }
+
+        auto target2 = std::make_unique<ModelObject>(L"../Assets/Models/target.obj");
+        ASSERT(target2);
+        hr = target2->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        if (SUCCEEDED(hr)) {
+            target2->SetPosition({ 8.0f, 2.0f, 15.0f });
+            target2->SetName("Target_2");
+            m_gameObjects.push_back(std::move(target2));
+            LOG_TO_CONSOLE_IMMEDIATE(L"Target 2 model created successfully", L"INFO");
+        } else {
+            LOG_TO_CONSOLE_IMMEDIATE(L"Target 2 model creation failed", L"WARNING");
+        }
+
+        // Character model for testing
+        auto character = std::make_unique<ModelObject>(L"../Assets/Models/character.obj");
+        ASSERT(character);
+        hr = character->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        if (SUCCEEDED(hr)) {
+            character->SetPosition({ 0.0f, 0.0f, 8.0f });
+            character->SetName("Character_Model");
+            m_gameObjects.push_back(std::move(character));
+            LOG_TO_CONSOLE_IMMEDIATE(L"Character model created successfully", L"INFO");
+        } else {
+            LOG_TO_CONSOLE_IMMEDIATE(L"Character model creation failed", L"WARNING");
+        }
+
+        // Weapon display (rifle on a stand)
+        auto weaponDisplay = std::make_unique<ModelObject>(L"../Assets/Models/rifle.obj");
+        ASSERT(weaponDisplay);
+        hr = weaponDisplay->Initialize(m_graphics->GetDevice(), m_graphics->GetContext());
+        if (SUCCEEDED(hr)) {
+            weaponDisplay->SetPosition({ -3.0f, 1.5f, 5.0f });
+            weaponDisplay->SetName("Weapon_Display");
+            m_gameObjects.push_back(std::move(weaponDisplay));
+            LOG_TO_CONSOLE_IMMEDIATE(L"Weapon display model created successfully", L"INFO");
+        } else {
+            LOG_TO_CONSOLE_IMMEDIATE(L"Weapon display model creation failed", L"WARNING");
         }
     }
 

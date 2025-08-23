@@ -187,7 +187,9 @@ public:
     const AdvancedProperties& GetAdvancedProperties() const { return m_advancedProperties; }
     const MaterialRenderState& GetRenderState() const { return m_renderState; }
     const MaterialTexture& GetTexture(MaterialTextureType type) const;
-    
+    const std::string& GetActiveVariant() const;
+    std::vector<std::string> GetAvailableVariants() const;
+
     // Setters
     void SetPBRProperties(const PBRProperties& properties) { m_pbrProperties = properties; }
     void SetAdvancedProperties(const AdvancedProperties& properties) { m_advancedProperties = properties; }
@@ -279,6 +281,7 @@ public:
 
     // Hot reloading
     void EnableHotReload(bool enabled) { m_hotReloadEnabled = enabled; }
+    void EnableHotReloading(bool enabled);
     void UpdateHotReload();
     int ReloadAllMaterials();
 
@@ -360,6 +363,43 @@ public:
      */
     int Console_ValidateMaterials();
 
+    /**
+     * @brief Dump detailed material information
+     */
+    std::string Console_DumpMaterialDetails(const std::string& materialName) const;
+
+    /**
+     * @brief Export material to file
+     */
+    bool Console_ExportMaterial(const std::string& materialName, const std::string& filePath);
+
+    /**
+     * @brief Import material from file
+     */
+    bool Console_ImportMaterial(const std::string& filePath);
+
+    /**
+     * @brief List all available texture types
+     */
+    std::string Console_ListTextureTypes() const;
+
+    /**
+     * @brief Load texture to specific material slot
+     */
+    bool Console_LoadTextureToSlot(const std::string& materialName, 
+                                  const std::string& textureType, 
+                                  const std::string& texturePath);
+
+    /**
+     * @brief Unload texture from material slot
+     */
+    void Console_UnloadTextureFromSlot(const std::string& materialName, const std::string& textureType);
+
+    /**
+     * @brief List material variants
+     */
+    std::string Console_ListMaterialVariants(const std::string& materialName) const;
+
 private:
     ID3D11Device* m_device;
     ID3D11DeviceContext* m_context;
@@ -389,6 +429,7 @@ private:
     uint64_t GetFileTimestamp(const std::string& filePath) const;
     ComPtr<ID3D11ShaderResourceView> LoadTextureFromFile(const std::string& filePath);
     void UpdateMetrics();
+    void PerformPeriodicMaintenance();
     std::string TextureTypeToString(MaterialTextureType type) const;
     MaterialTextureType StringToTextureType(const std::string& str) const;
 };

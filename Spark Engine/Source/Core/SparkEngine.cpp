@@ -117,7 +117,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            // **SOLUTION: Clean main loop with single render path**
+            // **SOLUTION: Fixed main loop - NO double BeginFrame/EndFrame**
             float dt = g_timer ? g_timer->GetDeltaTime() : 0.016f;
 
             // Input update
@@ -128,16 +128,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 g_game->Update(dt);
             }
 
-            // **SOLUTION: Single, clean graphics rendering call**
-            // Console rendering happens INSIDE Game::Render() - nowhere else
-            if (g_graphics) {
+            // **CRITICAL FIX: Single, clean rendering - Game::Render() handles ALL frame management**
+            if (g_game) {
+                g_game->Render();  // Game::Render() calls BeginFrame/EndFrame internally
+            } else if (g_graphics) {
+                // Fallback: If no game, just clear the screen
                 g_graphics->BeginFrame();
-                
-                if (g_game) g_game->Render();
-                
                 g_graphics->EndFrame();
             }
-            // **CRITICAL: NO console rendering here - only in Game::Render()**
+            // **NO graphics BeginFrame/EndFrame here - that was causing double rendering!**
 
             // Console update (non-rendering operations only)
             console.Update();

@@ -105,6 +105,17 @@ public:
         const DirectX::XMMATRIX& proj) override;
 
     /**
+     * @brief Render the weapon model in first-person view
+     * 
+     * Renders the current weapon model positioned relative to the camera
+     * for first-person weapon display.
+     * 
+     * @param view Camera view transformation matrix
+     * @param proj Camera projection transformation matrix
+     */
+    void RenderWeapon(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& proj);
+
+    /**
      * @brief Apply damage to the player
      * 
      * Reduces player health, accounting for armor protection. Can result
@@ -404,6 +415,13 @@ private:
     int         m_currentAmmo{ 0 }; ///< Current ammunition count
     float       m_fireTimer{ 0 }, m_reloadTimer{ 0 }; ///< Weapon timing
     bool        m_isReloading{ false }, m_isFiring{ false }; ///< Combat state
+
+    // Weapon models for rendering
+    std::unique_ptr<class Model> m_pistolModel;      ///< Pistol weapon model
+    std::unique_ptr<class Model> m_rifleModel;       ///< Rifle weapon model
+    std::unique_ptr<class Model> m_shotgunModel;     ///< Shotgun weapon model
+    std::unique_ptr<class Model> m_rocketModel;      ///< Rocket launcher model
+    std::unique_ptr<class Model> m_grenadeModel;     ///< Grenade launcher model
 
     // Console integration state
     bool m_godModeEnabled{ false };      ///< God mode prevents damage

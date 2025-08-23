@@ -4,29 +4,18 @@
  * @author Spark Engine Team
  * @date 2025
  * 
- * This file defines weapon types, statistics structures, and default configurations
+ * This file defines weapon statistics structures and default configurations
  * for the weapon system. It provides a data-driven approach to weapon balancing
  * and configuration management.
  */
 
 #pragma once
 
+#include "../Enums/GameSystemEnums.h"
 #include "Utils/Assert.h"
 
-/**
- * @brief Enumeration of supported weapon types
- * 
- * Defines the different categories of weapons available in the game.
- * Each type has associated default statistics and behaviors.
- */
-enum class WeaponType
-{
-    PISTOL,           ///< Semi-automatic pistol with moderate damage and high accuracy
-    RIFLE,            ///< Automatic rifle with high damage and moderate accuracy
-    SHOTGUN,          ///< Close-range weapon with high damage but low accuracy
-    ROCKET_LAUNCHER,  ///< Explosive weapon with very high damage but slow fire rate
-    GRENADE_LAUNCHER  ///< Area-of-effect weapon with explosive projectiles
-};
+// Use the SparkEditor namespace for enum types
+using SparkEditor::WeaponType;
 
 /**
  * @brief Weapon statistics and configuration structure
@@ -49,84 +38,146 @@ struct WeaponStats
      */
     WeaponStats()
         : Type(WeaponType::PISTOL)
-        , Damage(0.0f)
-        , FireRate(0.0f)
-        , MagazineSize(0)
-        , ReloadTime(0.0f)
-        , MuzzleVelocity(0.0f)
-        , Accuracy(1.0f)
+        , Damage(10.0f)
+        , FireRate(600.0f)
+        , MagazineSize(15)
+        , ReloadTime(2.0f)
+        , MuzzleVelocity(300.0f)
+        , Accuracy(0.85f)
     {
+    }
+
+    /**
+     * @brief Parameterized constructor
+     * 
+     * @param type Weapon type
+     * @param damage Base damage value
+     * @param fireRate Rate of fire in RPM
+     * @param magSize Magazine capacity
+     * @param reloadTime Reload duration in seconds
+     * @param velocity Muzzle velocity
+     * @param accuracy Accuracy factor (0.0-1.0)
+     */
+    WeaponStats(WeaponType type, float damage, float fireRate, int magSize, 
+               float reloadTime, float velocity, float accuracy)
+        : Type(type)
+        , Damage(damage)
+        , FireRate(fireRate)
+        , MagazineSize(magSize)
+        , ReloadTime(reloadTime)
+        , MuzzleVelocity(velocity)
+        , Accuracy(accuracy)
+    {
+        ASSERT_MSG(damage >= 0.0f, "Weapon damage must be non-negative");
+        ASSERT_MSG(fireRate >= 0.0f, "Fire rate must be non-negative");
+        ASSERT_MSG(magSize >= 0, "Magazine size must be non-negative");
+        ASSERT_MSG(reloadTime >= 0.0f, "Reload time must be non-negative");
+        ASSERT_MSG(velocity >= 0.0f, "Muzzle velocity must be non-negative");
+        ASSERT_MSG(accuracy >= 0.0f && accuracy <= 1.0f, "Accuracy must be between 0.0 and 1.0");
+    }
+
+    /**
+     * @brief Calculate time between shots based on fire rate
+     * @return Time between shots in seconds
+     */
+    float GetShotInterval() const
+    {
+        if (FireRate <= 0.0f) return 1.0f; // Safety fallback
+        return 60.0f / FireRate; // Convert RPM to seconds per shot
+    }
+
+    /**
+     * @brief Get effective range based on muzzle velocity and accuracy
+     * @return Effective range in game units
+     */
+    float GetEffectiveRange() const
+    {
+        return MuzzleVelocity * Accuracy * 0.1f; // Simple formula
+    }
+
+    /**
+     * @brief Calculate damage per second (DPS)
+     * @return Theoretical maximum damage per second
+     */
+    float GetDPS() const
+    {
+        return Damage * (FireRate / 60.0f);
+    }
+
+    /**
+     * @brief Validate weapon statistics for logical consistency
+     * @return true if stats are valid, false otherwise
+     */
+    bool IsValid() const
+    {
+        return Damage >= 0.0f &&
+               FireRate >= 0.0f &&
+               MagazineSize >= 0 &&
+               ReloadTime >= 0.0f &&
+               MuzzleVelocity >= 0.0f &&
+               Accuracy >= 0.0f && Accuracy <= 1.0f;
     }
 };
 
-/**
- * @brief Get default weapon statistics for a specific weapon type
+ /**
+ * @brief Get default weapon statistics for a given weapon type
  * 
- * Returns pre-configured weapon statistics for each weapon type with
- * balanced values suitable for gameplay. These can be used as baseline
- * values and modified as needed for game balancing.
+ * Provides balanced default configurations for each weapon type.
+ * These values can be used as starting points for weapon balancing.
  * 
- * @param type The weapon type to get default stats for
+ * @param type The weapon type to get defaults for
  * @return WeaponStats structure with default values for the specified type
- * @note Values are balanced for typical FPS gameplay scenarios
- * @warning Will assert if an unknown weapon type is provided
  */
-inline WeaponStats GetDefaultWeaponStats(WeaponType type)
-{
-    WeaponStats stats;
-    stats.Type = type;
+WeaponStats GetDefaultWeaponStats(WeaponType type);
 
-    switch (type)
-    {
-    case WeaponType::PISTOL:
-        stats.Damage = 25.0f;
-        stats.FireRate = 300.0f;      // 5 shots per second
-        stats.MagazineSize = 12;
-        stats.ReloadTime = 1.5f;
-        stats.MuzzleVelocity = 300.0f;
-        stats.Accuracy = 0.95f;       // Very accurate
-        break;
+/**
+ * @brief Create a weapon stats configuration from parameters
+ * 
+ * Helper function to create weapon stats with validation.
+ * 
+ * @param type Weapon type
+ * @param damage Base damage value
+ * @param fireRate Rate of fire in RPM
+ * @param magSize Magazine capacity
+ * @param reloadTime Reload duration in seconds
+ * @param velocity Muzzle velocity
+ * @param accuracy Accuracy factor (0.0-1.0)
+ * @return WeaponStats structure with specified values
+ */
+WeaponStats CreateWeaponStats(WeaponType type, float damage, float fireRate, 
+                             int magSize, float reloadTime, float velocity, float accuracy);
 
-    case WeaponType::RIFLE:
-        stats.Damage = 35.0f;
-        stats.FireRate = 600.0f;      // 10 shots per second
-        stats.MagazineSize = 30;
-        stats.ReloadTime = 2.5f;
-        stats.MuzzleVelocity = 800.0f;
-        stats.Accuracy = 0.85f;       // Good accuracy
-        break;
+/**
+ * @brief Apply weapon modifications to base stats
+ * 
+ * Allows for weapon upgrades, attachments, or temporary modifications
+ * to be applied to base weapon statistics.
+ * 
+ * @param baseStats Base weapon statistics
+ * @param damageMultiplier Damage modification factor
+ * @param fireRateMultiplier Fire rate modification factor
+ * @param accuracyMultiplier Accuracy modification factor
+ * @param reloadTimeMultiplier Reload time modification factor (lower is better)
+ * @return Modified weapon statistics
+ */
+WeaponStats ApplyWeaponModifications(const WeaponStats& baseStats,
+                                   float damageMultiplier = 1.0f,
+                                   float fireRateMultiplier = 1.0f,
+                                   float accuracyMultiplier = 1.0f,
+                                   float reloadTimeMultiplier = 1.0f);
 
-    case WeaponType::SHOTGUN:
-        stats.Damage = 60.0f;
-        stats.FireRate = 120.0f;      // 2 shots per second
-        stats.MagazineSize = 8;
-        stats.ReloadTime = 3.0f;
-        stats.MuzzleVelocity = 400.0f;
-        stats.Accuracy = 0.60f;       // Lower accuracy, spread pattern
-        break;
+/**
+ * @brief Convert weapon type to string representation
+ * 
+ * @param type Weapon type to convert
+ * @return String name of the weapon type
+ */
+const char* WeaponTypeToString(WeaponType type);
 
-    case WeaponType::ROCKET_LAUNCHER:
-        stats.Damage = 150.0f;
-        stats.FireRate = 60.0f;       // 1 shot per second
-        stats.MagazineSize = 4;
-        stats.ReloadTime = 4.0f;
-        stats.MuzzleVelocity = 200.0f;
-        stats.Accuracy = 1.00f;       // Perfect accuracy
-        break;
-
-    case WeaponType::GRENADE_LAUNCHER:
-        stats.Damage = 100.0f;
-        stats.FireRate = 90.0f;       // 1.5 shots per second
-        stats.MagazineSize = 6;
-        stats.ReloadTime = 3.5f;
-        stats.MuzzleVelocity = 150.0f;
-        stats.Accuracy = 0.90f;       // High accuracy
-        break;
-
-    default:
-        ASSERT_ALWAYS_MSG(false, "Unknown WeaponType in GetDefaultWeaponStats");
-        break;
-    }
-
-    return stats;
-}
+/**
+ * @brief Convert string to weapon type
+ * 
+ * @param str String representation of weapon type
+ * @return Corresponding weapon type, or WeaponType::PISTOL if not found
+ */
+WeaponType StringToWeaponType(const char* str);
