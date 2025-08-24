@@ -1,6 +1,7 @@
 ﻿#include "Model.h"
 #include "ModelVertex.h"
 #include "Utils/Assert.h"
+#include "../Graphics/GraphicsEngine.h"  // ✅ ADD: For shader access
 #include <tiny_obj_loader.h>
 #include <vector>
 #include <string>
@@ -106,7 +107,8 @@ HRESULT Model::LoadObj(const std::wstring& filename, ID3D11Device* device)
     return hr;
 }
 
-void Model::Render(ID3D11DeviceContext* ctx)
+void Model::Render(ID3D11DeviceContext* ctx, GraphicsEngine* graphics, 
+                   const DirectX::XMMATRIX* world, const DirectX::XMMATRIX* view, const DirectX::XMMATRIX* proj)
 {
     ASSERT(ctx != nullptr);
 
@@ -116,12 +118,21 @@ void Model::Render(ID3D11DeviceContext* ctx)
         return;
     }
 
+    // ✅ ENHANCED: Set up shaders if graphics engine is provided
+    if (graphics && world && view && proj) {
+        // Set up basic shaders and constant buffers
+        graphics->SetBasicShaders();
+        graphics->UpdateBasicConstants(*world, *view, *proj);
+    }
+
     UINT stride = sizeof(ModelVertex);
     UINT offset = 0;
 
     ctx->IASetVertexBuffers(0, 1, &m_vb, &stride, &offset);
     ctx->IASetIndexBuffer(m_ib, DXGI_FORMAT_R32_UINT, 0);
     ctx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    
+    // ✅ FIXED: Now shaders are bound, so this will actually render something visible
     ctx->DrawIndexed(m_indexCount, 0, 0);
 }
 

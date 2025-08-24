@@ -5,6 +5,9 @@
 #include <DirectXMath.h>
 #include <string>
 
+// Forward declaration
+class GraphicsEngine;
+
 //------------------------------------------------------------------------------
 //  Model ‒ loads a simple OBJ file with tinyobjloader and creates GPU buffers
 //------------------------------------------------------------------------------
@@ -26,8 +29,11 @@ public:
     //   - device   : valid ID3D11Device*
     HRESULT LoadObj(const std::wstring& filename, ID3D11Device* device);
 
-    // Issue draw call for the model (assumes shaders / CBs already bound)
-    void Render(ID3D11DeviceContext* ctx);
+    // ✅ ENHANCED: Render with shader setup using graphics engine
+    void Render(ID3D11DeviceContext* ctx, GraphicsEngine* graphics = nullptr, 
+                const DirectX::XMMATRIX* world = nullptr, 
+                const DirectX::XMMATRIX* view = nullptr, 
+                const DirectX::XMMATRIX* proj = nullptr);
 
 private:
     ID3D11Buffer* m_vb{ nullptr };

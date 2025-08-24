@@ -20,6 +20,7 @@
 #include <dxgidebug.h>
 #include <DirectXMath.h>
 #include "..\Core\framework.h"
+#include "Shader.h"  // ✅ ADD: Include for PerObjectConstants and PerFrameConstants
 #include <functional>
 #include <mutex>
 #include <chrono>
@@ -302,7 +303,7 @@ public:
      * @param width New window width in pixels
      * @param height New window height in pixels
      */
-    void OnResize(UINT width, UINT height);
+    void OnResize(unsigned int width, unsigned int height);
 
     // ========================================================================
     // ADVANCED SYSTEM ACCESSORS
@@ -574,6 +575,31 @@ public:
      */
     RenderStatistics Console_GetMetrics() const;
 
+    // ========================================================================
+    // BASIC SHADER SYSTEM (for rendering pipeline)
+    // ========================================================================
+
+    /**
+     * @brief Set basic shaders for rendering
+     */
+    void SetBasicShaders();
+
+    /**
+     * @brief Update basic constant buffer with transformation matrices
+     * @param world World transformation matrix
+     * @param view View transformation matrix  
+     * @param proj Projection transformation matrix
+     */
+    void UpdateBasicConstants(const DirectX::XMMATRIX& world, const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& proj);
+
+    /**
+     * @brief Update per-frame constants for lighting and camera
+     * @param view View transformation matrix
+     * @param proj Projection transformation matrix
+     * @param cameraPos Camera position in world space
+     */
+    void UpdateFrameConstants(const XMMATRIX& view, const XMMATRIX& proj, const XMFLOAT3& cameraPos);
+
 private:
     // ========================================================================
     // ADVANCED RENDERING SUBSYSTEMS
@@ -682,6 +708,16 @@ private:
     // Resource tracking
     size_t m_textureMemoryUsage;
     size_t m_bufferMemoryUsage;
+    
+    // ✅ ADD: Basic shader system resources
+    ComPtr<ID3D11VertexShader> m_basicVertexShader;
+    ComPtr<ID3D11PixelShader> m_basicPixelShader;
+    ComPtr<ID3D11InputLayout> m_basicInputLayout;
+    ComPtr<ID3D11Buffer> m_basicConstantBuffer;
+    ComPtr<ID3D11Buffer> m_basicFrameConstantBuffer;  // ✅ ADD: Per-frame constant buffer
+    ComPtr<ID3D11SamplerState> m_basicSamplerState;
+    ComPtr<ID3D11Texture2D> m_defaultTexture;        // ✅ ADD: Default white texture
+    ComPtr<ID3D11ShaderResourceView> m_defaultSRV;   // ✅ ADD: Default texture SRV
 
     // ========================================================================
     // PRIVATE METHODS
@@ -721,4 +757,13 @@ private:
     void RenderLightingPass();
     void RenderPostProcessing();
     void RenderTemporalEffects();
+    
+    // ✅ ADD: Basic shader system methods
+    HRESULT InitializeBasicShaders();
+    HRESULT CompileShaderFromFile(const std::wstring& filename, const char* entryPoint, 
+                                  const char* shaderModel, ID3DBlob** blobOut);
+    HRESULT CreateBasicConstantBuffer();
+    HRESULT CreateDefaultTexture();  // ✅ ADD: Default texture creation
+    HRESULT CompileEmbeddedVertexShader(ID3DBlob** blobOut);   // ✅ ADD: Embedded vertex shader
+    HRESULT CompileEmbeddedPixelShader(ID3DBlob** blobOut);    // ✅ ADD: Embedded pixel shader
 };

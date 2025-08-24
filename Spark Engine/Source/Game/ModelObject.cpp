@@ -42,10 +42,21 @@ void ModelObject::Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX&
 
     ASSERT(m_context != nullptr);
 
-    // **SIMPLIFIED RENDERING: Just render the model**
-    // In a complete implementation, you would set up shaders, constant buffers, etc.
+    // ? ENHANCED: Calculate world transformation matrix
+    DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
+    
+    // Apply position (access m_position from GameObject base class)
+    DirectX::XMFLOAT3 pos = GetPosition();
+    world = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+    
+    // ? ENHANCED: Get graphics engine reference (you may need to adjust this based on how you access it)
+    // For now, we'll try to get it from a global or pass it down from the render system
+    extern std::unique_ptr<GraphicsEngine> g_graphics;
+    GraphicsEngine* graphics = g_graphics.get();
+
+    // **ENHANCED RENDERING: Set up shaders, constant buffers, and matrices**
     try {
-        m_model->Render(m_context);
+        m_model->Render(m_context, graphics, &world, &view, &proj);
     } catch (...) {
         // Handle rendering errors gracefully
         static int errorCount = 0;
